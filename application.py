@@ -2,7 +2,18 @@
 import os
 from flask import Flask, render_template
 from moya.read_buzzer import rfid_read, rfid_rpi_read
+import Rpi.GPIO as GPIO
 import moya.Write
+
+# Create a dictionary called pins to store the pin number, name, and pin state:
+pins = {
+    16 : {'name' : 'red', 'state':GPIO.LOW},
+    20 : {'name' : 'green', 'state':GPIO.LOW},
+    21 : {'name' : 'yellow', 'state':GPIO.LOW},
+    6 : {'name' : 'entrance', 'state':GPIO.LOW},
+    12 : {'name' : 'exit', 'state':GPIO.LOW}
+}
+
 
 
 application = Flask(__name__)
@@ -21,8 +32,11 @@ def index(user='상호'):
     return render_template('entry.html', name=user, platform=rfid_rpi_read())
     # url test1 request path /두루
     # url test2 request path /
-
-
+    # if user exist turn on green led
+@application.route('/entrance')
+#activate when push button GPIO 6
+@application.route('/exit')
+#activate when push button GPIO 12
 @application.route('/gpio')
 def gpio():
     return render_template('main2.html')
