@@ -7,11 +7,11 @@ import moya.Write
 
 # Create a dictionary called pins to store the pin number, name, and pin state:
 pins = {
-    16 : {'name' : 'red', 'state':GPIO.LOW},
-    20 : {'name' : 'green', 'state':GPIO.LOW},
-    21 : {'name' : 'yellow', 'state':GPIO.LOW},
-    6 : {'name' : 'entrance', 'state':GPIO.LOW},
-    12 : {'name' : 'exit', 'state':GPIO.LOW}
+    16 : {'name' : 'red_rfid', 'state':GPIO.LOW},
+    20 : {'name' : 'green_enter', 'state':GPIO.LOW},
+    21 : {'name' : 'yellow_exit', 'state':GPIO.LOW},
+    6 : {'name' : 'entrance_bt', 'state':GPIO.LOW},
+    12 : {'name' : 'exit_bt', 'state':GPIO.LOW}
 }
 
 
@@ -33,10 +33,15 @@ def index(user='상호'):
     # url test1 request path /두루
     # url test2 request path /
     # if user exist turn on green led
+
 @application.route('/entrance')
 #activate when push button GPIO 6
+#pop up message "출입증을 태깅하세요"
+#blink red_rfid led
 @application.route('/exit')
 #activate when push button GPIO 12
+#pop up message "출입증을 태깅하세요"
+#blink red_rfid led
 @application.route('/gpio')
 def gpio():
     return render_template('main2.html')
