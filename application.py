@@ -6,8 +6,8 @@ application.env = 'development'
 application.debug = True
 
 
-@app.route('/')
-@app.route('/<user>')
+@application.route('/')
+@application.route('/<user>')
 def index(user='상호'):
     return render_template('entry.html', name=user)
     # url test1 request path /두루
