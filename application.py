@@ -1,18 +1,22 @@
 #-*- coding:utf-8 -*-
 from flask import Flask, render_template
 
-app = Flask(__name__)
-app.env = 'development'
-app.debug = True
+application = Flask(__name__)
+application.env = 'development'
+application.debug = True
 
-#@app.route('/<user>')
+
 @app.route('/')
-def index():
-    return render_template('entry.html', name="두루")
+@app.route('/<user>')
+def index(user='상호'):
+    return render_template('entry.html', name=user)
+    # url test1 request path /두루
+    # url test2 request path /
 
 
 #admin PAGE
 #@app.route('/AD')
 
-##
-app.run(host='0.0.0.0', port=5000)
+# Run the application
+if __name__ == "__main__":
+    application.run(host="0.0.0.0")
