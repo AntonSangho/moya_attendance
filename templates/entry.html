@@ -15,12 +15,29 @@
             grid-template-columns: 1fr 400px 1fr;
             border: 1px solid red;
         }
+        #hor div {
+            border: 1px darkcyan dashed;
+        }
         #ver {
-            grid-template-rows: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 400px 1fr;
             border: 1px solid red;
-            height: 400px;
+            height: 100vh;
             margin-top: auto;
-            overflow-y: hidden;
+        }
+        #container {
+            text-align: center;
+            line-height: 400px;
+            min-width: 400px;
+        }
+
+        body {
+            min-width: 400px;
+            font-size:2rem;
+            margin:0;
+            min-width: 600px;
+            min-height: 100%;
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
@@ -29,7 +46,7 @@
         <div></div>
         <div id="hor">
             <div></div>
-            <div id="container">{{name}}가 입장했습니다. 엘리먼트 박스</div>
+            <div id="container">{{name}}가 입장했습니다</div>
             <div></div>
         </div>
         <div></div>
