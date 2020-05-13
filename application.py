@@ -14,6 +14,21 @@ def index(user='상호'):
     # url test2 request path /
 
 
+@application.route('/gpio')
+def gpio():
+    return render_template('main2.html')
+
+@application.route("/<changePin>/<action>")
+def action (changePin, action):
+    changePin = int(changePin)
+    deviceName = pins[changePin]['name']
+    templateData = {
+        'message' : 'message',
+        'pin' : 'pins'
+    }
+    return render_template('main2.html', **templateData)
+
+
 #admin PAGE
 #@app.route('/AD')
 
