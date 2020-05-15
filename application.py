@@ -18,7 +18,7 @@ application.debug = True
 
 @application.route('/')
 @application.route('/<user>')
-def index(user='상호'):
+def index(user=''):
     print(rfid_read())
     print(rfid_rpi_read())
     return render_template('entry.html', name=user, platform=rfid_rpi_read())
