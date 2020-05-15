@@ -2,17 +2,9 @@
 import os
 from flask import Flask, render_template
 from moya.read_buzzer import rfid_read, rfid_rpi_read
-import RPi.GPIO as GPIO
+
 import moya.Write
 
-# Create a dictionary called pins to store the pin number, name, and pin state:
-pins = {
-    16 : {'name' : 'red_rfid', 'state':GPIO.LOW},
-    20 : {'name' : 'green_enter', 'state':GPIO.LOW},
-    21 : {'name' : 'yellow_exit', 'state':GPIO.LOW},
-    6 : {'name' : 'entrance_bt', 'state':GPIO.LOW},
-    12 : {'name' : 'exit_bt', 'state':GPIO.LOW}
-}
 
 
 
