@@ -4,6 +4,7 @@ from flask import Flask, render_template
 from moya.read_buzzer import rfid_read, rfid_rpi_read
 
 import moya.Write
+from moya.driver_db import init_connect_db, get_attendance
 
 
 
@@ -25,6 +26,15 @@ def index(user=''):
     # url test1 request path /두루
     # url test2 request path /
     # if user exist turn on green led
+
+
+@application.route('/dbtest')
+def dbselect():
+    db = init_connect_db()
+    lists = get_attendance(db)
+    print(lists)
+    return "db select test"
+    
 
 @application.route('/entrance')
 #activate when push button GPIO 6

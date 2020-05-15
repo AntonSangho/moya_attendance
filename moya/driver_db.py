@@ -1,0 +1,36 @@
+import pymysql
+
+# 데이타베이스 초기화 정보
+def init_connect_db():
+    db = pymysql.connect(
+        user='root',
+        passwd='', #beanstalk 환경변수 이용
+        db='moya', #beanstalk 환경변수 이용
+        host='localhost', #beanstalk 환경변수 이용
+        charset='utf8', #beanstalk 환경변수 이용
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    return db
+
+
+# rfid 태그값 가져오기
+def get_attendance(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute("SELECT id, user_id, clock_in FROM attendance ORDER BY id DESC")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" %(e.args[0], e.args[1]))
+
+# rfid 태깅기록
+def set_attendance(db, userid):
+    try:
+         cursor = db.cursor()
+         cursor.execute("INSERT INTO attendance(user_id) VALUES ({userid})")
+         print("db commit successfully")
+         return db.commit()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" %(e.args[0], e.args[1]))
+   
+    
+    
