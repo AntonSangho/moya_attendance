@@ -26,11 +26,17 @@ def get_attendance(db):
 def set_attendance(db, userid):
     try:
          cursor = db.cursor()
-         cursor.execute("INSERT INTO attendance(user_id) VALUES ({userid})")
+         cursor.execute(f"INSERT INTO attendance(user_id) VALUES ({userid})")
          print("db commit successfully")
-         return db.commit()
     except pymysql.Error as e:
+        db.rollback()
+        db.close()
         print("db error pymysql %d: %s" %(e.args[0], e.args[1]))
+        raise
+    else:
+        db.commit()
+        #db.close()
+        return 1
    
     
     

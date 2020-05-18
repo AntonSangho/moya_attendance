@@ -4,7 +4,7 @@ from flask import Flask, render_template
 from moya.read_buzzer import rfid_read, rfid_rpi_read
 
 import moya.Write
-from moya.driver_db import init_connect_db, get_attendance
+from moya.driver_db import init_connect_db, get_attendance, set_attendance
 
 
 
@@ -34,6 +34,16 @@ def dbselect():
     lists = get_attendance(db)
     print(lists)
     return "db select test"
+
+@application.route('/db_insert_test/<cnt>')
+def dbinsert(cnt):
+    import random
+    db = init_connect_db()
+    if cnt :
+       for i in range(int(cnt)):
+        success = set_attendance(db, (random.randint(0, 10)%2)) #(i%2))
+    
+    return "db insert test /db_insert_test/1000 insert test"
     
 
 @application.route('/entrance')
