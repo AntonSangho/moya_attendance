@@ -18,14 +18,14 @@ def load_package():
         load_module('from mfrc522 import SimpleMFRC522')
 
 
-def rfid_write():
+def rfid_write(tag_text):
         try:
                 status = 'not suppert this platform.'
                 if not is_support_platform():
                         return False
                 status = 'support this platform'
                 from . import write
-                write.rpi_rfid_write()
+                write.rpi_rfid_write(tag_text)
                 status = 'complete write card'
         except Exception as e:
                          print("write error  %d: %s" %(e.args[0], e.args[1]))
@@ -36,7 +36,7 @@ def rfid_write():
 
 def rfid_read():
         try:
-                status = ['not suppert this platform.']
+                status = ['not support this platform.']
                 if not is_support_platform():
                         return False
                 status = ['support this platform']

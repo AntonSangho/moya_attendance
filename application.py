@@ -7,7 +7,6 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance
 
 
 
-
 application = Flask(__name__)
 application.config.from_mapping(
         SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev_key'
