@@ -47,7 +47,8 @@ def endpoint_rfid_read():
     print("rfid buzz test-----")
     if rst[0] != "not support this platform.":
         print(f"{rst[1]}, {rst[2]}")
-        
+        print(int(rst[2].strip()))
+
     return jsonify({'ps': rst})
 
 
