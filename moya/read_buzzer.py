@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os.path 
+import importlib
+
+def load_module(module_name):
+    return importlib.import_module(module_name)
+
+
 
 
 def is_support_platform():
@@ -16,8 +22,8 @@ def rfid_write():
                         return False
                 status = 'support this platform'
                 print("GPIO Cleanup")
-                import RPi.GPIO as GPIO
-                from mfrc522 import SimpleMFRC522
+                load_module('RPi.GPIO as GPIO')
+                load_module('from mfrc522 import SimpleMFRC522')
              
 
                 reader = SimpleMFRC522()
@@ -25,14 +31,13 @@ def rfid_write():
                 print("put card....")
                 reader.write(text.zfill(255, '0'))
                 print("recording card...")
-                GPIO.cleanup()
                 status = 'complete write card'
         except Exception as e:
                          print("write error  %d: %s" %(e.args[0], e.args[1]))
                          #로깅작업
                          raise
         finally:
-                        return status
+                return status
 
 def rfid_read():
         try:
