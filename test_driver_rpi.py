@@ -7,6 +7,3 @@ print(rfid_write())
 print("rfid write test-----")
 
 
-print("rpi buzz test")
-print(rfid_read())
-print("rfid buzz test-----")
