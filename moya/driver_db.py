@@ -1,12 +1,16 @@
 import pymysql
+import os;
 
 # 데이타베이스 초기화 정보
+
 def init_connect_db():
     db = pymysql.connect(
-        user='root',
-        passwd='', #beanstalk 환경변수 이용
-        db='moya', #beanstalk 환경변수 이용
-        host='localhost', #beanstalk 환경변수 이용
+        #if app.env =='development':
+    
+        user=os.getenv('DB_USER'),
+        passwd=os.getenv('DB_PASSWORD'), #beanstalk 환경변수 이용
+        db=os.getenv('DB_NAME'), #beanstalk 환경변수 이용
+        host=os.getenv('DB_HOST'), #beanstalk 환경변수 이용
         charset='utf8', #beanstalk 환경변수 이용
         cursorclass=pymysql.cursors.DictCursor
     )

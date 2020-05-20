@@ -22,6 +22,7 @@ application.debug = True
 def index(user=''):
     print(rfid_read())
     print(rfid_rpi_read())
+    print(application.env)
     return render_template('entry.html', name=user, platform=rfid_rpi_read())
     # url test1 request path /두루
     # url test2 request path /
