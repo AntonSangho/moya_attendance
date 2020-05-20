@@ -10,13 +10,13 @@ def rfid_write():
         try:
                 file = '/proc/device-tree/model'
                 status = 'result'
-                #if not os.path.exists(file) :
-                #        status = 'not suppert this platform.'
-                #        return False;
+                if not os.path.exists(file) :
+                        status = 'not suppert this platform.'
+                        return False;
 
-                with open(file, 'wb') as f:
-                        sysnm = f.readline()
-                        print(sysnm)
+                #with open(file, 'wb') as f:
+                #        sysnm = f.readline()
+                #        print(sysnm)
                         
                         import RPi.GPIO as GPIO
                         from mfrc522 import SimpleMFRC522
