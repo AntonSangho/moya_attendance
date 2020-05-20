@@ -19,7 +19,7 @@ application.debug = True
 @application.route('/entry/<user>')
 def entry(user=''):
     print(application.env)
-    return render_template('entry.html', name=user, platform=rfid_rpi_read())
+    return render_template('entry.html', name=user, platform="rpi")
     # url test1 request path /두루
     # url test2 request path /
     # if user exist turn on green led
