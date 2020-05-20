@@ -9,8 +9,8 @@ def rfid_read():
 def rfid_write():
         try:
                 file = '/proc/device-tree/model'
-                status = 'resut'
-                if not os.path.isfile(file) :
+                status = 'result'
+                if not os.path.exists(file) :
                         status = 'not suppert this platform.'
                         return False;
 
