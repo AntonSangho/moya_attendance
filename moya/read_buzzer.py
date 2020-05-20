@@ -3,7 +3,7 @@
 import os.path 
 import importlib
 from time import sleep
-import write
+
 
 def load_module(module_name):
     return importlib.import_module(module_name)
@@ -24,7 +24,7 @@ def rfid_write():
                 if not is_support_platform():
                         return False
                 status = 'support this platform'
-
+                from . import write
                 write.rpi_rfid_write()
 
                 status = 'complete write card'
