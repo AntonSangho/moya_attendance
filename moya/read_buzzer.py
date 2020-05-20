@@ -18,6 +18,8 @@ def rfid_write():
                 import RPi.GPIO as GPIO
                 from mfrc522 import SimpleMFRC522
 
+                GPIO.setwarnings(False)
+
                 reader = SimpleMFRC522()
                 text = "test1"
                 print("put card....")
@@ -62,20 +64,4 @@ def rfid_read():
                 raise
         finally:
                 return status
-        
 
-        
-
-
-                # )
-                # try:
-                #         
-                #         print(id)
-                #         print(text)
-                        
-               
-
-                # finally:
-                #         
-
-        return sysnm;
