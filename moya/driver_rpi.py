@@ -39,7 +39,7 @@ def rfid_read():
                 status = ['not suppert this platform.']
                 if not is_support_platform():
                         return False
-                
+                status = ['support this platform']
                 from . import buzz
                 from . import read
                 buzz.buzz()
