@@ -59,6 +59,7 @@
             return response.json();
         })
         .then(function(myJson) {
+            document.querySelector('#container').textContent = "rfid-read, db-recoding";
             console.log(JSON.stringify(myJson));
         });
     </script>
