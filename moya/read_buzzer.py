@@ -1,26 +1,34 @@
 #!/usr/bin/env python
 import platform
+import os.path 
 
 def rfid_read():
         return "rfid read--->"
 
 def rfid_write():
-        sysnm = platform.system()
-        if sysnm is "Linux":
-                import RPi.GPIO as GPIO
-                from mfrc522 import SimpleMFRC522
-                reader = SimpleMFRC522()
+        try:
+                file = '/proc/device-tree/model'
+                status = '결과'
+                if not os.path.isfile(file) :
+                        status = '이플랫폼은 지원하지 않습니다.'
+                        return False;
 
-                try:
+                with open(file, 'wb') as f:
+                        sysnm = f.readline()
+                        print(sysnm)
+                        
+                        import RPi.GPIO as GPIO
+                        from mfrc522 import SimpleMFRC522
+                        reader = SimpleMFRC522()
                         text = "test1"
-                        print("Now place your tag to write")
+                        print("카드 기록중....")
                         reader.write(text)
-                except Exception as e:
+                        GPIO.cleanup()
+        except Exception as e:
                          print("write error  %d: %s" %(e.args[0], e.args[1]))
                          raise
-                finally:
-                        GPIO.cleanup()
-                        return "write"
+        finally:
+                        return status
 
 def rfid_rpi_read():
         sysnm = platform.system()
