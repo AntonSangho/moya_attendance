@@ -2,18 +2,20 @@
 # -*- coding: utf-8 -*-
 import os.path 
 import importlib
+from time import sleep
 
 def load_module(module_name):
     return importlib.import_module(module_name)
-
-
-
 
 def is_support_platform():
         rpi_file = '/proc/device-tree/model'
         print(rpi_file)
         return os.path.exists(rpi_file)
-        
+
+def load_package():
+        load_module('RPi.GPIO as GPIO')
+        load_module('from mfrc522 import SimpleMFRC522')
+
 
 def rfid_write():
         try:
@@ -21,15 +23,13 @@ def rfid_write():
                 if not is_support_platform():
                         return False
                 status = 'support this platform'
-                print("GPIO Cleanup")
-                load_module('RPi.GPIO as GPIO')
-                load_module('from mfrc522 import SimpleMFRC522')
+                load_package()
              
 
                 reader = SimpleMFRC522()
                 text = "test1"
                 print("put card....")
-                reader.write(text.zfill(255, '0'))
+                reader.write(text)
                 print("recording card...")
                 status = 'complete write card'
         except Exception as e:
@@ -45,9 +45,8 @@ def rfid_read():
                 if not is_support_platform():
                         return False
                 
-                import RPi.GPIO as GPIO
-                from mfrc522 import SimpleMFRC522
-                from time import sleep
+                load_package()
+                
 
                 #GPIO 셋팅
                 GPIO.setwarnings(False)
