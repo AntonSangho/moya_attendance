@@ -20,7 +20,7 @@ application.debug = True
 @application.route('/entry/<user>')
 def entry(user=''):
     print(application.env)
-    return render_template('entry.html', name=user, platform="rpi")
+    return render_template('entry.html', msg="카드를 올려 놓으세요!", platform="rpi")
     # url test1 request path /두루
     # url test2 request path /
     # if user exist turn on green led

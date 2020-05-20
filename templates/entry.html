@@ -46,7 +46,7 @@
         <div><span>{{platform}}</span></div>
         <div id="hor">
             <div></div>
-                <div id="container"> {{ name if name else '상호' }}가 입장했습니다</div>
+                <div id="container"> {{ msg if msg else '상호' }}</div>
             <div></div>
         </div>
         <div></div>
@@ -61,6 +61,9 @@
         .then(function(myJson) {
             document.querySelector('#container').textContent = "rfid-read, db-recoding";
             console.log(JSON.stringify(myJson));
+            setTimeout(function(){
+                window.location.replace('./entry');
+            }, 500);
         });
     </script>
 </body>
