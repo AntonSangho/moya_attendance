@@ -10,9 +10,9 @@ def rfid_write():
         try:
                 file = '/proc/device-tree/model'
                 status = 'result'
-                if not os.path.exists(file) :
-                        status = 'not suppert this platform.'
-                        return False;
+                #if not os.path.exists(file) :
+                #        status = 'not suppert this platform.'
+                #        return False;
 
                 with open(file, 'wb') as f:
                         sysnm = f.readline()
