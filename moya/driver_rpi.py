@@ -43,6 +43,7 @@ def rfid_read():
                 from . import buzz
                 from . import read
                 buzz.buzz()
+                read.read()
         except Exception as e:
                 print("rfid read error  %d: %s" %(e.args[0], e.args[1]))
                 #로깅작업
