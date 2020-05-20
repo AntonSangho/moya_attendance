@@ -7,6 +7,6 @@ print(rfid_write())
 print("rfid write test-----")
 
 
-print("rfid write test")
+print("rfid read test")
 print(rfid_read())
-print("rfid write test-----")
+print("rfid read test-----")

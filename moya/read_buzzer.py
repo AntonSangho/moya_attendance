@@ -21,7 +21,7 @@ def rfid_write():
                 reader = SimpleMFRC522()
                 text = "test1"
                 print("put card....")
-                reader.write(text)
+                reader.write(text.zfill(255, '0'))
                 print("recording card...")
                 GPIO.cleanup()
                 status = 'complete write card'
