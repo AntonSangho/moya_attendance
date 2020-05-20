@@ -42,7 +42,7 @@ def rfid_read():
                 status = ['support this platform']
                 from . import read
                 from . import buzz
-                read.read()
+                status = status + read.read()
                 buzz.buzz()
         except Exception as e:
                 print("rfid read error  %d: %s" %(e.args[0], e.args[1]))
