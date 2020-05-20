@@ -14,3 +14,5 @@ def read():
     except KeyboardInterrupt:
         GPIO.cleanup()
         raise
+    finally:
+        GPIO.cleanup()
