@@ -40,9 +40,9 @@ def rfid_read():
                 if not is_support_platform():
                         return False
                 status = ['support this platform']
-                from . import buzz
+                #from . import buzz
                 from . import read
-                buzz.buzz()
+                #buzz.buzz()
                 read.read()
         except Exception as e:
                 print("rfid read error  %d: %s" %(e.args[0], e.args[1]))
