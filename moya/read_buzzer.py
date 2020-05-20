@@ -3,6 +3,7 @@
 import os.path 
 import importlib
 from time import sleep
+import write
 
 def load_module(module_name):
     return importlib.import_module(module_name)
@@ -23,14 +24,9 @@ def rfid_write():
                 if not is_support_platform():
                         return False
                 status = 'support this platform'
-                load_package()
-             
 
-                reader = SimpleMFRC522()
-                text = "test1"
-                print("put card....")
-                reader.write(text)
-                print("recording card...")
+                write.rpi_rfid_write()
+
                 status = 'complete write card'
         except Exception as e:
                          print("write error  %d: %s" %(e.args[0], e.args[1]))
