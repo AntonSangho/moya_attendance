@@ -43,9 +43,12 @@ def entry(user=''):
 @application.route('/api/v1.0/rfid', methods=['GET'])
 def endpoint_rfid_read():
     print("rpi buzz test")
-    print(rfid_read())
+    rst = rfid_read()
     print("rfid buzz test-----")
-    return jsonify({'ps': ps})
+    if rst[0] != "not support this platform.":
+        print(f"{rst[1]}, {rst[2]}")
+        
+    return jsonify({'ps': rst})
 
 
 @application.route('/exit')
