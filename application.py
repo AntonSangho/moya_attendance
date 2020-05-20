@@ -14,20 +14,6 @@ application.config.from_mapping(
 application.env = 'development'
 application.debug = True
 
-ps = [
-    {
-        'id': 1,
-        'pid': u'read rfid on rpi',
-        'description': u'rfid process...', 
-        'done': False
-    },
-    {
-        'id': 2,
-        'pid': u'read rfid on rpi',
-        'description': u'rfid process..', 
-        'done': True
-    }
-]
 
 
 @application.route('/entry')
@@ -47,7 +33,9 @@ def endpoint_rfid_read():
     print("rfid buzz test-----")
     if rst[0] != "not support this platform.":
         print(f"{rst[1]}, {rst[2]}")
-        print(int(rst[2].strip()))
+        userid = int(rst[2].strip())
+        db = init_connect_db()
+        print("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
 
     return jsonify({'ps': rst})
 
