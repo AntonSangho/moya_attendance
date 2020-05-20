@@ -18,14 +18,14 @@ def rfid_write():
                 #        sysnm = f.readline()
                 #        print(sysnm)
                         
-                        import RPi.GPIO as GPIO
-                        from mfrc522 import SimpleMFRC522
-                        reader = SimpleMFRC522()
-                        text = "test1"
-                        print("recording card....")
-                        reader.write(text)
-                        GPIO.cleanup()
-                        status = 'complete card'
+                import RPi.GPIO as GPIO
+                from mfrc522 import SimpleMFRC522
+                reader = SimpleMFRC522()
+                text = "test1"
+                print("recording card....")
+                reader.write(text)
+                GPIO.cleanup()
+                status = 'complete card'
         except Exception as e:
                          print("write error  %d: %s" %(e.args[0], e.args[1]))
                          #로깅작업
