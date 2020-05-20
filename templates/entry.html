@@ -51,5 +51,16 @@
         </div>
         <div></div>
     </div>
+    <script>
+        url = './api/v1.0/rfid'
+        
+        fetch(url)
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(myJson) {
+            console.log(JSON.stringify(myJson));
+        });
+    </script>
 </body>
 </html>

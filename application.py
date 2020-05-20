@@ -35,7 +35,7 @@ def endpoint_rfid_read():
         print(f"{rst[1]}, {rst[2]}")
         userid = int(rst[2].strip())
         db = init_connect_db()
-        print("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
+        rst.append = ("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
 
     return jsonify({'ps': rst})
 
