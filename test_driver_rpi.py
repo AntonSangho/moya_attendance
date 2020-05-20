@@ -2,8 +2,11 @@
 from moya.driver_rpi import  rfid_write, rfid_read
 
 
-print("rfid write test")
-print(rfid_write())
-print("rfid write test-----")
+# print("rfid write test")
+# print(rfid_write())
+# print("rfid write test-----")
 
 
+print("rpi buzz test")
+print(rfid_read())
+print("rfid buzz test-----")
