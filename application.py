@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from moya.driver_rpi import rfid_read, rfid_write
 
 from moya.driver_db import init_connect_db, get_attendance, set_attendance
@@ -14,6 +14,21 @@ application.config.from_mapping(
 application.env = 'development'
 application.debug = True
 
+ps = [
+    {
+        'id': 1,
+        'pid': u'read rfid on rpi',
+        'description': u'rfid process...', 
+        'done': False
+    },
+    {
+        'id': 2,
+        'pid': u'read rfid on rpi',
+        'description': u'rfid process..', 
+        'done': True
+    }
+]
+
 
 @application.route('/entry')
 @application.route('/entry/<user>')
@@ -24,11 +39,18 @@ def entry(user=''):
     # url test2 request path /
     # if user exist turn on green led
 
+
+@application.route('/api/v1.0/rfid', methods=['GET'])
+def endpoint_rfid_read():
+    print("rpi buzz test")
+    print(rfid_read())
+    print("rfid buzz test-----")
+    return jsonify({'ps': ps})
+
+
 @application.route('/exit')
 @application.route('/exit/<user>')
 def exit(user=''):
-    print(rfid_read())
-    print(rfid_rpi_read())
     print(application.env)
     return render_template('exit.html', name=user, platform=rfid_rpi_read())
 
@@ -56,13 +78,18 @@ def dbinsert(cnt):
 #activate when push button GPIO 6
 #pop up message "출입증을 태깅하세요"
 #blink red_rfid led
+
+
 @application.route('/exit')
 #activate when push button GPIO 12
 #pop up message "출입증을 태깅하세요"
 #blink red_rfid led
+
+
 @application.route('/gpio')
 def gpio():
     return render_template('main2.html')
+
 
 @application.route("/<changePin>/<action>")
 def action (changePin, action):
