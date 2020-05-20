@@ -1,9 +1,8 @@
 #-*- coding:utf-8 -*-
 import os
 from flask import Flask, render_template
-from moya.read_buzzer import rfid_read, rfid_rpi_read
+from moya.read_buzzer import rfid_read, rfid_rpi_read, rfid_write
 
-import moya.Write
 from moya.driver_db import init_connect_db, get_attendance, set_attendance
 
 
