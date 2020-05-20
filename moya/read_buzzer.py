@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import platform
 import os.path 
 
@@ -24,8 +25,10 @@ def rfid_write():
                         print("카드 기록중....")
                         reader.write(text)
                         GPIO.cleanup()
+                        status = '쓰기 완료'
         except Exception as e:
                          print("write error  %d: %s" %(e.args[0], e.args[1]))
+                         #로깅작업
                          raise
         finally:
                         return status
