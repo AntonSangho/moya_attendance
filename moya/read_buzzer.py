@@ -13,7 +13,7 @@ def is_support_platform():
 def rfid_write():
         try:
                 status = 'not suppert this platform.'
-                if not is_support_platform:
+                if not is_support_platform():
                         return False
                 
                 import RPi.GPIO as GPIO
@@ -38,7 +38,7 @@ def rfid_write():
 def rfid_read():
         try:
                 status = ['not suppert this platform.']
-                if not is_support_platform:
+                if not is_support_platform():
                         return False
                 
                 import RPi.GPIO as GPIO
