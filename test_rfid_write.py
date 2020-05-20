@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from moya.read_buzzer import  rfid_write
 
 
