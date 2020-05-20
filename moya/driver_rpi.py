@@ -26,7 +26,6 @@ def rfid_write():
                 status = 'support this platform'
                 from . import write
                 write.rpi_rfid_write()
-
                 status = 'complete write card'
         except Exception as e:
                          print("write error  %d: %s" %(e.args[0], e.args[1]))
@@ -42,6 +41,7 @@ def rfid_read():
                         return False
                 
                 from . import buzz
+                from . import read
                 buzz.buzz()
         except Exception as e:
                 print("rfid read error  %d: %s" %(e.args[0], e.args[1]))
