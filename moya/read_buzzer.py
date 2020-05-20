@@ -14,11 +14,11 @@ def rfid_write():
                 status = 'not suppert this platform.'
                 if not is_support_platform():
                         return False
+                status = 'support this platform'
                 print("GPIO Cleanup")
                 import RPi.GPIO as GPIO
                 from mfrc522 import SimpleMFRC522
-                GPIO.cleanup()
-                GPIO.setwarnings(False)
+             
 
                 reader = SimpleMFRC522()
                 text = "test1"
