@@ -9,9 +9,9 @@ def rfid_read():
 def rfid_write():
         try:
                 file = '/proc/device-tree/model'
-                status = '결과'
+                status = 'resut'
                 if not os.path.isfile(file) :
-                        status = '이플랫폼은 지원하지 않습니다.'
+                        status = 'not suppert this platform.'
                         return False;
 
                 with open(file, 'wb') as f:
@@ -22,10 +22,10 @@ def rfid_write():
                         from mfrc522 import SimpleMFRC522
                         reader = SimpleMFRC522()
                         text = "test1"
-                        print("카드 기록중....")
+                        print("recording card....")
                         reader.write(text)
                         GPIO.cleanup()
-                        status = '쓰기 완료'
+                        status = 'complete card'
         except Exception as e:
                          print("write error  %d: %s" %(e.args[0], e.args[1]))
                          #로깅작업
