@@ -5,8 +5,9 @@ import os.path
 
 
 def is_support_platform():
-        file = '/proc/device-tree/model'
-        return os.path.exists(file)
+        rpi_file = '/proc/device-tree/model'
+        print(rpi_file)
+        return os.path.exists(rpi_file)
         
 
 def rfid_write():
