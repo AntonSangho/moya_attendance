@@ -17,9 +17,9 @@ application.env = 'development'
 application.debug = True
 
 
-@application.route('/')
-@application.route('/<user>')
-def index(user=''):
+@application.route('/entry')
+@application.route('/entry/<user>')
+def entry(user=''):
     print(rfid_read())
     print(rfid_rpi_read())
     print(application.env)
@@ -27,6 +27,15 @@ def index(user=''):
     # url test1 request path /두루
     # url test2 request path /
     # if user exist turn on green led
+
+@application.route('/exit')
+@application.route('/exit/<user>')
+def exit(user=''):
+    print(rfid_read())
+    print(rfid_rpi_read())
+    print(application.env)
+    return render_template('exit.html', name=user, platform=rfid_rpi_read())
+
 
 
 @application.route('/dbtest')
