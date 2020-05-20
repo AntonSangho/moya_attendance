@@ -6,7 +6,6 @@ import os;
 def init_connect_db():
     db = pymysql.connect(
         #if app.env =='development':
-    
         user=os.getenv('DB_USER'),
         passwd=os.getenv('DB_PASSWORD'), #beanstalk 환경변수 이용
         db=os.getenv('DB_NAME'), #beanstalk 환경변수 이용
