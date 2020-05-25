@@ -50,7 +50,7 @@ def endpoint_rfid_read():
 
 
 @application.route('/api/v1.0/exit', methods=['GET'])
-def endpoint_rfid_read():
+def endpoint_rfid_read_exit():
     print("rpi buzz test")
     rst = rfid_read()
     print("rfid buzz test-----")
