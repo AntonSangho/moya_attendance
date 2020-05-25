@@ -27,7 +27,7 @@ def entry(user=''):
 
 @application.route('/exit')
 @application.route('/exit/<user>')
-def entry(user=''):
+def exis(user=''):
     print(application.env)
     return render_template('entry.html', msg="카드를 올려 놓으세요!", platform="퇴장")
     # url test1 request path /두루
