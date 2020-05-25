@@ -35,7 +35,21 @@ def exis(user=''):
     # if user exist turn on green led
 
 
-@application.route('/api/v1.0/rfid', methods=['GET'])
+@application.route('/api/v1.0/entry', methods=['GET'])
+def endpoint_rfid_read():
+    print("rpi buzz test")
+    rst = rfid_read()
+    print("rfid buzz test-----")
+    if rst[0] != "not support this platform.":
+        print(f"{rst[1]}, {rst[2]}")
+        userid = int(rst[2])
+        db = init_connect_db()
+        rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
+
+    return jsonify({'ps': rst})
+
+
+@application.route('/api/v1.0/exit', methods=['GET'])
 def endpoint_rfid_read():
     print("rpi buzz test")
     rst = rfid_read()
