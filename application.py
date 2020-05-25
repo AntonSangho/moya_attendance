@@ -15,7 +15,7 @@ application.env = 'development'
 application.debug = True
 
 @application.route('/')
-def entry(user=''):
+def index(user=''):
     print(application.env)
     return render_template('index.html', platform="뭐야")
 
