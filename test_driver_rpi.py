@@ -8,9 +8,9 @@ hash = random.getrandbits(128)
 
 #print("hash value: %032x" % hash)
 #print("rfid write test")
-#tag = input("input tag")
-#print(rfid_write(tag))
-#print("rfid write test-----")
+tag = input("input tag")
+print(rfid_write(tag))
+print("rfid write test-----")
 
 
 print("rpi buzz test")
