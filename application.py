@@ -1,7 +1,7 @@
 #-*- coding:utf-8 -*-
 import os
 from flask import Flask, render_template, jsonify
-from moya.driver_rpi import rfid_read, rfid_write
+from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit
 
@@ -47,6 +47,7 @@ def endpoint_rfid_read():
             userid = int(rst[2])
             db = init_connect_db()
             rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
+            buzzer_call()
 
     return jsonify({'ps': rst})
 
@@ -57,9 +58,11 @@ def endpoint_rfid_read_exit():
     rst = rfid_read()
     if rst[0] != "not support this platform.":
         print(f"{rst[1]}, {rst[2]}")
-        userid = int(rst[2])
-        db = init_connect_db()
-        rst.append("DB TRUE" if set_exit(db, userid) else "DB FALSE")
+        if rst[2] != None:
+            userid = int(rst[2])
+            db = init_connect_db()
+            rst.append("DB TRUE" if set_exit(db, userid) else "DB FALSE")
+            buzzer_call()
 
     return jsonify({'ps': rst})
 

@@ -3,7 +3,6 @@ import sys
 from mfrc522 import SimpleMFRC522
 import RPi.GPIO as GPIO
 reader = SimpleMFRC522()
-import signal
 
 def read():
     try:
@@ -13,9 +12,8 @@ def read():
         print("ID: %s\nText: %s" % (id,text))
         lis = [id, text]
         sleep(1)
-        continue_reading = True
     except KeyboardInterrupt:
-        GPIO.cleanup()
+        GPIO.cleanup() 
         raise
     finally:
         GPIO.cleanup()

@@ -47,7 +47,8 @@ def rfid_read():
                 #로깅작업
                 raise
         finally:
-                from . import buzz
-                buzz.buzz()
                 return status
 
+def buzzer_call():
+        from . import buzz
+        buzz.buzz()
