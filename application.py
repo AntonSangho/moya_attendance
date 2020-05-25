@@ -25,6 +25,7 @@ def entry(user=''):
     # url test2 request path /
     # if user exist turn on green led
 
+
 @application.route('/exits')
 @application.route('/exits/<user>')
 def exis(user=''):
