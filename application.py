@@ -25,8 +25,8 @@ def entry(user=''):
     # url test2 request path /
     # if user exist turn on green led
 
-@application.route('/exit')
-@application.route('/exit/<user>')
+@application.route('/exits')
+@application.route('/exits/<user>')
 def exis(user=''):
     print(application.env)
     return render_template('exits.html', msg="카드를 올려 놓으세요!", platform="퇴장")
