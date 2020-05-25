@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 app = Flask(__name__)
 
 GPIO.setmode(GPIO.BCM)
@@ -26,6 +26,7 @@ def main():
         'pins' : pins
     }
     # Pass the template data into the template main.html and return it to the user
+    
     return render_template('main2.html', **templateData)
 
 # The function below is executed when someone requests a URL with the pin number and action in it:
