@@ -41,13 +41,13 @@ def rfid_read():
                         return False
                 status = ['support this platform']
                 from . import read
-                from . import buzz
                 status = status + read.read()
-                buzz.buzz()
         except Exception as e:
                 print("rfid read error  %d: %s" %(e.args[0], e.args[1]))
                 #로깅작업
                 raise
         finally:
+                from . import buzz
+                buzz.buzz()
                 return status
 

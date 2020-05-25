@@ -52,9 +52,8 @@ def endpoint_rfid_read():
 
 @application.route('/api/v1.0/exits', methods=['GET'])
 def endpoint_rfid_read_exit():
-    print("rpi buzz test")
+    print("rpi buzz test- exit")
     rst = rfid_read()
-    print("rfid buzz test-----")
     if rst[0] != "not support this platform.":
         print(f"{rst[1]}, {rst[2]}")
         userid = int(rst[2])

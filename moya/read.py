@@ -6,6 +6,7 @@ import RPi.GPIO as GPIO
 def read():
     try:
         reader = SimpleMFRC522()
+        
         print("Hold a tag near the reader")
         id, text = reader.read()
         print("ID: %s\nText: %s" % (id,text))
