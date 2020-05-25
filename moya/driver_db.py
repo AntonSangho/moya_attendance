@@ -26,10 +26,28 @@ def get_attendance(db):
         print("db error pymysql %d: %s" %(e.args[0], e.args[1]))
 
 # rfid 태깅기록
+# 입장기록 
 def set_attendance(db, userid):
     try:
          cursor = db.cursor()
          cursor.execute(f"INSERT INTO attendance(user_id) VALUES ({userid})")
+         print("db commit successfully")
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" %(e.args[0], e.args[1]))
+        raise
+    else:
+        db.commit()
+        #db.close()
+        return 1
+
+# rfid 태깅기록
+# 퇴장기록 
+def set_exit(db, userid):
+    try:
+         cursor = db.cursor()
+         cursor.execute(f"INSERT INTO exit(user_id) VALUES ({userid})")
          print("db commit successfully")
     except pymysql.Error as e:
         db.rollback()

@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, jsonify
 from moya.driver_rpi import rfid_read, rfid_write
 
-from moya.driver_db import init_connect_db, get_attendance, set_attendance
+from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit
 
 
 
@@ -58,7 +58,7 @@ def endpoint_rfid_read_exit():
         print(f"{rst[1]}, {rst[2]}")
         userid = int(rst[2])
         db = init_connect_db()
-        rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
+        rst.append("DB TRUE" if set_exit(db, userid) else "DB FALSE")
 
     return jsonify({'ps': rst})
 
