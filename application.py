@@ -43,9 +43,10 @@ def endpoint_rfid_read():
     print("rfid buzz test-----")
     if rst[0] != "not support this platform.":
         print(f"{rst[1]}, {rst[2]}")
-        userid = int(rst[2])
-        db = init_connect_db()
-        rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
+        if rst[2] != None:
+            userid = int(rst[2])
+            db = init_connect_db()
+            rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
 
     return jsonify({'ps': rst})
 
