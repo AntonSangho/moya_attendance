@@ -29,7 +29,7 @@ def entry(user=''):
 @application.route('/exit/<user>')
 def exis(user=''):
     print(application.env)
-    return render_template('entry.html', msg="카드를 올려 놓으세요!", platform="퇴장")
+    return render_template('exits.html', msg="카드를 올려 놓으세요!", platform="퇴장")
     # url test1 request path /두루
     # url test2 request path /
     # if user exist turn on green led
@@ -63,11 +63,6 @@ def endpoint_rfid_read_exit():
     return jsonify({'ps': rst})
 
 
-@application.route('/exit')
-@application.route('/exit/<user>')
-def exit(user=''):
-    print(application.env)
-    return render_template('exit.html', name=user, platform=rfid_rpi_read())
 
 
 
