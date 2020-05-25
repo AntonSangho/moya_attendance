@@ -20,7 +20,16 @@ application.debug = True
 @application.route('/entry/<user>')
 def entry(user=''):
     print(application.env)
-    return render_template('entry.html', msg="카드를 올려 놓으세요!", platform="rpi")
+    return render_template('entry.html', msg="카드를 올려 놓으세요!", platform="입장")
+    # url test1 request path /두루
+    # url test2 request path /
+    # if user exist turn on green led
+
+@application.route('/exit')
+@application.route('/exit/<user>')
+def entry(user=''):
+    print(application.env)
+    return render_template('entry.html', msg="카드를 올려 놓으세요!", platform="입장")
     # url test1 request path /두루
     # url test2 request path /
     # if user exist turn on green led
@@ -33,7 +42,7 @@ def endpoint_rfid_read():
     print("rfid buzz test-----")
     if rst[0] != "not support this platform.":
         print(f"{rst[1]}, {rst[2]}")
-        userid = int(rst[2].strip())
+        userid, username = int(rst[2].split('^')
         db = init_connect_db()
         rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
 
