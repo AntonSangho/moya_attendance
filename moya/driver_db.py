@@ -47,7 +47,7 @@ def set_attendance(db, userid):
 def set_exit(db, userid):
     try:
          cursor = db.cursor()
-         cursor.execute(f"INSERT INTO exit(user_id) VALUES ({userid})")
+         cursor.execute(f"INSERT INTO exits(user_id) VALUES ({userid})")
          print("db commit successfully")
     except pymysql.Error as e:
         db.rollback()
