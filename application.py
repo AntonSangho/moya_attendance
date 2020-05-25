@@ -49,7 +49,7 @@ def endpoint_rfid_read():
     return jsonify({'ps': rst})
 
 
-@application.route('/api/v1.0/exit', methods=['GET'])
+@application.route('/api/v1.0/exits', methods=['GET'])
 def endpoint_rfid_read_exit():
     print("rpi buzz test")
     rst = rfid_read()
