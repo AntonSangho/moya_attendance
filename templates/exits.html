@@ -60,7 +60,7 @@
             return response.json();
         })
         .then(function(myJson) {
-            document.querySelector('#container').textContent = "퇴장 하셨습니다.rfid-read";
+            document.querySelector('#container').textContent = "퇴장 하셨습니다.rfid-read"+myJson[1];
             console.log(JSON.stringify(myJson));
             setTimeout(function(){
                 window.location.replace('./exits');
