@@ -60,9 +60,8 @@
                 return response.json();
             })
             .then(function(myJson) {
-                selectdb = myJson[0] ;
-                if(selectdb[1] != null) {
-                  document.querySelector('#container').textContent = selectdb[1]+"누구누구 입장하셨습니다";
+                if(myJson.ps[1] != null) {
+                  document.querySelector('#container').textContent = selectdb[1]+" 누구누구 입장하셨습니다";
                 }
                 console.log(JSON.stringify(myJson));
                 setTimeout(function(){
