@@ -52,7 +52,7 @@ def endpoint_rfid_read():
             db = init_connect_db()
             rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
             name = get_userinfo(db, userid)
-            rst.append(name[0].name)
+            rst.append(name[0])
             buzzer_call()
 
     return jsonify({'ps': rst})
