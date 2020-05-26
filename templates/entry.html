@@ -53,7 +53,8 @@
         <div></div>
     </div>
     <script>
-        url = './api/v1.0/entry'
+        url = './api/v1.0/entry';
+        refresh_time = 200;
         
         function fetchs(url){
             fetch(url).then(function(response) {
@@ -69,7 +70,7 @@
                 setTimeout(function(){
                     console.log('/.entry')
                     fetchs(url);
-                }, 500);
+                }, refresh_time);
             });
         }
 
