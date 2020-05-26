@@ -60,7 +60,9 @@
                 return response.json();
             })
             .then(function(myJson) {
-                document.querySelector('#container').textContent = "rfid-read, db-recoding";
+                if(myJson[2] != null) {
+                  document.querySelector('#container').textContent = myJson[2]+"누구누구 입장하셨습니다";
+                }
                 console.log(JSON.stringify(myJson));
                 setTimeout(function(){
                     console.log('/.entry')
