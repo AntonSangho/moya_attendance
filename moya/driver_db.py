@@ -25,6 +25,14 @@ def get_attendance(db):
     except pymysql.Error as e:
         print("db error pymysql %d: %s" %(e.args[0], e.args[1]))
 
+def get_userinfo(db, userid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"SELECT name FROM users WHERE id = {userid};")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" %(e.args[0], e.args[1]))
+
 # rfid 태깅기록
 # 입장기록 
 def set_attendance(db, userid):
