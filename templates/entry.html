@@ -62,7 +62,7 @@
             })
             .then(function(usercardjson) {
                 if(usercardjson.ps[1] != null) {
-                  document.querySelector('#container').textContent = usercardjson.ps[3]+" 누구누구 입장하셨습니다";
+                  document.querySelector('#container').textContent = usercardjson.ps[4].name + "님이 입장하셨습니다";
                 } else {
                     document.querySelector('#container').textContent = '카드를 올려 놓으세요!'
                 }
