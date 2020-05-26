@@ -59,11 +59,13 @@
             fetch(url).then(function(response) {
                 return response.json();
             })
-            .then(function(myJson) {
-                if(myJson.ps[1] != null) {
-                  document.querySelector('#container').textContent = selectdb[1]+" 누구누구 입장하셨습니다";
+            .then(function(usercardjson) {
+                if(usercardjson.ps[1] != null) {
+                  document.querySelector('#container').textContent = usercardjson.ps[1]+" 누구누구 입장하셨습니다";
+                } else {
+                    document.querySelector('#container').textContent = '카드를 올려 놓으세요!'
                 }
-                console.log(JSON.stringify(myJson));
+                console.log(JSON.stringify(usercardjson));
                 setTimeout(function(){
                     console.log('/.entry')
                     fetchs(url);
