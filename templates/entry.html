@@ -67,7 +67,10 @@
             })
             .then(function(usercardjson) {
                 if(usercardjson.ps[1] != null) {
-                  document.querySelector('#container').textContent = usercardjson.ps[4].name + "님이 입장하셨습니다";
+                    if(usercardjson.ps[4].name)
+                        document.querySelector('#container').textContent = usercardjson.ps[4].name + "님이 입장하셨습니다";
+                    else 
+                        document.querySelector('#container').textContent = '등록된 사용자가 아닙니다.';
                 } else {
                     document.querySelector('#container').textContent = '카드를 올려 놓으세요!'
                 }

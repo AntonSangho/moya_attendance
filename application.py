@@ -67,14 +67,12 @@ def endpoint_rfid_read():
         if rst[0] != "not support this platform.":
             db = init_connect_db()
             print(f"{rst[1]}, {rst[2]}")
-            carduuid = rst[1]
-            userid = int(rst[2])
-            name = get_userinfo(db, userid)
-            ## 등록된 카드인지 아닌지 검사 
-            # if True :
-            #     return jsonify({'ps': rst});
+            
 
             if rst[2] != None:
+                userid = int(rst[2])
+                rfid_uid = rst[1]
+                name = get_userinfo(db, userid, rfid_uid)
                 rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
                 rst.append(name[0])
                 buzzer_call()
