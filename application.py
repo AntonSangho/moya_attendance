@@ -93,6 +93,15 @@ def dbinsert(cnt):
     
     return "db insert test /db_insert_test/1000 insert test"
     
+@application.errorhandler(500)
+def internal_error(error):
+    #내부에러가 발생시 로깅 기록
+    return render_template('index.html'), 500 
+
+@application.errorhandler(404)
+def page_not_found(error):
+    #페이지를 찾을 수 없을때
+    return render_template('index.html'), 404 
 
 @application.route('/entrance')
 #activate when push button GPIO 6
