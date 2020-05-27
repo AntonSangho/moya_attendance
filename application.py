@@ -74,7 +74,7 @@ def endpoint_rfid_read():
                 rst.append(name[0])
                 buzzer_call()
     except Exception as e:
-        return str(e)
+        return jsonify({'ps': str(e)})
 
     return jsonify({'ps': rst})
 
