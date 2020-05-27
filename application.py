@@ -65,13 +65,17 @@ def endpoint_rfid_read():
         rst = rfid_read()
         print("rfid buzz test-----")
         if rst[0] != "not support this platform.":
+            db = init_connect_db()
             print(f"{rst[1]}, {rst[2]}")
+            carduuid = rst[1]
+            userid = int(rst[2])
+            name = get_userinfo(db, userid)
+            ## 등록된 카드인지 아닌지 검사 
+            if True :
+                return jsonify({'ps': rst});
+
             if rst[2] != None:
-                userid = int(rst[2])
-                ## 디비
-                db = init_connect_db()
                 rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
-                name = get_userinfo(db, userid)
                 rst.append(name[0])
                 buzzer_call()
     except Exception as e:
@@ -113,12 +117,10 @@ def dbinsert(cnt):
         success = set_attendance(db, (random.randint(0, 10)%2)) #(i%2))
     
     return "db insert test /db_insert_test/1000 insert test"
-    
-@application.errorhandler(500)
-def internal_error(e):
-    #내부에러가 발생시 로깅 기록
+
+
+def file_log(e):
     application.logger.error(e)
-    application.logger.info('internal_error', e)
     log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])
     ensure_dir_exists(log_dir)
     file_handler = RotatingFileHandler(application.config['LOGGING_LOCATION'] + application.config['LOGGING_FILENAME'],
@@ -127,31 +129,20 @@ def internal_error(e):
     file_handler.setFormatter(Formatter(application.config['LOGGING_FORMAT']))
     file_handler.setLevel(application.config['LOGGING_LEVEL'])
     application.logger.addHandler(file_handler)
-    application.logger.info("internal_error---start")
-    application.logger.info('500 error ')
     application.logger.error(e)
-    application.logger.info('internal_error', e)
-    application.logger.info("500 error----end")
+    application.logger.info('error', e)
+
+@application.errorhandler(500)
+def internal_error(error):
+    #내부에러가 발생시 로깅 기록
+    file_log(error)
     return render_template('index.html'), 500 
+
 
 @application.errorhandler(404)
 def page_not_found(error):
     #페이지를 찾을 수 없을때
-    application.logger.error(error)
-    application.logger.info('check page not found', error)
-    log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])
-
-    ensure_dir_exists(log_dir)
-    file_handler = RotatingFileHandler(application.config['LOGGING_LOCATION'] + application.config['LOGGING_FILENAME'],
-                                       maxBytes=application.config['LOGGING_MAX_BYTES'],
-                                       backupCount=application.config['LOGGING_BACKUP_COUNT'])
-    file_handler.setFormatter(Formatter(application.config['LOGGING_FORMAT']))
-    file_handler.setLevel(application.config['LOGGING_LEVEL'])
-    application.logger.addHandler(file_handler)
-    application.logger.info("page_not_found---start")
-    application.logger.info('페이지를 찾을 수 없습니다. ')
-    application.logger.error(error)
-    application.logger.info("page_not_found----end")
+    file_log(error)
     return render_template('index.html'), 404 
 
 
