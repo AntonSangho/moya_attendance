@@ -68,13 +68,15 @@ def endpoint_rfid_read():
             print(f"{rst[1]}, {rst[2]}")
             if rst[2] != None:
                 userid = int(rst[2])
+                ## 디비
                 db = init_connect_db()
                 rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
                 name = get_userinfo(db, userid)
                 rst.append(name[0])
                 buzzer_call()
     except Exception as e:
-        return jsonify({'ps': rst.append(str(e))})
+        return abort(500)
+        #return jsonify({'ps': rst.append(str(e))})
 
     return jsonify({'ps': rst})
 
