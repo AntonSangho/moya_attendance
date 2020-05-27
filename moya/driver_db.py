@@ -44,7 +44,6 @@ def set_attendance(db, userid):
         db.rollback()
         db.close()
         print("db error pymysql %d: %s" %(e.args[0], e.args[1]))
-        raise
     else:
         db.commit()
         #db.close()
