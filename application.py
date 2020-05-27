@@ -120,7 +120,6 @@ def dbinsert(cnt):
 
 
 def file_log(e):
-    application.logger.error(e)
     log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])
     ensure_dir_exists(log_dir)
     file_handler = RotatingFileHandler(application.config['LOGGING_LOCATION'] + application.config['LOGGING_FILENAME'],
@@ -132,17 +131,18 @@ def file_log(e):
     application.logger.error(e)
     application.logger.info('error', e)
 
+
 @application.errorhandler(500)
 def internal_error(error):
     #내부에러가 발생시 로깅 기록
-    file_log(error)
+    #file_log(error)
     return render_template('index.html'), 500 
 
 
 @application.errorhandler(404)
 def page_not_found(error):
     #페이지를 찾을 수 없을때
-    file_log(error)
+    #file_log(error)
     return render_template('index.html'), 404 
 
 
