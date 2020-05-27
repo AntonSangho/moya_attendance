@@ -9,9 +9,9 @@ def buzz():
         buzzer=5
         GPIO.setup(buzzer,GPIO.OUT)
         GPIO.output(buzzer,GPIO.HIGH)
-        sleep(0.5)
+        sleep(0.2)
         GPIO.output(buzzer,GPIO.LOW)
-        sleep(0.5)
+        sleep(0.2)
     except Exception as e:
         GPIO.cleanup()
         print("buzz GPIO error  %d: %s" %(e.args[0], e.args[1]))

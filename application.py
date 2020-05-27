@@ -5,7 +5,7 @@ from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo
 
-
+from flask.logging import default_handler
 
 application = Flask(__name__)
 application.config.from_mapping(
@@ -13,6 +13,7 @@ application.config.from_mapping(
     )
 application.env = 'development'
 application.debug = True
+
 
 @application.route('/')
 def index(user=''):
@@ -93,33 +94,20 @@ def dbinsert(cnt):
     
     return "db insert test /db_insert_test/1000 insert test"
     
+@application.errorhandler(500)
+def internal_error(error):
+    #내부에러가 발생시 로깅 기록
+    application.logger.error(error)
+    
+    return render_template('index.html'), 500 
 
-@application.route('/entrance')
-#activate when push button GPIO 6
-#pop up message "출입증을 태깅하세요"
-#blink red_rfid led
+@application.errorhandler(404)
+def page_not_found(error):
+    #페이지를 찾을 수 없을때
+    application.logger.error(error)
+    application.logger.info('check page not found', error)
+    return render_template('index.html'), 404 
 
-
-@application.route('/exit')
-#activate when push button GPIO 12
-#pop up message "출입증을 태깅하세요"
-#blink red_rfid led
-
-
-@application.route('/gpio')
-def gpio():
-    return render_template('main2.html')
-
-
-@application.route("/<changePin>/<action>")
-def action (changePin, action):
-    changePin = int(changePin)
-    deviceName = pins[changePin]['name']
-    templateData = {
-        'message' : 'message',
-        'pin' : 'pins'
-    }
-    return render_template('main2.html', **templateData)
 
 
 
