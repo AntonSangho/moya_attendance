@@ -28,7 +28,7 @@ def get_attendance(db):
 def get_userinfo(db, userid, rfid_uid):
     try:
         cursor = db.cursor()
-        cursor.execute(f"SELECT name FROM users WHERE id = {userid} and uid = {rfid_uid};")
+        cursor.execute(f"SELECT name FROM users WHERE id = {userid} and rfid_uid = {rfid_uid};")
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" %(e.args[0], e.args[1]))
