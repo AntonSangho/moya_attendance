@@ -71,8 +71,8 @@ def endpoint_rfid_read():
             userid = int(rst[2])
             name = get_userinfo(db, userid)
             ## 등록된 카드인지 아닌지 검사 
-            if True :
-                return jsonify({'ps': rst});
+            # if True :
+            #     return jsonify({'ps': rst});
 
             if rst[2] != None:
                 rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
