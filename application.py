@@ -1,5 +1,7 @@
 #-*- coding:utf-8 -*-
 import os
+import shutil
+
 from flask import Flask, render_template, jsonify
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 
@@ -7,12 +9,24 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
 
 from flask.logging import default_handler
 
+import logging
+from logging.handlers import RotatingFileHandler
+from logging import Formatter
+
 application = Flask(__name__)
 application.config.from_mapping(
         SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev_key'
     )
 application.env = 'development'
 application.debug = True
+
+application.config['HOME_DIR'] = './'
+application.config['LOGGING_LEVEL'] = logging.DEBUG
+application.config['LOGGING_FORMAT'] = '%(asctime)s %(levelname)s: %(message)s in %(filename)s:%(lineno)d]'
+application.config['LOGGING_LOCATION'] = 'log/'
+application.config['LOGGING_FILENAME'] = 'loging.log'
+application.config['LOGGING_MAX_BYTES'] = 100000
+application.config['LOGGING_BACKUP_COUNT'] = 1000
 
 
 @application.route('/')
@@ -75,8 +89,6 @@ def endpoint_rfid_read_exit():
 
 
 
-
-
 @application.route('/dbtest')
 def dbselect():
     db = init_connect_db()
@@ -97,8 +109,21 @@ def dbinsert(cnt):
 @application.errorhandler(500)
 def internal_error(error):
     #내부에러가 발생시 로깅 기록
-    application.logger.error(error)
-    
+    if not application.debug:
+        application.logger.error(error)
+        application.logger.info('check page not found', error)
+        log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])
+        ensure_dir_exists(log_dir)
+        file_handler = RotatingFileHandler(application.config['LOGGING_LOCATION'] + application.config['LOGGING_FILENAME'],
+                                       maxBytes=application.config['LOGGING_MAX_BYTES'],
+                                       backupCount=application.config['LOGGING_BACKUP_COUNT'])
+        file_handler.setFormatter(Formatter(application.config['LOGGING_FORMAT']))
+        file_handler.setLevel(application.config['LOGGING_LEVEL'])
+        application.logger.addHandler(file_handler)
+        application.logger.info("page_not_found---start")
+        application.logger.info('500 error ')
+        application.logger.error(error)
+        application.logger.info("500 error----end")
     return render_template('index.html'), 500 
 
 @application.errorhandler(404)
@@ -106,9 +131,28 @@ def page_not_found(error):
     #페이지를 찾을 수 없을때
     application.logger.error(error)
     application.logger.info('check page not found', error)
+    log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])
+
+    ensure_dir_exists(log_dir)
+    file_handler = RotatingFileHandler(application.config['LOGGING_LOCATION'] + application.config['LOGGING_FILENAME'],
+                                       maxBytes=application.config['LOGGING_MAX_BYTES'],
+                                       backupCount=application.config['LOGGING_BACKUP_COUNT'])
+    file_handler.setFormatter(Formatter(application.config['LOGGING_FORMAT']))
+    file_handler.setLevel(application.config['LOGGING_LEVEL'])
+    application.logger.addHandler(file_handler)
+    application.logger.info("page_not_found---start")
+    application.logger.info('페이지를 찾을 수 없습니다. ')
+    application.logger.error(error)
+    application.logger.info("page_not_found----end")
     return render_template('index.html'), 404 
 
 
+def ensure_dir_exists(dir_path, recursive=False):
+    if not os.path.isdir(dir_path):
+        if recursive:
+            os.makedirs(dir_path)
+        else:
+            os.mkdir(dir_path)
 
 
 # Run the application
