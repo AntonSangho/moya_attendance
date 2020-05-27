@@ -62,7 +62,6 @@
             fetch(url).then(function(response) {
                 debugger;
                 if(response.status > 400){
-                    document.querySelector('#container').textContent = '관리자에게 연락하세요!!!';
                     return false;
                 }
                 return response.json();
@@ -81,8 +80,7 @@
             }).catch(
                 function(error){
                     console.log('Error:', error);
-                    // document.querySelector('body').innerHTML = '<h1>관리자에게 연락하세요 2</h1>';
-                    document.querySelector('#container').textContent = '관리자에게 연락하세요. 010-2345'
+                    document.querySelector('#container').textContent = '관리자에게 연락하세요!!!'
                 }
             );
         }
