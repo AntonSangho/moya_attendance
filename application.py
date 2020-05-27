@@ -61,7 +61,6 @@ def exis(user=''):
 @application.route('/api/v1.0/entry', methods=['GET'])
 def endpoint_rfid_read():
     try:
-        abort(500)
         print("rpi buzz test")
         rst = rfid_read()
         print("rfid buzz test-----")
