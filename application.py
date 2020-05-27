@@ -32,7 +32,6 @@ application.config['LOGGING_BACKUP_COUNT'] = 1000
 @application.route('/')
 def index(user=''):
     print(application.env)
-    abort(500)
     return render_template('index.html', platform="뭐야")
 
 
@@ -61,18 +60,21 @@ def exis(user=''):
 
 @application.route('/api/v1.0/entry', methods=['GET'])
 def endpoint_rfid_read():
-    print("rpi buzz test")
-    rst = rfid_read()
-    print("rfid buzz test-----")
-    if rst[0] != "not support this platform.":
-        print(f"{rst[1]}, {rst[2]}")
-        if rst[2] != None:
-            userid = int(rst[2])
-            db = init_connect_db()
-            rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
-            name = get_userinfo(db, userid)
-            rst.append(name[0])
-            buzzer_call()
+    try:
+        print("rpi buzz test")
+        rst = rfid_read()
+        print("rfid buzz test-----")
+        if rst[0] != "not support this platform.":
+            print(f"{rst[1]}, {rst[2]}")
+            if rst[2] != None:
+                userid = int(rst[2])
+                db = init_connect_db()
+                rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
+                name = get_userinfo(db, userid)
+                rst.append(name[0])
+                buzzer_call()
+    except Exception as e:
+        return str(e)
 
     return jsonify({'ps': rst})
 
