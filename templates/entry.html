@@ -60,7 +60,6 @@
         
         function fetchs(url){
             fetch(url).then(function(response) {
-                debugger;
                 if(response.status > 400){
                     return false;
                 }
@@ -81,6 +80,10 @@
                 function(error){
                     console.log('Error:', error);
                     document.querySelector('#container').textContent = '관리자에게 연락하세요!!!'
+                    setTimeout(function(){
+                        console.log('/.entry')
+                        fetchs(url);
+                    }, 3000);
                 }
             );
         }
