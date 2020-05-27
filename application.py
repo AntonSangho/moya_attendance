@@ -2,7 +2,7 @@
 import os
 import shutil
 
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, abort
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo
@@ -32,14 +32,18 @@ application.config['LOGGING_BACKUP_COUNT'] = 1000
 @application.route('/')
 def index(user=''):
     print(application.env)
+    abort(500)
     return render_template('index.html', platform="뭐야")
 
 
 @application.route('/entry')
 @application.route('/entry/<user>')
 def entry(user=''):
-    print(application.env)
-    return render_template('entry.html', msg="카드를 올려 놓으세요!", platform="입장")
+    try:
+        print(application.env)
+        return render_template('entry.html', msg="카드를 올려 놓으세요!", platform="입장")
+    except Exception as e:
+        return str(e)
     # url test1 request path /두루
     # url test2 request path /
     # if user exist turn on green led
@@ -107,23 +111,23 @@ def dbinsert(cnt):
     return "db insert test /db_insert_test/1000 insert test"
     
 @application.errorhandler(500)
-def internal_error(error):
+def internal_error(e):
     #내부에러가 발생시 로깅 기록
-    if not application.debug:
-        application.logger.error(error)
-        application.logger.info('check page not found', error)
-        log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])
-        ensure_dir_exists(log_dir)
-        file_handler = RotatingFileHandler(application.config['LOGGING_LOCATION'] + application.config['LOGGING_FILENAME'],
-                                       maxBytes=application.config['LOGGING_MAX_BYTES'],
-                                       backupCount=application.config['LOGGING_BACKUP_COUNT'])
-        file_handler.setFormatter(Formatter(application.config['LOGGING_FORMAT']))
-        file_handler.setLevel(application.config['LOGGING_LEVEL'])
-        application.logger.addHandler(file_handler)
-        application.logger.info("page_not_found---start")
-        application.logger.info('500 error ')
-        application.logger.error(error)
-        application.logger.info("500 error----end")
+    application.logger.error(e)
+    application.logger.info('internal_error', e)
+    log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])
+    ensure_dir_exists(log_dir)
+    file_handler = RotatingFileHandler(application.config['LOGGING_LOCATION'] + application.config['LOGGING_FILENAME'],
+                                    maxBytes=application.config['LOGGING_MAX_BYTES'],
+                                    backupCount=application.config['LOGGING_BACKUP_COUNT'])
+    file_handler.setFormatter(Formatter(application.config['LOGGING_FORMAT']))
+    file_handler.setLevel(application.config['LOGGING_LEVEL'])
+    application.logger.addHandler(file_handler)
+    application.logger.info("internal_error---start")
+    application.logger.info('500 error ')
+    application.logger.error(e)
+    application.logger.info('internal_error', e)
+    application.logger.info("500 error----end")
     return render_template('index.html'), 500 
 
 @application.errorhandler(404)
