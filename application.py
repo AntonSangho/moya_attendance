@@ -119,13 +119,13 @@ def file_log(e):
 
 @application.errorhandler(500)
 def internal_error(error):
-    file_log(error)
+    #file_log(error)
     return render_template('index.html'), 500 
 
 
 @application.errorhandler(404)
 def page_not_found(error):
-    file_log(error)
+    #file_log(error)
     return render_template('index.html'), 404 
 
 
