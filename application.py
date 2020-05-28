@@ -73,11 +73,11 @@ def endpoint_rfid_read():
                 userid = int(rst[2])
                 rfid_uid = rst[1]
                 name = get_userinfo(db, userid, rfid_uid)
-                print(name)
                 rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
                 rst.append(name[0])
                 buzzer_call()
     except Exception as e:
+        print("error", e)
         return abort(500)
         #return jsonify({'ps': rst.append(str(e))})
 
