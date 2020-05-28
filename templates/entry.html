@@ -7,6 +7,7 @@
         body {
             font-family: 'Noto Sans KR', sans-serif;
             background-color: pink;
+            overflow: hidden;
         }
         #hor, #ver {
             display: grid;
@@ -40,17 +41,15 @@
             max-width: 100%;
             height: auto;
         }
-
-    
     </style>
 </head>
 <body>
     <div id="ver">
         <div><span>{{platform}}</span></div>
         <div id="hor">
-            <div></div>
+            <div id="go_index"></div>
                 <div id="container"> {{ msg if msg else '상호' }}</div>
-            <div></div>
+            <div id="go_exits"></div>
         </div>
         <div></div>
     </div>
@@ -90,6 +89,16 @@
                 }
             );
         }
+
+        document.querySelector('#go_index').addEventListener('click', function(){
+            document.location.href = './';
+            console.log('go_index');
+        });
+
+        document.querySelector('#go_exits').addEventListener('click', function(){
+            document.location.href = './exits';
+            console.log('go_exits');
+        });
 
         fetchs(url);
     </script>
