@@ -100,6 +100,14 @@
             console.log('go_entry');
         });
 
+        document.onkeypress = function(e) {
+            console.log(e)
+            if (e.key == 'h') { //h버튼을 누리면 뒤로 가기
+                document.location.href = './entry';
+                console.log('entry');
+            }
+        }
+
         fetchs(url);
     </script>
 </body>
