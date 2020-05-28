@@ -1,8 +1,21 @@
 import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
+import time
+import uinput
+
+events = (
+        uinput.KEY_H,
+        uinput.KEY_L
+        )
 
 def leftbutton_callback(channel):
+        with uinput.Device(events) as device:
+                time.sleep(1) 
+                device.emit_click(uinput.KEY_H)
         print("Left Button was pushed!")
 def rightbutton_callback(channel):
+        with uinput.Device(events) as device:
+                time.sleep(1) 
+                device.emit_click(uinput.KEY_L)
         print("Righ Button was pushed!")
 
 GPIO.setwarnings(False) # Ignore warning for now

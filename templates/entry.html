@@ -101,6 +101,13 @@
         });
 
         fetchs(url);
+
+        document.onkeypress = function(e) {
+            if (e.which == 72) {
+                document.location.href = './exits';
+                console.log('go_exits');
+            }
+        }
     </script>
 </body>
 </html>
