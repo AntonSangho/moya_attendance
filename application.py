@@ -30,32 +30,26 @@ application.config['LOGGING_BACKUP_COUNT'] = 1000
 
 
 @application.route('/')
-def index(user=''):
+def index():
     print(application.env)
     return render_template('index.html', platform="뭐야")
 
 
 @application.route('/entry')
-@application.route('/entry/<user>')
-def entry(user=''):
+def entry():
     try:
         print(application.env)
         return render_template('entry.html', msg="카드를 올려 놓으세요!", platform="입장")
     except Exception as e:
         return str(e)
-    # url test1 request path /두루
-    # url test2 request path /
-    # if user exist turn on green led
+
 
 
 @application.route('/exits')
-@application.route('/exits/<user>')
-def exis(user=''):
+def exis():
     print(application.env)
     return render_template('exits.html', msg="카드를 올려 놓으세요!", platform="퇴장")
-    # url test1 request path /두루
-    # url test2 request path /
-    # if user exist turn on green led
+
 
 
 @application.route('/api/v1.0/entry', methods=['GET'])
@@ -83,7 +77,6 @@ def endpoint_rfid_read():
     except Exception as e:
         print("error", e)
         return abort(500)
-        #return jsonify({'ps': rst.append(str(e))})
 
     return jsonify({'ps': rst})
 
@@ -104,24 +97,6 @@ def endpoint_rfid_read_exit():
 
 
 
-@application.route('/dbtest')
-def dbselect():
-    db = init_connect_db()
-    lists = get_attendance(db)
-    print(lists)
-    return "db select test"
-
-@application.route('/db_insert_test/<cnt>')
-def dbinsert(cnt):
-    import random
-    db = init_connect_db()
-    if cnt :
-       for i in range(int(cnt)):
-        success = set_attendance(db, (random.randint(0, 10)%2)) #(i%2))
-    
-    return "db insert test /db_insert_test/1000 insert test"
-
-
 def file_log(e):
     log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])
     ensure_dir_exists(log_dir)
@@ -137,15 +112,13 @@ def file_log(e):
 
 @application.errorhandler(500)
 def internal_error(error):
-    #내부에러가 발생시 로깅 기록
-    #file_log(error)
+    file_log(error)
     return render_template('index.html'), 500 
 
 
 @application.errorhandler(404)
 def page_not_found(error):
-    #페이지를 찾을 수 없을때
-    #file_log(error)
+    file_log(error)
     return render_template('index.html'), 404 
 
 
@@ -157,6 +130,5 @@ def ensure_dir_exists(dir_path, recursive=False):
             os.mkdir(dir_path)
 
 
-# Run the application
 if __name__ == "__main__":
     application.run(host="0.0.0.0")
