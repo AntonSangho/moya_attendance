@@ -60,14 +60,11 @@ def endpoint_rfid_read():
         print("rfid buzz test-----")
         if rst[0] != "not support this platform.":
             db = init_connect_db()
-            print(f"{rst[1]}, {rst[2]}")
             
-
             if rst[2] != None:
                 userid = int(rst[2])
                 rfid_uid = rst[1]
                 name = get_userinfo(db, userid, rfid_uid)
-                print(len(name))
                 rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
                 if len(name) > 0 :
                     rst.append(name[0])
@@ -83,15 +80,25 @@ def endpoint_rfid_read():
 
 @application.route('/api/v1.0/exits', methods=['GET'])
 def endpoint_rfid_read_exit():
-    print("rpi buzz test- exit")
-    rst = rfid_read()
-    if rst[0] != "not support this platform.":
-        print(f"{rst[1]}, {rst[2]}")
-        if rst[2] != None:
-            userid = int(rst[2])
+    try:
+        print("rpi buzz test- exit")
+        rst = rfid_read()
+        print("rfid buzz test-----")
+        if rst[0] != "not support this platform.":
             db = init_connect_db()
-            rst.append("DB TRUE" if set_exit(db, userid) else "DB FALSE")
-            buzzer_call()
+            if rst[2] != None:
+                userid = int(rst[2])
+                rfid_uid = rst[1]
+                name = get_userinfo(db, userid, rfid_uid)
+                rst.append("DB TRUE" if set_exit(db, userid) else "DB FALSE")
+                if len(name) > 0 :
+                    rst.append(name[0])
+                else :
+                    rst.append('누구예요?')
+                buzzer_call()
+    except Exception as e:
+        print("error", e)
+        return abort(500)
 
     return jsonify({'ps': rst})
 
