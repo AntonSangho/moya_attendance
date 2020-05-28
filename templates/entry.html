@@ -100,23 +100,13 @@
             console.log('go_exits');
         });
 
-        
-
-        document.onkeypress = function(e) {
-            console.log(e)
-            if (e.key == 'h') { //h버튼을 누리면 뒤로 가기
-                document.location.href = './entry';
-                console.log('entry');
-            }
-        }
-
         document.onkeypress = function(e) {
             console.log(e)
             if (e.key == 'l') { //h버튼을 누리면 뒤로 가기
                 document.location.href = './exits';
                 console.log('go_exits');
             }
-        }
+        };
 
         fetchs(url);
     </script>
