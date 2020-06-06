@@ -3,7 +3,7 @@
 import os.path 
 import importlib
 from time import sleep
-
+from rfid_read_exception import RfidReadException
 
 def load_module(module_name):
     return importlib.import_module(module_name)
@@ -35,19 +35,28 @@ def rfid_write(tag_text):
                 return status
 
 def rfid_read():
-        try:
-                status = ['not support this platform.']
-                if not is_support_platform():
-                        return False
-                status = ['support this platform']
-                from . import read
-                status = status + read.read()
-        except Exception as e:
-                print("rfid read error  %d: %s" %(e.args[0], e.args[1]))
-                #로깅작업
-                raise
-        finally:
-                return status
+        import queue
+        q = queue.Queue()
+        status = ['not support this platform.']
+        if not is_support_platform():
+                return False
+        status = ['support this platform']
+
+        for x in range(5):
+                try:        
+                        from . import read
+                        status = status + read.read()
+                except Exception as e:
+                        print("rfid read error  %d: %s" %(e.args[0], e.args[1]))
+                        #로깅작업
+                        q.put(e)
+                        print(f"{x} 번 읽기 시도")
+        
+        for xq in list(q.queue):
+                if type(xq) !=  RfidReadException :
+                        return xq
+        return False
+
 
 def buzzer_call():
         from . import buzz
