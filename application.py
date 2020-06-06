@@ -56,6 +56,10 @@ def exis():
 def endpoint_rfid_read():
     try:
         print("rpi buzz test")
+
+        if rfid_read() == False :
+            return abort(500, 'rfid 리더기 에러')
+            
         rst = rfid_read()
         print("rfid buzz test-----")
         if rst[0] != "not support this platform.":

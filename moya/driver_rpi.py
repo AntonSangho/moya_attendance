@@ -3,7 +3,8 @@
 import os.path 
 import importlib
 from time import sleep
-from rfid_read_exception import RfidReadException
+from . import rfid_read_exception
+
 
 def load_module(module_name):
     return importlib.import_module(module_name)
