@@ -7,7 +7,7 @@ import time
 from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 
-from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo
+from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist
 
 from flask.logging import default_handler
 
@@ -83,16 +83,30 @@ def admin():
 def userlist():
     print(application.env)
     user = {'name': '관리자'}
-    userlist = [
-        {
-            'profile': {'name': '두루'},
-            'status': '입장중'
-        },
-        {
-            'profile': {'name': '상호'},
-            'status': '퇴장하셨습니다'
+    db = init_connect_db()
+    userlist = []
+    for dbuser in get_userlist(db):
+        user = {
+            'profile': {'name':dbuser['name']},
+            'status': '입장중',
+            'is': True
         }
-    ]
+        userlist.append(user)
+
+
+    print(userlist)
+    # userlist = [
+    #     {
+    #         'profile': {'name': '두루'},
+    #         'status': '입장중',
+    #         'is': True
+    #     },
+    #     {
+    #         'profile': {'name': '상호'},
+    #         'status': '퇴장',
+    #         'is': False
+    #     }
+    # ]
     if 'reliquum' in session:
         return render_template('userlist.html', title='도서관현황판', user=user, userlist=userlist)
             
