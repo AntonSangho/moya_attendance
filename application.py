@@ -1,8 +1,10 @@
 #-*- coding:utf-8 -*-
 import os
 import shutil
+import hashlib
+import time
 
-from flask import Flask, render_template, jsonify, abort
+from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo
@@ -14,11 +16,10 @@ from logging.handlers import RotatingFileHandler
 from logging import Formatter
 
 application = Flask(__name__)
-application.config.from_mapping(
-        SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev_key'
-    )
+
 application.env = 'development'
 application.debug = True
+application.secret_key = str(time.time())+'05C18B18FBDBD041342F6D0360523720934514A9C55945E64EA9D13BF74E09E5' #sha256
 
 application.config['HOME_DIR'] = './'
 application.config['LOGGING_LEVEL'] = logging.DEBUG
@@ -43,6 +44,46 @@ def entry():
     except Exception as e:
         return str(e)
 
+@application.route('/auth', methods=['POST','GET'])
+def auth():
+    try:
+        print(application.env)
+        if request.method == "POST":
+            pp = request.form['pp']
+            
+            if(hashlib.sha256(pp.encode()).hexdigest().upper() == 'B6E01168DC7579E745D41638CBDA0D9EAEA5EE9E8DADD1DB250AFCAD9D6B29D2'):
+                session['reliquum'] = "active"
+                return redirect('./admin')
+
+            return f"""<h1> 비밀번호가 잘못되었습니다. : {pp}</h1>
+                    <form method='post' action='./auth'>
+                    <input type='password' value='' name='pp' placehold='비밀번호 입력해주세요' /> 
+                    <input type='submit' value='login' />
+                    </form>
+                    """
+        else:
+            return """<h1> 관리자 비밀번호를 입력해주세요</h1>
+                    <form method='post' action='./auth'>
+                    <input type='password' value='' name='pp' placehold='비밀번호 입력해주세요' /> 
+                    <input type='submit' value='login' />
+                    </form>"""
+    except Exception as e:
+        return str(e)
+
+@application.route('/admin')
+def admin():
+    print(application.env)
+    if 'reliquum' in session:
+        on_active = session['reliquum']
+        return '현재 상태 ' + on_active + '<br>' + "<b><a href = '/logout'>나가기</a></b>"
+    return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
+
+@application.route('/logout')
+def logout():
+    print(application.env)
+    session.pop('reliquum', None)
+    return redirect(url_for('index'))
+    
 
 
 @application.route('/exits')
@@ -58,13 +99,12 @@ def endpoint_rfid_read():
         print("rpi buzz test")
 
         if rfid_read() == False :
-            return abort(500, 'rfid 리더기 에러')
-            
+            return jsonify({'ps': 'rfid_card_reader_device_err'})
+
         rst = rfid_read()
         print("rfid buzz test-----")
         if rst[0] != "not support this platform.":
             db = init_connect_db()
-            
             if rst[2] != None:
                 userid = int(rst[2])
                 rfid_uid = rst[1]
@@ -77,7 +117,7 @@ def endpoint_rfid_read():
                 buzzer_call()
     except Exception as e:
         print("error", e)
-        return abort(500)
+        return jsonify({'ps': '500'})
 
     return jsonify({'ps': rst})
 
