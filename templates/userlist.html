@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<ul>
+    {% for user in userlist %}
+    <li>
+      사용자명 : {{ user.profile.name }} 상태 :
+      <span class="entry">{{ user.status }}</span>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+

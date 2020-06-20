@@ -19,7 +19,7 @@ application = Flask(__name__)
 
 application.env = 'development'
 application.debug = True
-application.secret_key = str(time.time())+'05C18B18FBDBD041342F6D0360523720934514A9C55945E64EA9D13BF74E09E5' #sha256
+application.secret_key = '05C18B18FBDBD041342F6D0360523720934514A9C55945E64EA9D13BF74E09E5' #sha256 str(time.time()) 10분에 한번씩 변경하도록 
 
 application.config['HOME_DIR'] = './'
 application.config['LOGGING_LEVEL'] = logging.DEBUG
@@ -73,10 +73,33 @@ def auth():
 @application.route('/admin')
 def admin():
     print(application.env)
+    user = {'name': '관리자'}
     if 'reliquum' in session:
         on_active = session['reliquum']
-        return '현재 상태 ' + on_active + '<br>' + "<b><a href = '/logout'>나가기</a></b>"
+        return render_template('admin.html', title='관리자', user=user)
     return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
+
+@application.route('/userlist')
+def userlist():
+    print(application.env)
+    user = {'name': '관리자'}
+    userlist = [
+        {
+            'profile': {'name': '두루'},
+            'status': '입장중'
+        },
+        {
+            'profile': {'name': '상호'},
+            'status': '퇴장하셨습니다'
+        }
+    ]
+    if 'reliquum' in session:
+        return render_template('userlist.html', title='도서관현황판', user=user, userlist=userlist)
+            
+    else:
+        return redirect(url_for('auth'))
+    
+
 
 @application.route('/logout')
 def logout():
