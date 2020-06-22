@@ -55,7 +55,7 @@
     </div>
     <script>
         url = './api/v1.0/entry';
-        refresh_time = 200;
+        refresh_time = 500;
         
         function fetchs(url){
             fetch(url).then(function(response) {
@@ -75,6 +75,9 @@
                     else{ 
                         document.querySelector('#container').textContent = '등록된 사용자가 아닙니다.';
                     }
+                } else if(usercardjson.ps[1] == 'rfid_card_reading....'){
+                    console.log('rfid_card_reading....');
+
                 } else {
                     document.querySelector('#container').textContent = '카드를 올려 놓으세요!'
                 }

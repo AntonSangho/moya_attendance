@@ -118,7 +118,7 @@ def exis():
     return render_template('exits.html', msg="카드를 올려 놓으세요!", platform="퇴장")
 
 
-
+blocking = False;
 @application.route('/api/v1.0/entry', methods=['GET'])
 def endpoint_rfid_read():
     try:
@@ -127,14 +127,16 @@ def endpoint_rfid_read():
         if rfid_read() == False :
             return jsonify({'ps': 'rfid_card_reader_device_err'})
 
+        ## 값이 읽히면 블로킹
+        if self::blocking :
+            return jsonify({'ps':'rfid_card_reading....'})
+
         rst = rfid_read()
-        print('####')
-        print(rst)
-        print("rfid buzz test-----")
         if rst[0] != "not support this platform.":
             db = init_connect_db()
             if rst[2] != None:
                 userid = int(rst[2])
+                self::blocking = True
                 rfid_uid = rst[1]
                 name = get_userinfo(db, userid, rfid_uid)
                 rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
