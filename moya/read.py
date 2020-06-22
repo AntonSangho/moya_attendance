@@ -1,7 +1,7 @@
 from time import sleep
 import sys
 from mfrc522 import SimpleMFRC522
-from rfid_read_exception import RfidReadException
+#from rfid_read_exception import RfidReadException
 
 import RPi.GPIO as GPIO
 reader = SimpleMFRC522()
@@ -18,7 +18,7 @@ def read():
     except Exception as e:
         GPIO.cleanup() 
         print('예외가 발생했습니다.', e)
-        raise RfidReadException()
+#        raise RfidReadException()
     finally:
         GPIO.cleanup()
         return lis

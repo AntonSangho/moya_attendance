@@ -139,6 +139,8 @@ def endpoint_rfid_read():
             return jsonify({'ps': 'rfid_card_reader_device_err'})
 
         rst = rfid_read()
+        print('####')
+        print(rst)
         print("rfid buzz test-----")
         if rst[0] != "not support this platform.":
             db = init_connect_db()
