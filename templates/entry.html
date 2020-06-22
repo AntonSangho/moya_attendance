@@ -68,6 +68,10 @@
                 if(usercardjson.ps[1] != null) {
                     if(usercardjson.ps[4].name)
                         document.querySelector('#container').textContent = usercardjson.ps[4].name + "님이 입장하셨습니다";
+                        setTimeout(function name(params) {
+                            window.location.href = './index';
+                        }, 1000);
+                        
                     else 
                         document.querySelector('#container').textContent = '등록된 사용자가 아닙니다.';
                 } else {
