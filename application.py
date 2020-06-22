@@ -87,7 +87,7 @@ def userlist():
     userlist = []
     for dbuser in get_userlist(db):
         user = {
-            'profile': {'name':dbuser['name']},
+            'profile': {'name':dbuser['name'], 'rfid': dbuser['rfid_uid']},
             'status': '입장중',
             'is': True
         }
