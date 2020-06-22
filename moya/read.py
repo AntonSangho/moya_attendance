@@ -12,7 +12,7 @@ def read():
         GPIO.cleanup()       
         print("Hold a tag near the reader")
         id, text = reader.read_no_block()
-        id, text = reader.read_block()
+        #id, text = reader.read_block()
         print("ID: %s\nText: %s" % (id,text))
         lis = [id, text]
         sleep(1)
