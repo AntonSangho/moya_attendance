@@ -40,6 +40,7 @@ def index():
 def entry():
     try:
         print(application.env)
+        global blocking = False
         return render_template('entry.html', msg="카드를 올려 놓으세요!", platform="입장")
     except Exception as e:
         return str(e)
@@ -128,7 +129,7 @@ def endpoint_rfid_read():
             return jsonify({'ps': 'rfid_card_reader_device_err'})
 
         ## 값이 읽히면 블로킹
-        if self::blocking :
+        if global blocking :
             return jsonify({'ps':'rfid_card_reading....'})
 
         rst = rfid_read()
@@ -136,7 +137,7 @@ def endpoint_rfid_read():
             db = init_connect_db()
             if rst[2] != None:
                 userid = int(rst[2])
-                self::blocking = True
+                global blocking = True
                 rfid_uid = rst[1]
                 name = get_userinfo(db, userid, rfid_uid)
                 rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
