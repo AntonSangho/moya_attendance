@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<ul>
+    {% for user in userlist %}
+    <li>
+      사용자명 : {{ user.profile.name }} / 상태 :
+        {% if user.is == true %}
+            <span class="entry">{{ user.status }}</span>
+        {% else %}
+            <span class="exit">{{ user.status }}</span>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
