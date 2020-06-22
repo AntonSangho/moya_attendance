@@ -33,7 +33,7 @@ application.config['LOGGING_BACKUP_COUNT'] = 1000
 @application.route('/')
 def index():
     print(application.env)
-    return render_template('index.html', platform="뭐야")
+    return render_template('index.html', platform="모야")
 
 
 @application.route('/entry')
