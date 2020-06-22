@@ -30,6 +30,7 @@ application.config['LOGGING_MAX_BYTES'] = 100000
 application.config['LOGGING_BACKUP_COUNT'] = 1000
 
 
+global blocking
 blocking = False
 
 @application.route('/')
@@ -42,6 +43,7 @@ def index():
 def entry():
     try:
         print(application.env)
+        global blocking
         blocking = True
         return render_template('entry.html', msg="카드를 올려 놓으세요!", platform="입장")
     except Exception as e:
@@ -130,6 +132,7 @@ def endpoint_rfid_read():
             return jsonify({'ps': 'rfid_card_reader_device_err'})
 
         ## 값이 읽히면 블로킹
+        global blocking
         if blocking :
             return jsonify({'ps':'rfid_card_reading....'})
 
