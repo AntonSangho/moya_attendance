@@ -6,10 +6,15 @@ import os;
 def init_connect_db():
     db = pymysql.connect(
         #if app.env =='development':
-        user=os.getenv('DB_USER'),
-        passwd=os.getenv('DB_PASSWORD'), #beanstalk 환경변수 이용
-        db=os.getenv('DB_NAME'), #beanstalk 환경변수 이용
-        host=os.getenv('DB_HOST'), #beanstalk 환경변수 이용
+        # user=os.getenv('DB_USER'),
+        # passwd=os.getenv('DB_PASSWORD'), #beanstalk 환경변수 이용
+        # db=os.getenv('DB_NAME'), #beanstalk 환경변수 이용
+        # host=os.getenv('DB_HOST'), #beanstalk 환경변수 이용
+        # charset='utf8', #beanstalk 환경변수 이용
+        user='righthand',
+        passwd='moya_0526', #beanstalk 환경변수 이용
+        db='moya', #beanstalk 환경변수 이용
+        host='moy.cismqc0tinee.ap-northeast-2.rds.amazonaws.com', #beanstalk 환경변수 이용
         charset='utf8', #beanstalk 환경변수 이용
         cursorclass=pymysql.cursors.DictCursor
     )

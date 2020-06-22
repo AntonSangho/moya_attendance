@@ -36,27 +36,19 @@ def rfid_write(tag_text):
                 return status
 
 def rfid_read():
-        import queue
-        q = queue.Queue()
-        status = ['not support this platform.']
-        if not is_support_platform():
-                return False
-        status = ['support this platform']
-
-        for x in range(5):
-                try:        
-                        from . import read
-                        status = status + read.read()
-                except Exception as e:
-                        print("rfid read error  %d: %s" %(e.args[0], e.args[1]))
-                        #로깅작업
-                        q.put(e)
-                        print(f"{x} 번 읽기 시도")
+        try:
+                status = ['not support this platform.']
+                if not is_support_platform():
+                        return False
+                status = ['support this platform']
+                from . import read
+                status = status + read.read()
+        except Exception as e:
+                print("rfid read error  %d: %s" %(e.args[0], e.args[1]))
+        finally:
+                return status
+       
         
-        for xq in list(q.queue):
-                if type(xq) !=  RfidReadException :
-                        return xq
-        return False
 
 
 def buzzer_call():
