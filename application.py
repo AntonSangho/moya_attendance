@@ -128,20 +128,11 @@ def endpoint_rfid_read():
     try:
         print("rpi buzz test")
 
-        if rfid_read() == False :
-            return jsonify({'ps': 'rfid_card_reader_device_err'})
-
-        ## 값이 읽히면 블로킹
-        #global blocking
-        #if blocking :
-        #    return jsonify({'ps':'rfid_card_reading....'})
-
         rst = rfid_read()
         if rst[0] != "not support this platform.":
             db = init_connect_db()
             if rst[2] != None:
                 userid = int(rst[2])
-                #blocking = True
                 rfid_uid = rst[1]
                 name = get_userinfo(db, userid, rfid_uid)
                 rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
@@ -152,7 +143,7 @@ def endpoint_rfid_read():
                 buzzer_call()
     except Exception as e:
         print("error", e)
-        return jsonify({'ps': '500'})
+        return abort(500)
 
     return jsonify({'ps': rst})
 
