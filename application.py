@@ -95,18 +95,7 @@ def userlist():
 
 
     print(userlist)
-    # userlist = [
-    #     {
-    #         'profile': {'name': '두루'},
-    #         'status': '입장중',
-    #         'is': True
-    #     },
-    #     {
-    #         'profile': {'name': '상호'},
-    #         'status': '퇴장',
-    #         'is': False
-    #     }
-    # ]
+   
     if 'reliquum' in session:
         return render_template('userlist.html', title='도서관현황판', user=user, userlist=userlist)
             
@@ -204,6 +193,7 @@ def file_log(e):
 def internal_error(error):
     #file_log(error)
     return render_template('index.html'), 500 
+
 
 
 @application.errorhandler(404)

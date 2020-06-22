@@ -1,12 +1,15 @@
 import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 from time import sleep
+import time
+import os
 
 def buzz():
     try:
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
         buzzer=5
+        os.system('omxplayer ./sound/ascend.mp3 &')
         GPIO.setup(buzzer,GPIO.OUT)
         GPIO.output(buzzer,GPIO.HIGH)
         sleep(0.2)
