@@ -5,8 +5,8 @@ import hashlib
 import time
 
 from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for
-from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 
+from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist
 
 from flask.logging import default_handler
@@ -48,6 +48,8 @@ def entry():
         return render_template('entry.html', msg="카드를 올려 놓으세요!", platform="입장")
     except Exception as e:
         return str(e)
+
+
 
 @application.route('/auth', methods=['POST','GET'])
 def auth():
@@ -190,6 +192,7 @@ def file_log(e):
 @application.errorhandler(500)
 def internal_error(error):
     #file_log(error)
+    # todo : 에러시 관리자 연락하거나 노티가게 
     return render_template('index.html'), 500 
 
 
@@ -197,6 +200,7 @@ def internal_error(error):
 @application.errorhandler(404)
 def page_not_found(error):
     #file_log(error)
+    #todo : 페이지 안내
     return render_template('index.html'), 404 
 
 

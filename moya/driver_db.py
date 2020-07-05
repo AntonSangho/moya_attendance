@@ -1,5 +1,5 @@
 import pymysql
-import os;
+import os
 
 # 데이타베이스 초기화 정보
 
