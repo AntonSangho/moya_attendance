@@ -1,122 +1,18 @@
-<!DOCTYPE html> <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>입장</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: orangered;
-            overflow: hidden;
-        }
-        #hor, #ver {
-            display: grid;
-        }
+{% extends "base_rpi.html" %}
 
-        #hor {
-            grid-template-columns: 1fr 400px 1fr;
-            /* {#border: 1px solid red;#} */
-        }
-        #hor div {
-            /* {#border: 1px darkcyan dashed;#} */
-        }
-        #ver {
-            grid-template-rows: 1fr 400px 1fr;
-            /* {#border: 1px solid red;#} */
-            height: 100vh;
-            margin-top: auto;
-        }
-        #container {
-            text-align: center;
-            line-height: 400px;
-            min-width: 400px;
-        }
+{% block title %}
+<title>입장</title>
+{% endblock %}
 
-        body {
-            min-width: 400px;
-            font-size:2rem;
-            margin:0;
-            min-width: 600px;
-            min-height: 100%;
-            max-width: 100%;
-            height: auto;
-        }
-    </style>
-</head>
-<body>
-    <div id="ver">
-        <div><span>{{platform}}</span></div>
-        <div id="hor">
-            <div id="go_index"></div>
-                <div id="container"> {{ msg if msg else '상호' }}</div>
-            <div id="go_exits"></div>
-        </div>
-        <div></div>
-    </div>
-    <script>
-        url = './api/v1.0/entry';
-        refresh_time = 500;
-        
-        function fetchs(url){
-            fetch(url).then(function(response) {
-                if(response.status > 400){
-                    return false;
-                }
-                return response.json();
-            })
-            .then(function(usercardjson) {
-                if(usercardjson.ps[1] != null) {
-                    if(usercardjson.ps[4].name){
-                        document.querySelector('#container').textContent = usercardjson.ps[4].name + "님이 입장하셨습니다";
-                        setTimeout(function name(params) {
-                            window.location.href = './index';
-                        }, 1000);
-                    }
-                    else{ 
-                        document.querySelector('#container').textContent = '등록된 사용자가 아닙니다.';
-                    }
-                } else if(usercardjson.ps[1] == 'rfid_card_reading....'){
-                    console.log('rfid_card_reading....');
+{% block background %}
+background-color: orangered;
+{% endblock %}
 
-                } else {
-                    document.querySelector('#container').textContent = '카드를 올려 놓으세요!'
-                }
-                console.log(JSON.stringify(usercardjson));
-                setTimeout(function(){
-                    console.log('/.entry')
-                    fetchs(url);
-                }, refresh_time);
-            }).catch(
-                function(error){
-                    console.log('Error:', error);
-                    document.querySelector('#container').textContent = '관리자에게 연락하세요!!!'
-                    setTimeout(function(){
-                        console.log('/.entry')
-                        fetchs(url);
-                    }, 3000);
-                }
-            );
-        }
+{% block goto %}
+<div id="go_exits"></div>
+{% endblock %}
 
-        document.querySelector('#go_index').addEventListener('click', function(){
-            document.location.href = './';
-            console.log('go_index');
-        });
+{% block textContent %}
+document.querySelector('#container').textContent = usercardjson.ps[4].name + "님이 입장하셨습니다";
+{% endblock %}
 
-        document.querySelector('#go_exits').addEventListener('click', function(){
-            document.location.href = './exits';
-            console.log('go_exits');
-        });
-
-        document.onkeypress = function(e) {
-            console.log(e)
-            if (e.key == 'l') { //h버튼을 누리면 뒤로 가기
-                document.location.href = './exits';
-                console.log('go_exits');
-            }
-        };
-
-        fetchs(url);
-    </script>
-</body>
-</html>

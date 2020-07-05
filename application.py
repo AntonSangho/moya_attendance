@@ -38,6 +38,10 @@ def index():
     print(application.env)
     return render_template('index.html', platform="")
 
+@application.route('/intro')
+def intro():
+    print(application.env)
+    return render_template('intro.html', platform="")
 
 @application.route('/entry')
 def entry():
