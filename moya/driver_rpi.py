@@ -35,6 +35,8 @@ def rfid_write(tag_text):
         finally:
                 return status
 
+
+
 def rfid_read():
         try:
                 status = ['not support this platform.']

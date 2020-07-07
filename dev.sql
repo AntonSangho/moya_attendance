@@ -12,6 +12,7 @@ userdetail 에는 user 테이블의 id 가 키로 해서 추가정보가 들어�
 
 insert into users(id, rfid_uid, name) value
 ('?', '?', '?');
+insert into users()
 
 insert into users_detail(id, sex, phone, age, memo) value
     (1, 2, 'xxx-xxxx-xxxx', 34, '모야');

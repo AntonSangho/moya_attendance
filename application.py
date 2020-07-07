@@ -7,7 +7,7 @@ import time
 from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
-from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist
+from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, set_signup
 
 from flask.logging import default_handler
 
@@ -130,11 +130,27 @@ def signup():
         memo = request.form['memo']
         ## 데이타베이스 저장하는 코드
 
+        db = init_connect_db()
+        if set_signup(db, rfid, name) :
+            return f"<h2>저장했습니다. 신규 유져 </h2>"
+        else:
+            return f"<h2>관리자한테 연락주세요</h2>"
+
         ## 이상이 없으면 alert 창 뛰우기
         return f"<h2>{age}post 입니다{rfid} </h2>"
 
-    user = {'name': '관리자'}
-    return render_template('signup.html', title='신규 회원 등록', user=user)
+    usert = {'name': '관리자'}
+    db = init_connect_db()
+    userlist = []
+    for dbuser in get_userlist(db):
+        user = {
+            'profile': {'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+            'status': '입장중',
+            'is': True
+        }
+        userlist.append(user)
+
+    return render_template('signup.html', title='신규 회원 등록', user=usert, userlist=userlist)
 
 @application.route('/exits')
 def exis():

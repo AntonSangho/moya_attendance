@@ -46,6 +46,22 @@ def get_userlist(db):
     except pymysql.Error as e:
         print("db error pymysql %d: %s" %(e.args[0], e.args[1]))
 
+def set_signup(db, rfid_uid, name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"insert into users(rfid_uid, `name`) value ('{rfid_uid}', '{name}')")
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" %(e.args[0], e.args[1]))
+        return 0
+    else:
+        db.commit()
+        db.close()
+        return 1
+
+
+
 # rfid 태깅기록
 # 입장기록 
 def set_attendance(db, userid):
