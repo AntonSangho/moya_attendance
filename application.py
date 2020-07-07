@@ -121,7 +121,20 @@ def logout():
     session.pop('reliquum', None)
     return redirect(url_for('index'))
     
+@application.route('/signup', methods=['POST','GET'])
+def signup():
+    if request.method == 'POST':
+        rfid = request.form['rfid']
+        name = request.form['name']
+        age = request.form['age']
+        memo = request.form['memo']
+        ## 데이타베이스 저장하는 코드
 
+        ## 이상이 없으면 alert 창 뛰우기
+        return f"<h2>{age}post 입니다{rfid} </h2>"
+
+    user = {'name': '관리자'}
+    return render_template('signup.html', title='신규 회원 등록', user=user)
 
 @application.route('/exits')
 def exis():

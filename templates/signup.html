@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>신규 회원 등록</h1>
+    <form action="./signup" method="post" onsubmit="validateForm()">
+            <input name="id" type="hidden"/>
+            <p><label>RFID</label><input type="textbox" name="rfid" id="rfid"  placeholder="1부터 92번호"></p>
+        <p><label>별명</label><input type="textbox" name="name" id="name" placeholder="별명"></p>
+        <p><label>나이 </label><input type="textbox"  name="age" placeholder="나이"></p>
+        <label>메모 </label><textarea value="memo" name="memo" placeholder="메모"></textarea>
+        <input type="submit" value="저장" />
+    </form>
+    <script>
+      function validateForm()
+      {
+          //debugger;
+          if (document.querySelector("#name").value == "") {
+              alert("이름값은 필수 입니다. 입력해주세에요");
+              return false;
+          }
+
+          if (document.querySelector("#rfid").value == "") {
+              alert("rfid값은 필수 입니다. 입력해주세에요");
+              document.querySelector("#rfid").focus();
+              return false;
+          }
+      }
+    </script>
+{% endblock %}
+
