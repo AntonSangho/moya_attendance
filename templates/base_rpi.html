@@ -51,14 +51,14 @@
         <div id="hor">
             <div id="go_index"></div>
                 <div id="container"> {{ msg if msg else '상호' }}</div>
-            {% block goto %}
-{#            <div id="go_exits"></div>#}
-            {% endblock %}
+            <div id="go_exits"></div>
         </div>
         <div></div>
     </div>
+    {% block script %}
+    {% endblock %}
+
     <script>
-        url = './api/v1.0/entry';
         refresh_time = 500;
 
         function fetchs(url){
@@ -88,7 +88,6 @@
                 }
                 console.log(JSON.stringify(usercardjson));
                 setTimeout(function(){
-                    console.log('/.entry')
                     fetchs(url);
                 }, refresh_time);
             }).catch(

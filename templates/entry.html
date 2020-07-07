@@ -8,11 +8,14 @@
 background-color: orangered;
 {% endblock %}
 
-{% block goto %}
-<div id="go_exits"></div>
-{% endblock %}
 
 {% block textContent %}
-document.querySelector('#container').textContent = usercardjson.ps[4].name + "님이 입장하셨습니다";
+document.querySelector('#container').textContent = usercardjson.ps[4].name + "님이 입장하셨습니다"
+{% endblock %}
+
+{% block script %}
+ <script>
+        url = './api/v1.0/entry';
+ </script>
 {% endblock %}
 
