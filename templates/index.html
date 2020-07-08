@@ -18,14 +18,14 @@
 
         #hor {
             grid-template-columns: 1fr 400px 1fr;
-            border: 1px solid red;
+            {#border: 1px solid red;#}
         }
         #hor div {
-            border: 1px darkcyan dashed;
+            {#border: 1px darkcyan dashed;#}
         }
         #ver {
             grid-template-rows: 1fr 400px 1fr;
-            border: 1px solid red;
+            {#border: 1px solid red;#}
             height: 100vh;
             margin-top: auto;
         }
@@ -51,10 +51,10 @@
             background-color: black;
             color: orangered;
             padding: 4px 6px 4px 6px;
-            border-top: 1px solid green;
-            border-right: 1px solid green;
-            border-bottom: 1px solid green;
-            border-left: 1px solid green;
+            {#border-top: 1px solid green;#}
+            {#border-right: 1px solid green;#}
+            {#border-bottom: 1px solid green;#}
+            {#border-left: 1px solid green;#}
         }
         .button_ex {
             font: bold 0.8em;
@@ -62,21 +62,10 @@
             background-color: black;
             color: blue;
             padding: 4px 6px 4px 6px;
-            border-top: 1px solid green;
-            border-right: 1px solid green;
-            border-bottom: 1px solid green;
-            border-left: 1px solid green;
-        }
-        .button_pt {
-            font: bold 0.8em;
-            text-decoration: none;
-            background-color: black;
-            color: gray;
-            padding: 4px 6px 4px 6px;
-            border-top: 1px solid green;
-            border-right: 1px solid green;
-            border-bottom: 1px solid green;
-            border-left: 1px solid green;
+            {#border-top: 1px solid green;#}
+            {#border-right: 1px solid green;#}
+            {#border-bottom: 1px solid green;#}
+            {#border-left: 1px solid green;#}
         }
 
     </style>
@@ -85,9 +74,7 @@
     <div id="ver">
         <div><span>{{platform}}</span></div>
         <div id="hor">
-            <div>
-                <a href="./entry" class="button_pt">작업일지</a>
-            </div>
+            <div></div>
                 <div id="container">  
                     <a href="./entry" class="button_en">입장버튼 </a>
                     <a href="./exits" class="button_ex">퇴장버튼 </a>
