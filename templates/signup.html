@@ -4,12 +4,18 @@
     <form action="./signup" method="post" onsubmit="validateForm()">
             <input name="id" type="hidden"/>
         <p><label>RFID</label>
-        <select name="rfid">
+            <select name="rfid">
             {% for user in userlist %}
             <option value="{{ user.profile.rfid }} ">rfid card - {{ user.profile.rfid }} </option>
             {% endfor %}
             </select>
         <p><label>별명</label><input type="textbox" name="name" id="name" placeholder="별명"></p>
+        <p><label>성별</label>
+            <select name="sex">
+                <option value="남성">남성</option>
+                <option value="여성">여성</option>
+                <option value="불특정">불특정</option>
+            </select>
         <p><label>나이 </label><input type="textbox"  name="age" placeholder="나이"></p>
         <label>메모 </label><textarea value="memo" name="memo" placeholder="메모"></textarea>
         <input type="submit" value="저장" />
