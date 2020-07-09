@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>신규 회원 등록</h1>
+<h1 xmlns="http://www.w3.org/1999/html">신규 회원 등록</h1>
     <form action="./signup" method="post" onsubmit="validateForm()">
-            <input name="id" type="hidden"/>
         <p><label>RFID</label>
-            <select name="rfid">
-            {% for user in userlist %}
-            <option value="{{ user.profile.rfid }} ">rfid card - {{ user.profile.rfid }} </option>
-            {% endfor %}
-            </select>
+            <select id="rfid">
+                {% for user in userlist %}
+                    <option value="{{ user.profile.name }}"> {{ user.profile.name }} </option>
+                {% endfor %}
+                </select>
+            </input>
+        </p>
         <p><label>별명</label><input type="textbox" name="name" id="name" placeholder="별명"></p>
         <p><label>성별</label>
             <select name="sex">
