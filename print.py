@@ -1,4 +1,9 @@
 """
+Requirement
+gcc
+cups-devel(libcups-2dev)
+python3-devel (python3 dev)
+
 Printe on demand with rasberrypi (https://www.hackster.io/glowascii/print-on-demand-with-raspi-d74619)
 GPIO pin:
 
@@ -8,17 +13,26 @@ GPIO pin:
 import RPi.GPIO as GPIO
 import time
 import os
+import cups
 
+conn = cups.Connection()
+printers = conn.getPrinters()
+printer_name = printers.keys()[0]
+file = "/home/pi/moya_attendance/image/w1.png"
+#conn.printFile(printer_name, file, "W1.png", {})
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(5, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 
 def Printtest(channel):
     print('Printing...')
+    conn.printFile(printer_name, file, "W1.png", {})
 
-    # Test printing
-    os.system("echo 'This is a test.' | lp")
 
+# Test printing
+#    os.system("echo 'This is a test.' | lp")
+#    os.system('lp /usr/share/cups/data/testprint')
+GPIO.add_event_detect(21, GPIO.RISING, callback=Printtest, bouncetime=2000)
 
 while 1:
     time.sleep(1)
