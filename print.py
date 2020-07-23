@@ -31,6 +31,7 @@ filelist = [file1, file2, file3, file4, file5]
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
+os.system('lp /usr/share/cups/data/testprint')
 
 def Printtest(channel):
     print('Printing...')
