@@ -28,6 +28,12 @@ filelist = [file1, file2, file3, file4, file5]
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
+GPIO.setwarnings(False)
+GPIO.setup(20, GPIO.OUT)
+print("LED on")
+GPIO.output(20, GPIO.HIGH)
+time.sleep(1)
+
 #os.system('lp /usr/share/cups/data/testprint')
 
 def Printtest(channel):
