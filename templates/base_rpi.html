@@ -17,10 +17,10 @@
 
         #hor {
             grid-template-columns: 1fr 400px 1fr;
-            /* {#border: 1px solid red;#} */
+            {#border: 1px solid red;#}
         }
         #hor div {
-            /* {#border: 1px darkcyan dashed;#} */
+            {#border: 1px darkcyan dashed;#}
         }
         #ver {
             grid-template-rows: 1fr 400px 1fr;
@@ -30,6 +30,11 @@
         }
         #container {
             text-align: center;
+            line-height: 400px;
+            min-width: 400px;
+        }
+        #go_index {
+            text-align: left;
             line-height: 400px;
             min-width: 400px;
         }
@@ -49,7 +54,7 @@
     <div id="ver">
         <div><span>{{platform}}</span></div>
         <div id="hor">
-            <div id="go_index"></div>
+            <div id="go_index">뒤로가기</div>
                 <div id="container"> {{ msg if msg else '상호' }}</div>
             <div id="go_exits"></div>
         </div>
