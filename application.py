@@ -47,6 +47,11 @@ def intro():
     # print(application.env)
     return render_template('intro.html', platform="")
 
+# YouTube embedded page
+@application.route('/intro-s')
+def intro2():
+    # print(application.env)
+    return render_template('intro-s.html', platform="")
 
 # 입장시 RFID카드를 인식하는 페이지
 @application.route('/entry')
