@@ -147,3 +147,7 @@ cython_debug/
 !.elasticbeanstalk/*.global.yml
 .DS_Store
 deploy.zip
+
+# pycharm deployment file
+.idea/deployment.xml
+.idea/webServers.xml
