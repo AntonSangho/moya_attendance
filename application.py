@@ -47,7 +47,7 @@ def intro():
     # print(application.env)
     return render_template('intro.html', platform="")
 
-# YouTube embedded page
+# YouTube embedded page for small library
 @application.route('/intro-s')
 def intro2():
     # print(application.env)

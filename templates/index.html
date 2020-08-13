@@ -18,14 +18,14 @@
 
         #hor {
             grid-template-columns: 1fr 400px 1fr;
-            {#border: 1px solid red;#}
+            border: 1px solid red;
         }
         #hor div {
-            {#border: 1px darkcyan dashed;#}
+            border: 1px lightcyan dashed;
         }
         #ver {
             grid-template-rows: 1fr 400px 1fr;
-            {#border: 1px solid red;#}
+            border: 1px solid yellow;
             height: 100vh;
             margin-top: auto;
         }
@@ -35,6 +35,11 @@
             min-width: 400px;
         }
 
+        #bottom {
+            text-align: right;
+            line-height: 100px;
+            min-width: 200px;
+        }
         body {
             min-width: 400px;
             font-size:3rem;
@@ -46,28 +51,49 @@
         }
 
         .button_en {
-            font: bold 0.8em;
+            {#font: bold 0.8em;#}
             text-decoration: none;
-            background-color: black;
-            color: orangered;
-            padding: 4px 6px 4px 6px;
-            {#border-top: 1px solid green;#}
-            {#border-right: 1px solid green;#}
-            {#border-bottom: 1px solid green;#}
-            {#border-left: 1px solid green;#}
+            background-color: orangered;
+            border: none;
+            color: black;
+            padding: 10px;
+            text-align: center;
+            border-top: 1px solid green;
+            border-right: 1px solid green;
+            border-bottom: 1px solid green;
+            border-left: 1px solid green;
         }
         .button_ex {
-            font: bold 0.8em;
+            {#font: bold 0.8em;#}
             text-decoration: none;
-            background-color: black;
-            color: blue;
-            padding: 4px 6px 4px 6px;
-            {#border-top: 1px solid green;#}
-            {#border-right: 1px solid green;#}
-            {#border-bottom: 1px solid green;#}
-            {#border-left: 1px solid green;#}
+            background-color: blue;
+            color: black;
+            padding: 10px;
+            text-align: center;
+            border-top: 1px solid green;
+            border-right: 1px solid green;
+            border-bottom: 1px solid green;
+            border-left: 1px solid green;
+        }
+        .button_new {
+            {#font: bold 0.8em;#}
+            text-decoration: none;
+            background-color: lightgray;
+            color: black;
+            padding: 10px;
+            text-align: center;
+            border-top: 1px solid green;
+            border-right: 1px solid green;
+            border-bottom: 1px solid green;
+            border-left: 1px solid green;
         }
 
+        .button_round {
+            border-radius: 50%;
+        }
+        .button_rect {
+            border-radius: 18px;
+        }
     </style>
 </head>
 <body>
@@ -76,12 +102,15 @@
         <div id="hor">
             <div></div>
                 <div id="container">  
-                    <a href="./entry" class="button_en">입장버튼 </a>
-                    <a href="./exits" class="button_ex">퇴장버튼 </a>
+                    <a href="./entry" class="button_en button_round">입장</a>
+                    <a href="./exits" class="button_ex button_round">퇴장</a>
                 </div>
             <div></div>
         </div>
         <div></div>
+            <div id="bottom">
+                <a href="./signup" class="button_new button_rect">신규등록</a>
+            </div>
     </div>
     <script>
          document.onkeypress = function(e) {
