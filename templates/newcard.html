@@ -1,0 +1,21 @@
+{% extends "base_rpi.html" %}
+
+{% block title %}
+<title>카드등록</title>
+{% endblock %}
+
+{% block background %}
+background-color: gray;
+{% endblock %}
+
+
+{% block textContent %}
+document.querySelector('#container').textContent = "카드번호" +  + "이 등록되었습니다."
+{% endblock %}
+
+{% block script %}
+ <script>
+        url = './api/v1.0/entry';
+ </script>
+{% endblock %}
+

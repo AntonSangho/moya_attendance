@@ -64,6 +64,15 @@ def entry():
     except Exception as e:
         return str(e)
 
+@application.route('/newcard')
+def newcard():
+    try:
+        # print(application.env)
+        # global blocking
+        # blocking = False
+        return render_template('newcard.html', msg="카드를 올려 놓으세요!", platform="카드등록")
+    except Exception as e:
+        return str(e)
 
 # 관리자 로그인 창
 @application.route('/auth', methods=['POST', 'GET'])
