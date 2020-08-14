@@ -8,7 +8,7 @@ from flask import Flask, render_template, jsonify, abort, request, redirect, ses
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
-    set_signup, is_rfid
+    set_signup, is_rfid, add_newcard
 
 from flask.logging import default_handler
 
@@ -254,9 +254,12 @@ def endpoint_rfid_read():
             db = init_connect_db()
             if rst[1] != None:
                 rfid_uid = rst[1]
-                if is_rfid(db, rfid_uid)['cnt'] == 1 :
-                     print("--------------must no input ")
+                if is_rfid(db, rfid_uid)['cnt'] == 0 :
+                    add_newcard(db, rfid_uid, '이름없음')
+                    time.sleep( 1 )
+                    
                      
+
     except Exception as e:
         print("error", e)
         return abort(500)
