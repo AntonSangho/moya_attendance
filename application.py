@@ -47,11 +47,13 @@ def intro():
     # print(application.env)
     return render_template('intro.html', platform="")
 
+
 # YouTube embedded page for small library
 @application.route('/intro-s')
 def intro2():
     # print(application.env)
     return render_template('intro-s.html', platform="")
+
 
 # 입장시 RFID카드를 인식하는 페이지
 @application.route('/entry')
@@ -64,6 +66,7 @@ def entry():
     except Exception as e:
         return str(e)
 
+
 @application.route('/newcard')
 def newcard():
     try:
@@ -73,6 +76,7 @@ def newcard():
         return render_template('newcard.html', msg="카드를 올려 놓으세요!", platform="카드등록")
     except Exception as e:
         return str(e)
+
 
 # 관리자 로그인 창
 @application.route('/auth', methods=['POST', 'GET'])
@@ -214,7 +218,8 @@ def endpoint_rfid_read_exit():
 
 # 입장시 RFID카드와 DB 대조작업
 @application.route('/api/v1.0/entry', methods=['GET'])
-def endpoint_rfid_read():
+# def endpoint_rfid_read():
+def endpoint_rfid_read_entry():
     try:
         print("rpi buzz test")
 
@@ -236,6 +241,12 @@ def endpoint_rfid_read():
         return abort(500)
 
     return jsonify({'ps': rst})
+
+
+# 새로운 카드등록시 RFID카드와 DB 대조작업
+@application.route('/api/v1.0/newcard', methods=['GET'])
+def endpoint_rfid_read():
+
 
 
 def file_log(e):
