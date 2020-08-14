@@ -257,8 +257,6 @@ def endpoint_rfid_read():
                 print(rfid_uid)
                 print(is_rfid(db, rfid_uid))
 
-
->>>>>>> 87af418e8f2c807b0b4ed388375da31f04ec60ef
     except Exception as e:
         print("error", e)
         return abort(500)
