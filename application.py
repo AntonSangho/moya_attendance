@@ -245,7 +245,7 @@ def endpoint_rfid_read_entry():
 
 # 새로운 카드등록시 RFID카드와 DB 대조작업
 @application.route('/api/v1.0/newcard', methods=['GET'])
-def endpoint_rfid_read():
+# def endpoint_rfid_read():
 
 
 
