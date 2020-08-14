@@ -40,6 +40,14 @@ def get_userinfo(db, userid, rfid_uid):
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
+def is_rfid(db, rfid_uid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"select count(*) from users where rfid_uid = {rfid_uid};")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
 
 def get_userlist(db):
     try:
