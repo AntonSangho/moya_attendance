@@ -245,7 +245,20 @@ def endpoint_rfid_read_entry():
 
 # 새로운 카드등록시 RFID카드와 DB 대조작업
 @application.route('/api/v1.0/newcard', methods=['GET'])
-# def endpoint_rfid_read():
+def endpoint_rfid_read():
+    try:
+        print("rpi buzz")
+
+        rst = rfid_read()
+        if rst[0] != "not support the platform.":
+            db = init_connect_db()
+            if rst[1] != None:
+                rfid_uid = rst[1]
+    except Exception as e:
+        print("error", e)
+        return abort(500)
+    return jsonify({'ps': rfid_uid})
+
 
 
 

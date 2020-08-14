@@ -101,10 +101,10 @@ def set_exit(db, userid):
 
 
 # rfid 카드등록
-def add_newcard(db, rfid_uid):
+def add_newcard(db, rfid_uid, name):
     try:
         cursor = db.cursor()
-        cursor.execute(f"insert into users(rfid_uid) value ('{rfid_uid}'")
+        cursor.execute(f"insert into users(rfid_uid, name) values ('{rfid_uid}','{name}'")
     except pymysql.Error as e:
         db.rollback()
         db.close()
