@@ -248,15 +248,15 @@ def endpoint_rfid_read_entry():
 def endpoint_rfid_read():
     try:
         print("rpi buzz")
-        rfid_uid=""
+
         rst = rfid_read()
         if rst[0] != "not support the platform.":
             db = init_connect_db()
             if rst[1] != None:
                 rfid_uid = rst[1]
-                print(rfid_uid)
-                print(is_rfid(db, rfid_uid))
-
+                if is_rfid(db, rfid_uid)['cnt'] = 1 :
+                     print("--------------must no input ")
+                     
     except Exception as e:
         print("error", e)
         return abort(500)
