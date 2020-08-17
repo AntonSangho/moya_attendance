@@ -65,7 +65,6 @@
 
     <script>
         refresh_time = 500;
-        debugger;
         fetch(url).then(function(response) {
             if(response.status > 400){
                 return false;
@@ -86,7 +85,7 @@
                 } else if (usercardjson.ps[1] == 'rfid_card_reading....') {
                     console.log('rfid_card_reading....');
 
-                } else if (usercardjson.ps == ""){
+                } else if (typeof(usercardjson.ps) == "number"){
                     {% block textContentNewcard %}
                     {%  endblock %}
                     }else {
