@@ -227,10 +227,14 @@ def endpoint_rfid_read_entry():
         if rst[0] != "not support this platform.":
             db = init_connect_db()
             if rst[2] != None:
+                print("*****************1")
                 userid = int(rst[2])
                 rfid_uid = rst[1]
+                print("*****************2")
                 name = get_userinfo(db, userid, rfid_uid)
                 rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
+
+                print("*****************3")
                 if len(name) > 0:
                     rst.append(name[0])
                 else:
