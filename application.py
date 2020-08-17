@@ -262,7 +262,7 @@ def endpoint_rfid_read():
                     # 이미카드가 있는 경우
                     rfid_uid = 00000
 
-                print(get_rfid(db, rfid_uid)['id'])
+                print(get_rfid(db, rfid_uid))
 
     except Exception as e:
         print("error", e)
