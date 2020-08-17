@@ -258,12 +258,11 @@ def endpoint_rfid_read():
                     add_newcard(db, rfid_uid, '이름없음')
                     time.sleep(1)
                     # DB에 접속해서 배정된 카드번호 표시
-                    rfid_uid = get_rfid(db,rfid_uid)
                 else:
                     # 이미카드가 있는 경우
                     rfid_uid = 00000
 
-
+                print(get_rfid(db, rfid_uid)['id'])
 
     except Exception as e:
         print("error", e)
