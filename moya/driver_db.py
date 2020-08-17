@@ -53,7 +53,7 @@ def is_rfid(db, rfid_uid):
 def get_rfid(db, rfid_uid):
     try:
         cursor = db.cursor()
-        print("**************" + rfid_uid)
+        print("**************" + str(rfid_uid))
         cursor.execute(f"select id from users where rfid_uid = {rfid_uid};")
         return cursor.fetchone()
     except pymysql.Error as e:
