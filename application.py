@@ -267,7 +267,8 @@ def endpoint_rfid_read():
                 else:
                     uid = get_rfid(db, rfid_uid)['id']
                     # 이미카드가 있는 경우
-                    rfid_write(uid)
+                    rfid_write(str(uid))
+                    print("uid write %d", uid)
                     rfid_uid = 00000
 
 
