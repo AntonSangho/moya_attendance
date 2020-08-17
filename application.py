@@ -228,7 +228,7 @@ def endpoint_rfid_read_entry():
             db = init_connect_db()
             if rst[2] != None:
                 print("*****************1")
-                userid = int(rst[2])
+                userid = rst[2]
                 rfid_uid = rst[1]
                 print("*****************2")
                 name = get_userinfo(db, userid, rfid_uid)
