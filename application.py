@@ -239,7 +239,7 @@ def endpoint_rfid_read_entry():
                     rst.append(name[0])
                 else:
                     rst.append('누구예요?')
-                #buzzer_call()
+                buzzer_call()
     except Exception as e:
         print("error", e)
         return abort(500)
@@ -267,6 +267,7 @@ def endpoint_rfid_read():
                 else:
                     uid = get_rfid(db, rfid_uid)['id']
                     # 이미카드가 있는 경우
+                    rfid_write(uid)
                     rfid_uid = 00000
 
 
