@@ -249,13 +249,14 @@ def endpoint_rfid_read():
     try:
         print("rpi buzz")
         rfid_uid = ""
+        uid = 0
         rst = rfid_read()
         if rst[0] != "not support the platform.":
             db = init_connect_db()
             if rst[1] != None:
                 rfid_uid = rst[1]
                 print("----")
-                print(get_rfid(db, rfid_uid))
+                uid = get_rfid(db, rfid_uid)['id']
                 if is_rfid(db, rfid_uid)['cnt'] == 0:
                     add_newcard(db, rfid_uid, '이름없음')
                     time.sleep(1)
@@ -265,10 +266,11 @@ def endpoint_rfid_read():
                     rfid_uid = 00000
 
 
+
     except Exception as e:
         print("error", e)
         return abort(500)
-    return jsonify({'ps': rfid_uid})
+    return jsonify({'ps': rfid_uid, 'uid': uid})
 
 
 def file_log(e):

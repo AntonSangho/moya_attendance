@@ -88,7 +88,7 @@
 
                     } else if (typeof (usercardjson.ps) == "number") {
                         if(usercardjson.ps === 0)
-                            document.querySelector('#container').textContent = "이미 등록된 카드입니다."
+                            document.querySelector('#container').textContent = usercardjson.uid + " 사용자 , 이미 등록된 카드입니다."
                         else {
                             {% block textContentNewcard %}
                             {%  endblock %}
