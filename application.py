@@ -254,6 +254,8 @@ def endpoint_rfid_read():
             db = init_connect_db()
             if rst[1] != None:
                 rfid_uid = rst[1]
+                print("----")
+                print(get_rfid(db, rfid_uid))
                 if is_rfid(db, rfid_uid)['cnt'] == 0:
                     add_newcard(db, rfid_uid, '이름없음')
                     time.sleep(1)
@@ -262,8 +264,6 @@ def endpoint_rfid_read():
                     # 이미카드가 있는 경우
                     rfid_uid = 00000
 
-                print("----")
-                print(get_rfid(db, rfid_uid))
 
     except Exception as e:
         print("error", e)
