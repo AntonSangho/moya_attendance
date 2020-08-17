@@ -88,7 +88,7 @@
                         console.log('rfid_card_reading....');
 
                     } else if (typeof (usercardjson.ps) == "number") {
-                        if(usercardjson.ps === 000000)
+                        if(usercardjson.ps === 0)
                             document.querySelector('#container').textContent = "새로운 카드가 등록되었습니다."
                         else {
                             {% block textContentNewcard %}
