@@ -239,7 +239,6 @@ def endpoint_rfid_read_entry():
                     rst.append(name[0])
                 else:
                     rst.append('누구예요?')
-                buzzer_call()
     except Exception as e:
         print("error", e)
         return abort(500)
@@ -270,8 +269,6 @@ def endpoint_rfid_read():
                     rfid_write(str(uid))
                     print("uid write %d", uid)
                     rfid_uid = 00000
-
-
 
     except Exception as e:
         print("error", e)
