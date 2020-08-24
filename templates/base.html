@@ -3,6 +3,12 @@
     {% if title %}
     <title>{{ title }} - User List</title>
     {% endif %}
+    <link rel="stylesheet" type="text/css" href="/static/semantic/semantic.css">
+    <script
+          src="https://code.jquery.com/jquery-3.1.1.min.js"
+          integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+          crossorigin="anonymous"></script>
+    <script src="/static/semantic/semantic.js"></script>
     <style>
       span.entry {
         color: green;
@@ -13,6 +19,9 @@
     </style>
   </head>
   <body>
+    <button class="ui button">
+        Follow
+    </button>
     <span>로그인 : {{ user.name }}</span> <a href="./logout">나가기</a>
     <h1 id="clock" style="color: gray;">00:00</h1>
     <hr />

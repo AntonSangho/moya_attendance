@@ -16,7 +16,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from logging import Formatter
 
-application = Flask(__name__)
+application = Flask(__name__, static_folder="static")
 
 application.env = 'development'
 application.debug = True
