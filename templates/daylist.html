@@ -18,10 +18,13 @@
  <table class="ui celled table">
   <thead>
     <tr>
-        <th>Name</th>
-        <th>Age</th>
-        <th>Job</th>
+        <th>RFID No.</th>
+        <th>이름</th>
         <th>성별</th>
+        <th>나이</th>
+        <th>출입한 시간</th>
+        <th>퇴장한 시간</th>
+        <th>입퇴장 상태</th>
     </tr>
   </thead>
   <tbody>
@@ -42,5 +45,15 @@
     </tr>
   </tbody>
 </table>
+<form class="ui form">
+    <div class="inline field">
+        <label>작은손조회</label>
+        <input type="text" name="name" placeholder="이름입력">
+        <button class="ui inline button" type="search">검색</button>
+    </div>
+    <div class="field"></div>
+    <button class="ui button" type="signup">작은손 신규등록</button>
+    <button class="ui right floated button" type="Downlaod">액셀파일 다운로드</button>
+</form>
 </body>
 </html>
