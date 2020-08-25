@@ -32,11 +32,20 @@ def get_attendance(db):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
+def get_dayattendance(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute("SELECT userid FROM stat_attendance")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+
 def get_userinfo(db, userid, rfid_uid):
     try:
         cursor = db.cursor()
         print("$$$$$$$$")
-        print(userid,rfid_uid)
+        print(userid, rfid_uid)
         cursor.execute(f"SELECT name FROM users WHERE id = {userid} and rfid_uid = {rfid_uid};")
         return cursor.fetchall()
     except pymysql.Error as e:

@@ -142,6 +142,13 @@ def userlist():
         return redirect(url_for('auth'))
 
 
+# 특정 날짜의 사용자를 확인하는 페이지
+@application.route('/daylist')
+def daylist():
+    # print(application.env)
+    return render_template('daylist.html', platform="")
+
+
 # 관리자 로그아웃시 index로 이동하는 페이지
 @application.route('/logout')
 def logout():
