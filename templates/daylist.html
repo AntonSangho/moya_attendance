@@ -9,12 +9,18 @@
 </head>
 <body>
  <h1 class="ui header">오늘의 입장 상황표</h1>
+ <ul>
+     {% for user in userlist %}
+     <li>사용자명 : {{ user.profile.name }} / card_id : {{ user.profile.rfid }}</li>
+     {% endfor %}
+ </ul>
  <div class="ui calendar" id="standard_calendar">
   <div class="ui input left icon">
     <i class="calendar icon"></i>
     <input type="text" placeholder="Date/Time">
   </div>
 </div>
+
  <table class="ui celled table">
   <thead>
     <tr>
@@ -46,7 +52,7 @@
   </tbody>
 </table>
 <form class="ui form">
-    <div class="inline field">
+    <div classans="inline field">
         <label>작은손조회</label>
         <input type="text" name="name" placeholder="이름입력">
         <button class="ui inline button" type="search">검색</button>

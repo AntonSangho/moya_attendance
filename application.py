@@ -8,7 +8,7 @@ from flask import Flask, render_template, jsonify, abort, request, redirect, ses
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
-    set_signup, is_rfid, add_newcard, get_rfid
+    set_signup, is_rfid, add_newcard, get_rfid, get_dayattendance
 
 from flask.logging import default_handler
 
@@ -146,7 +146,17 @@ def userlist():
 @application.route('/daylist')
 def daylist():
     # print(application.env)
-    return render_template('daylist.html', platform="")
+    user = {'name':'관리자'}
+    db = init_connect_db()
+    userlist = []
+    # for dbuser in get_dayattendance(db):
+    for dbuser in get_userlist(db):
+        user = {
+            # 'profile': {'userid': dbuser['userid']}
+            'profile': {'name': dbuser['name'], 'rfid': dbuser['rfid_uid']}
+        }
+        userlist.append(user)
+    return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
 
 
 # 관리자 로그아웃시 index로 이동하는 페이지
