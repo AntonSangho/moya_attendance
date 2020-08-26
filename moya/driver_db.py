@@ -32,11 +32,17 @@ def get_attendance(db):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
-def get_dayattendance(db):
+def get_dayattendance(db, filter_date):
     try:
         cursor = db.cursor()
+        print(filter_date)
+
         cursor.execute(
-            "SELECT userid FROM stat_attentance"
+            f""" 
+    select a.id, a.name , b.* from users a left join (select substr(entry_time, 1, 10) as ent, userid, max(entry_time) as entry, max(exit_time) as exits, max(used_time) as used
+ from stat_attentance group by userid, substr(entry_time, 1, 10) order by substr(entry_time, 1, 10) desc, userid asc) b  
+  on a.id = b.userid """
+# where b.ent ='{filter_date}'"""
         )
         # cursor.execute(
         #     f'SELECT userid, substr(entry_time, 1, 10), max(used_time) '

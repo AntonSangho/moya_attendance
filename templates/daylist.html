@@ -12,7 +12,7 @@
  <ul>
      {% for user in userlist %}
 {#     <li>사용자명 : {{ user.profile.userid }} / 출입시간 : {{ user.profile.entry }}/ 퇴장시간 : {{ user.profile.exit }}</li>#}
-     <li>사용자명 : {{ user.profile.userid }} </li>
+     <li>사용자명 : {{ user.profile.userid }} / 출입시간: {{ user.profile.entry }} / 사용한시간: {{ user.profile.usedtime }}</li>
      {% endfor %}
  </ul>
  <div class="ui calendar" id="standard_calendar">
