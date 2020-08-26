@@ -151,3 +151,6 @@ deploy.zip
 # pycharm deployment file
 .idea/deployment.xml
 .idea/webServers.xml
+
+# Semantic UI file
+static/semantic/
