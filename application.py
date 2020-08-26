@@ -152,7 +152,8 @@ def daylist():
     for dbuser in get_dayattendance(db):
         user = {
             # 'profile': {'userid': dbuser['userid']}
-            'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
+            # 'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
+            'profile': {'userid': dbuser['userid']}
         }
         userlist.append(user)
         print(user)

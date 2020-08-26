@@ -36,7 +36,7 @@ def get_dayattendance(db):
     try:
         cursor = db.cursor()
         cursor.execute(
-            "SELECT userid, entry_time, exit_time FROM stat_attentance "
+            "SELECT userid FROM stat_attentance"
         )
         # cursor.execute(
         #     f'SELECT userid, substr(entry_time, 1, 10), max(used_time) '
