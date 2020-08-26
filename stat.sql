@@ -47,5 +47,5 @@ select substr(clock_in, 1, 10) from attendance b;
 
 --
 select  userid, substr(entry_time, 1, 10), max(used_time) from stat_attentance
-where  substr(entry_time, 1, 10) = '2020-08-04' -- 이것만 바꿔치기 하시면 됨
+where  substr(entry_time, 1, 10) = '2020-08-21' -- 이것만 바꿔치기 하시면 됨
 group by  userid, substr(entry_time, 1, 10);

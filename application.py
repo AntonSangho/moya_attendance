@@ -146,16 +146,16 @@ def userlist():
 @application.route('/daylist')
 def daylist():
     # print(application.env)
-    user = {'name':'관리자'}
+    user = {'name': '관리자'}
     db = init_connect_db()
     userlist = []
-    # for dbuser in get_dayattendance(db):
-    for dbuser in get_userlist(db):
+    for dbuser in get_dayattendance(db):
         user = {
             # 'profile': {'userid': dbuser['userid']}
-            'profile': {'name': dbuser['name'], 'rfid': dbuser['rfid_uid']}
+            'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
         }
         userlist.append(user)
+        print(user)
     return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
 
 

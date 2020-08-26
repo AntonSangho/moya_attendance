@@ -11,7 +11,7 @@
  <h1 class="ui header">오늘의 입장 상황표</h1>
  <ul>
      {% for user in userlist %}
-     <li>사용자명 : {{ user.profile.name }} / card_id : {{ user.profile.rfid }}</li>
+     <li>사용자명 : {{ user.profile.userid }} / 출입시간 : {{ user.profile.entry }}/ 퇴장시간 : {{ user.profile.exit }}</li>
      {% endfor %}
  </ul>
  <div class="ui calendar" id="standard_calendar">

@@ -35,7 +35,14 @@ def get_attendance(db):
 def get_dayattendance(db):
     try:
         cursor = db.cursor()
-        cursor.execute("SELECT userid FROM stat_attendance")
+        cursor.execute(
+            "SELECT userid, entry_time, exit_time FROM stat_attentance "
+        )
+        # cursor.execute(
+        #     f'SELECT userid, substr(entry_time, 1, 10), max(used_time) '
+        #     f'from stat_attentance '
+        #     f'WHERE substr(entry_time, 1, 10) = \'2020-08-21\' '
+        #     f'group by userid, substr(entry_time, 1, 10);')
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))

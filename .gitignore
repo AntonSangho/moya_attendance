@@ -154,3 +154,6 @@ deploy.zip
 
 # Semantic UI file
 static/semantic/
+
+#sql for test
+stat.sql
