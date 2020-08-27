@@ -159,7 +159,7 @@ def daylist():
     db = init_connect_db()
     userlist = []
     # print(get_dayattendance(db, '2020-08-01'))
-    for dbuser in get_dayattendance(db, '2020-08-04'):
+    for dbuser in get_dayattendance(db, '2020-08-18'):
         user = {
             # 'profile': {'userid': dbuser['userid']}
             # 'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
