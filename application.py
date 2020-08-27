@@ -150,15 +150,16 @@ def daylist():
     db = init_connect_db()
     userlist = []
     print(get_dayattendance(db, '2020-08-01'))
-    #for dbuser in get_dayattendance(db, '2020-08-01'):
-    #    user = {
+    for dbuser in get_dayattendance(db, '2020-08-04'):
+        user = {
             # 'profile': {'userid': dbuser['userid']}
             # 'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
-    #        'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'], 'exits': dbuser['exits'] ,'used': dbuser['used']}
-    #    }
-    #    userlist.append(user)
-    #    print(user)
-    return "" #render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
+            'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                        'exits': dbuser['exits'], 'used': dbuser['used']}
+        }
+        userlist.append(user)
+        print(user)
+    return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
 
 
 # 관리자 로그아웃시 index로 이동하는 페이지
