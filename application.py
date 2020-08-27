@@ -143,13 +143,22 @@ def userlist():
 
 
 # 특정 날짜의 사용자를 확인하는 페이지
-@application.route('/daylist')
+@application.route('/daylist', methods=['GET', 'POST'])
 def daylist():
+    if request.method == 'GET':
+        year = request.args.get('year')
+        month = request.args.get('month')
+        day = request.args.get('day')
     # print(application.env)
+    # filter_date=[]
+    # filter_date.append(year)
+    # filter_date.append(month)
+    # filter_date.append(day)
+
     user = {'name': '관리자'}
     db = init_connect_db()
     userlist = []
-    print(get_dayattendance(db, '2020-08-01'))
+    # print(get_dayattendance(db, '2020-08-01'))
     for dbuser in get_dayattendance(db, '2020-08-04'):
         user = {
             # 'profile': {'userid': dbuser['userid']}

@@ -15,10 +15,17 @@
      <li>카드번호 : {{ user.profile.userid }} / 이름 : {{ user.profile.name }} / 출입시간: {{ user.profile.entry }} / 퇴장한시간 : {{ user.profile.exits }}사용한시간: {{ user.profile.used }}</li>
      {% endfor %}
  </ul>
- <p><label>year</label><input type="textbox" name="year" id="year" placeholder="ex)2020"></p>
- <p><label>month</label><input type="textbox" name="month" id="month" placeholder="ex)08"></p>
- <p><label>day</label><input type="textbox" name="day" id="day" placeholder="ex)14"></p>
- <input type="submit" value="보기">
+ <form action="./daylist.html" method="get">
+     <div class="input text">
+         <p><label>year</label><input type="textbox" name="year" id="year" placeholder="ex)2020"></p>
+         <p><label>month</label><input type="textbox" name="month" id="month" placeholder="ex)08"></p>
+         <p><label>day</label><input type="textbox" name="day" id="day" placeholder="ex)14"></p>
+     </div>
+     <div class="input submit">
+         <input type="submit" value="Submit">
+     </div>
+
+ </form>
  <table class="ui celled table">
   <thead>
     <tr>
@@ -60,4 +67,5 @@
     <button class="ui right floated button" type="Downlaod">액셀파일 다운로드</button>
 </form>
 </body>
+
 </html>
