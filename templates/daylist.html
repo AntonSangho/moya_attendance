@@ -15,13 +15,10 @@
      <li>카드번호 : {{ user.profile.userid }} / 이름 : {{ user.profile.name }} / 출입시간: {{ user.profile.entry }} / 퇴장한시간 : {{ user.profile.exits }}사용한시간: {{ user.profile.used }}</li>
      {% endfor %}
  </ul>
- <div class="ui calendar" id="standard_calendar">
-  <div class="ui input left icon">
-    <i class="calendar icon"></i>
-    <input type="text" placeholder="Date/Time">
-  </div>
-</div>
-
+ <p><label>year</label><input type="textbox" name="year" id="year" placeholder="ex)2020"></p>
+ <p><label>month</label><input type="textbox" name="month" id="month" placeholder="ex)08"></p>
+ <p><label>day</label><input type="textbox" name="day" id="day" placeholder="ex)14"></p>
+ <input type="submit" value="보기">
  <table class="ui celled table">
   <thead>
     <tr>
