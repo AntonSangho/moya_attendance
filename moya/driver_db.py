@@ -39,10 +39,9 @@ def get_dayattendance(db, filter_date):
 
         cursor.execute(
             f""" 
-    select a.id, a.name , b.* from users a left join (select substr(entry_time, 1, 10) as ent, userid, max(entry_time) as entry, max(exit_time) as exits, max(used_time) as used
- from stat_attendance group by userid, substr(entry_time, 1, 10) order by substr(entry_time, 1, 10) desc, userid asc) b  
-  on a.id = b.userid 
- where b.ent ='{filter_date}'"""
+            SELECT a.id, a.name , b.* FROM users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
+            FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid 
+            where b.ent ='{filter_date}'"""
         )
         # cursor.execute(
         #     f'SELECT userid, substr(entry_time, 1, 10), max(used_time) '

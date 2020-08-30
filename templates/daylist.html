@@ -8,7 +8,7 @@
     <script src="/static/semantic/semantic.js"></script>
 </head>
 <body>
- <h1 class="ui header">오늘의 입장 상황표</h1>
+ <h1 class="ui header"> 입장 상황표 </h1>
 {# <form action="./daylist.html" method="get">#}
 {#     <div class="input text">#}
 {#         <p><label>year</label><input type="textbox" name="year" id="year" placeholder="ex)2020"></p>#}
@@ -32,12 +32,14 @@
   <tbody>
    {% for user in userlist %}
    <tr>
-      <td data-label="RFID No.">{{ user.profile.userid }}</td>
-      <td data-label="Name">{{ user.profile.name }}</td>
-      <td data-label="Entry time">{{ user.profile.entry }}</td>
-      <td data-label="Exit time">{{ user.profile.exits }}</td>
-      <td data-label="Working time(min)">{{ user.profile.used }}</td>
+       <td data-label="RFID No.">{{ user.profile.userid }}</td>
+       <td data-label="Name">{{ user.profile.name }}</td>
+       <td data-label="Entry time">{{ user.profile.entry }}</td>
+       <td data-label="Exit time">{{ user.profile.exits }}</td>
+       <td data-label="Working time(min)">{{ user.profile.used }}</td>
    </tr>
+   {% else %}
+       <em> 이 날짜의 입장객은 없습니다.</em>
    {% endfor %}
   </tbody>
 </table>
