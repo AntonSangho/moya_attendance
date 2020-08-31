@@ -171,6 +171,22 @@ def daylist():
     return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
 
 
+@application.route('/form-example', methods=['GET', 'POST'])  # allow both GET and POST requests
+def form_example():
+    if request.method == 'POST':
+        language = request.form.get('language')
+        framework = request.form['framework']
+
+        return '''<h1>The language value is: {}</h1>
+                   <h1>The framework value is: {}</h1>'''.format(language, framework)
+
+    return f"""<form method="POST">
+                  Language: <input type="text" name="language"><br>
+                  Framework: <input type="text" name="framework"><br>
+                  <input type="submit" value="Submit"><br>
+              </form>"""
+
+
 # 관리자 로그아웃시 index로 이동하는 페이지
 @application.route('/logout')
 def logout():
