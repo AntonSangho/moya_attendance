@@ -179,23 +179,23 @@ def inputdateform():
         day = request.form['day']
         filterdate = year + '-' + month + '-' + day
 
-        return '''<h1>{}</h1>'''.format(filterdate)
-
-    user = {'name': '관리자'}
-    db = init_connect_db()
-    userlist = []
-    # print(get_dayattendance(db, '2020-08-01'))
-    # for dbuser in get_dayattendance(db, '2020-08-01'):
-    #     user = {
-    #         # 'profile': {'userid': dbuser['userid']}
-    #         # 'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
-    #         'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-    #                     'exits': dbuser['exits'], 'used': dbuser['used']}
-    #     }
-    #     userlist.append(user)
-    #     print(user)
-    # return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
-    return f"""<form method="POST">
+        user = {'name': '관리자'}
+        db = init_connect_db()
+        userlist = []
+        # print(get_dayattendance(db, '2020-08-01'))
+        for dbuser in get_dayattendance(db, filterdate):
+            user = {
+                # 'profile': {'userid': dbuser['userid']}
+                # 'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
+                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                            'exits': dbuser['exits'], 'used': dbuser['used']}
+            }
+            userlist.append(user)
+            print(user)
+        return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
+        # return '''<h1>{}</h1>'''.format(filterdate)
+    else :
+        return f"""<form method="POST">
                   year: <input type="text" name="year"><br>
                   month: <input type="text" name="month"><br>
                   day: <input type="day" name="day"></br>
