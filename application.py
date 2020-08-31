@@ -171,20 +171,37 @@ def daylist():
     return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
 
 
-@application.route('/form-example', methods=['GET', 'POST'])  # allow both GET and POST requests
-def form_example():
+@application.route('/inputdateform', methods=['GET', 'POST'])
+def inputdateform():
     if request.method == 'POST':
-        language = request.form.get('language')
-        framework = request.form['framework']
+        year = request.form['year']
+        month = request.form['month']
+        day = request.form['day']
+        filterdate = year + '-' + month + '-' + day
 
-        return '''<h1>The language value is: {}</h1>
-                   <h1>The framework value is: {}</h1>'''.format(language, framework)
+        return '''<h1>{}</h1>'''.format(filterdate)
 
+    user = {'name': '관리자'}
+    db = init_connect_db()
+    userlist = []
+    # print(get_dayattendance(db, '2020-08-01'))
+    # for dbuser in get_dayattendance(db, '2020-08-01'):
+    #     user = {
+    #         # 'profile': {'userid': dbuser['userid']}
+    #         # 'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
+    #         'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+    #                     'exits': dbuser['exits'], 'used': dbuser['used']}
+    #     }
+    #     userlist.append(user)
+    #     print(user)
+    # return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
     return f"""<form method="POST">
-                  Language: <input type="text" name="language"><br>
-                  Framework: <input type="text" name="framework"><br>
+                  year: <input type="text" name="year"><br>
+                  month: <input type="text" name="month"><br>
+                  day: <input type="day" name="day"></br>
                   <input type="submit" value="Submit"><br>
               </form>"""
+
 
 
 # 관리자 로그아웃시 index로 이동하는 페이지
