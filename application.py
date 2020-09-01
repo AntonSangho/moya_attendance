@@ -171,6 +171,7 @@ def daylist():
     return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
 
 
+# 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/inputdateform', methods=['GET', 'POST'])
 def inputdateform():
     if request.method == 'POST':
@@ -194,14 +195,13 @@ def inputdateform():
             print(user)
         return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
         # return '''<h1>{}</h1>'''.format(filterdate)
-    else :
+    else:
         return f"""<form method="POST">
                   year: <input type="text" name="year"><br>
                   month: <input type="text" name="month"><br>
                   day: <input type="day" name="day"></br>
                   <input type="submit" value="Submit"><br>
               </form>"""
-
 
 
 # 관리자 로그아웃시 index로 이동하는 페이지
