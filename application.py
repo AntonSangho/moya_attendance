@@ -3,6 +3,8 @@ import os
 import shutil
 import hashlib
 import time
+import pandas as pd
+
 
 from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for
 
@@ -143,33 +145,37 @@ def userlist():
 
 
 # 특정 날짜의 사용자를 확인하는 페이지
-@application.route('/daylist', methods=['GET', 'POST'])
+@application.route('/download', methods=['GET', 'POST'])
 def daylist():
-    if request.method == 'GET':
-        year = request.args.get('year')
-        month = request.args.get('month')
-        day = request.args.get('day')
-    # print(application.env)
-    # filter_date=[]
-    # filter_date.append(year)
-    # filter_date.append(month)
-    # filter_date.append(day)
-
-    user = {'name': '관리자'}
+    # if request.method == 'GET':
+    #     year = request.args.get('year')
+    #     month = request.args.get('month')
+    #     day = request.args.get('day')
+    # # print(application.env)
+    # # filter_date=[]
+    # # filter_date.append(year)
+    # # filter_date.append(month)
+    # # filter_date.append(day)
+    #
+    # user = {'name': '관리자'}
     db = init_connect_db()
-    userlist = []
-    # print(get_dayattendance(db, '2020-08-01'))
-    for dbuser in get_dayattendance(db, '2020-08-01'):
-        user = {
-            # 'profile': {'userid': dbuser['userid']}
-            # 'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
-            'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-                        'exits': dbuser['exits'], 'used': dbuser['used']}
-        }
-        userlist.append(user)
-        print(user)
-    return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
+    # userlist = []
 
+    # print(get_dayattendance(db, '2020-08-01'))
+    # for dbuser in get_dayattendance(db, '2020-08-01'):
+    #     user = {
+    #         # 'profile': {'userid': dbuser['userid']}
+    #         # 'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
+    #         'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+    #                     'exits': dbuser['exits'], 'used': dbuser['used']}
+    #     }
+    #     userlist.append(user)
+    #     print(user)
+    df = pd.DataFrame({"Name": ["Braund, Mr. Owen Harris","Allen, Mr. William Henry","Bonnell, Miss. Elizabeth"],
+                       "Age": [22, 35, 58],
+                       "Sex": ["male", "male", "female"]})
+    # return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
+    return render_template('download.html', tables=[df.to_html(classes='data')], titles=df.columns.values)
 
 # 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/inputdateform', methods=['GET', 'POST'])

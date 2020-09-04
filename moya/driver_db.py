@@ -53,6 +53,7 @@ def get_dayattendance(db, filter_date):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
+
 def get_userinfo(db, userid, rfid_uid):
     try:
         cursor = db.cursor()
