@@ -147,7 +147,7 @@ def userlist():
 
 # 특정 날짜의 사용자를 확인하는 페이지
 @application.route('/download', methods=['GET', 'POST'])
-def daylist():
+def download():
     # if request.method == 'GET':
     #     year = request.args.get('year')
     #     month = request.args.get('month')
@@ -172,7 +172,8 @@ def daylist():
     #     }
     #     userlist.append(user)
     #     print(user)
-    df = pd.read_sql_query("select * from moya.users",db)
+    # df = pd.read_sql_query("select * from moya.users",db)
+    df = pd.DataFrame(get_dayattendance(db, filterdate))
     csv_data = df.to_csv(index='false', encoding='utf-8')
 
     response = Response(csv_data, mimetype='text/csv')
