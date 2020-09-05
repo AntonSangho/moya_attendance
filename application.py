@@ -6,11 +6,12 @@ import time
 import pandas as pd
 
 
-from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for
+from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for, Response
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
     set_signup, is_rfid, add_newcard, get_rfid, get_dayattendance
+from sqlalchemy import create_engine
 
 from flask.logging import default_handler
 
@@ -171,11 +172,17 @@ def daylist():
     #     }
     #     userlist.append(user)
     #     print(user)
-    df = pd.DataFrame({"Name": ["Braund, Mr. Owen Harris","Allen, Mr. William Henry","Bonnell, Miss. Elizabeth"],
-                       "Age": [22, 35, 58],
-                       "Sex": ["male", "male", "female"]})
+    df = pd.read_sql_query("select * from moya.users",db)
+    csv_data = df.to_csv(index='false', encoding='utf-8')
+
+    response = Response(csv_data, mimetype='text/csv')
+    response.headers.set("Content-Disposition","attachment", filename="data.csv")
+    # df = pd.DataFrame({"Name": ["Braund, Mr. Owen Harris","Allen, Mr. William Henry","Bonnell, Miss. Elizabeth"],
+    #                    "Age": [22, 35, 58],
+    #                    "Sex": ["male", "male", "female"]})
     # return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
-    return render_template('download.html', tables=[df.to_html(classes='data')], titles=df.columns.values)
+    # return render_template('download.html', tables=[df.to_html(classes='data')], titles=df.columns.values)
+    return response
 
 # 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/inputdateform', methods=['GET', 'POST'])
