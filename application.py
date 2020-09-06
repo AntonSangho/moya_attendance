@@ -5,7 +5,6 @@ import hashlib
 import time
 import pandas as pd
 
-
 from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for, Response
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
@@ -177,13 +176,14 @@ def download():
     csv_data = df.to_csv(index='false', encoding='utf-8')
 
     response = Response(csv_data, mimetype='text/csv')
-    response.headers.set("Content-Disposition","attachment", filename="data.csv")
+    response.headers.set("Content-Disposition", "attachment", filename="data.csv")
     # df = pd.DataFrame({"Name": ["Braund, Mr. Owen Harris","Allen, Mr. William Henry","Bonnell, Miss. Elizabeth"],
     #                    "Age": [22, 35, 58],
     #                    "Sex": ["male", "male", "female"]})
     # return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
     # return render_template('download.html', tables=[df.to_html(classes='data')], titles=df.columns.values)
     return response
+
 
 # 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/inputdateform', methods=['GET', 'POST'])
@@ -210,12 +210,25 @@ def inputdateform():
         return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
         # return '''<h1>{}</h1>'''.format(filterdate)
     else:
-        return f"""<form method="POST">
-                  year: <input type="text" name="year"><br>
-                  month: <input type="text" name="month"><br>
-                  day: <input type="day" name="day"></br>
-                  <input type="submit" value="Submit"><br>
-              </form>"""
+        # return f"""<form method="POST">
+        #           year: <input type="text" name="year"><br>
+        #           month: <input type="text" name="month"><br>
+        #           day: <input type="day" name="day"></br>
+        #           <input type="submit" value="Submit"><br>
+        #       </form>"""
+        user = {'name': '관리자'}
+        db = init_connect_db()
+        userlist = []
+        for dbuser in get_dayattendance(db, '2020-08-14'):
+            user = {
+                # 'profile': {'userid': dbuser['userid']}
+                # 'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
+                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                            'exits': dbuser['exits'], 'used': dbuser['used']}
+            }
+            userlist.append(user)
+            print(user)
+        return render_template('todaytable.html', user=user,userlist=userlist, title='도서관현황판', platform="")
 
 
 # 관리자 로그아웃시 index로 이동하는 페이지
