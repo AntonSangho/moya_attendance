@@ -144,45 +144,49 @@ def userlist():
         return redirect(url_for('auth'))
 
 
-# 특정 날짜의 사용자를 확인하는 페이지
+# 엑셀파일을 다운로드하는 페이지
 @application.route('/download', methods=['GET', 'POST'])
 def download():
-    # if request.method == 'GET':
-    #     year = request.args.get('year')
-    #     month = request.args.get('month')
-    #     day = request.args.get('day')
+     # if request.method == 'GET':
+     #     year = request.args.get('year')
+     #     month = request.args.get('month')
+     #     day = request.args.get('day')
     # # print(application.env)
-    # # filter_date=[]
-    # # filter_date.append(year)
-    # # filter_date.append(month)
-    # # filter_date.append(day)
-    #
+    #  filter_date=[]
+    #  filter_date.append(year)
+    #  filter_date.append(month)
+    #  filter_date.append(day)
+
     # user = {'name': '관리자'}
     db = init_connect_db()
     # userlist = []
 
     # print(get_dayattendance(db, '2020-08-01'))
     # for dbuser in get_dayattendance(db, '2020-08-01'):
-    #     user = {
-    #         # 'profile': {'userid': dbuser['userid']}
-    #         # 'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
+         # user = {
+     # 'profile': {'userid': dbuser['userid']}
+             # 'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
     #         'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
     #                     'exits': dbuser['exits'], 'used': dbuser['used']}
     #     }
     #     userlist.append(user)
     #     print(user)
     # df = pd.read_sql_query("select * from moya.users",db)
-    df = pd.DataFrame(get_dayattendance(db, filterdate))
+    df = pd.DataFrame(get_dayattendance(db, datetime.datetime.today()))
     csv_data = df.to_csv(index='false', encoding='utf-8')
 
     response = Response(csv_data, mimetype='text/csv')
     response.headers.set("Content-Disposition", "attachment", filename="data.csv")
-    # df = pd.DataFrame({"Name": ["Braund, Mr. Owen Harris","Allen, Mr. William Henry","Bonnell, Miss. Elizabeth"],
-    #                    "Age": [22, 35, 58],
-    #                    "Sex": ["male", "male", "female"]})
     # return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
     # return render_template('download.html', tables=[df.to_html(classes='data')], titles=df.columns.values)
     return response
+
+
+# 자료받기 원하는 구간을 정하기
+@application.route('/daterange', methods=['GET', 'POST'])
+def daterange():
+    user = {'name': '관리자'}
+    return render_template('/daterange.html', user=user, title='관리자')
 
 
 # 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
@@ -230,7 +234,7 @@ def inputdateform():
             }
             userlist.append(user)
             print(user)
-        return render_template('todaytable.html', user=user,userlist=userlist, title='도서관현황판', platform="")
+        return render_template('todaytable.html', user=user, userlist=userlist, title='도서관현황판', platform="")
 
 
 # 관리자 로그아웃시 index로 이동하는 페이지
