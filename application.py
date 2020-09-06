@@ -4,7 +4,7 @@ import shutil
 import hashlib
 import time
 import pandas as pd
-
+import datetime
 from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for, Response
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
@@ -216,10 +216,12 @@ def inputdateform():
         #           day: <input type="day" name="day"></br>
         #           <input type="submit" value="Submit"><br>
         #       </form>"""
+        today = datetime.datetime.today()
+        print(today)
         user = {'name': '관리자'}
         db = init_connect_db()
         userlist = []
-        for dbuser in get_dayattendance(db, '2020-08-14'):
+        for dbuser in get_dayattendance(db, today):
             user = {
                 # 'profile': {'userid': dbuser['userid']}
                 # 'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
