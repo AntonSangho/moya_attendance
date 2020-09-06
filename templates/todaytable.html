@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+ <h1 class="ui header"> 오늘 입장 상황표 </h1>
+ <form action="./inputdateform" method="post">
+     <div class="input text">
+         <p><label>year</label><input type="textbox" name="year" id="year" placeholder="ex)2020"></p>
+         <p><label>month</label><input type="textbox" name="month" id="month" placeholder="ex)08"></p>
+         <p><label>day</label><input type="textbox" name="day" id="day" placeholder="ex)14"></p>
+     </div>
+     <div class="input submit">
+         <input type="submit" value="Submit">
+     </div>
+ </form>
+ <table class="ui celled table">
+  <thead>
+    <tr>
+        <th>RFID No.</th>
+        <th>이름</th>
+        <th>출입한 시간</th>
+        <th>퇴장한 시간</th>
+        <th>작업한 시간(분)</th>
+    </tr>
+  </thead>
+  <tbody>
+   {% for user in userlist %}
+   <tr>
+       <td data-label="RFID No.">{{ user.profile.userid }}</td>
+       <td data-label="Name">{{ user.profile.name }}</td>
+       <td data-label="Entry time">{{ user.profile.entry }}</td>
+       <td data-label="Exit time">{{ user.profile.exits }}</td>
+       <td data-label="Working time(min)">{{ user.profile.used }}</td>
+   </tr>
+   {% else %}
+       <em> 이 날짜의 입장객은 없습니다.</em>
+   {% endfor %}
+  </tbody>
+</table>
+{#<form action="./download" , method="post", class="ui form">#}
+{#    <div classans="inline field">#}
+{#        <label>작은손조회</label>#}
+{#        <input type="text" name="name" placeholder="이름입력">#}
+{#        <button class="ui inline button" type="search">검색</button>#}
+{#    </div>#}
+{#    <div class="field"></div>#}
+{#    <button class="ui button" type="signup">작은손 신규등록</button>#}
+{#    <button class="ui right floated button" type="Downlaod">액셀파일 다운로드</button>#}
+{#</form>#}
+{% endblock %}
