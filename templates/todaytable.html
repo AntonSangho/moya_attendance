@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
- <h1 class="ui header", id="id01"> 오늘 입장 상황표 </h1>
+ <h1 class="ui header"> 오늘 입장 상황표 </h1>
  <form action="./inputdateform" method="post">
      <div class="input text">
          <p><label>year</label><input type="textbox" name="year" id="year" placeholder="ex)2020"></p>
@@ -10,7 +10,13 @@
      <div class="input submit">
          <input type="submit" value="날짜검색">
      </div>
+ <h2 class="ui header">날짜 선택</h2>
  </form>
+    <form method="post" action="">
+        {{ form.hidden_tag() }}
+        {{ form.dt(class="dtpick") }}
+        <button type="submit">검색</button>
+    </form>
  <table class="ui celled table">
   <thead>
     <tr>
@@ -30,11 +36,14 @@
        <td data-label="Exit time">{{ user.profile.exits }}</td>
        <td data-label="Working time(min)">{{ user.profile.used }}</td>
    </tr>
-   {% else %}
-       <em> 이 날짜의 입장객은 없습니다.</em>
-   {% endfor %}
+{#   {% else %}#}
+{#       <em> 이 날짜의 입장객은 없습니다.</em>#}
+{#   {% endfor %}#}
   </tbody>
 </table>
+    {% else %}
+       <em>오늘의 입장객은 없습니다.</em>
+   {% endfor %}
 {#<form action="./download" , method="post", class="ui form">#}
 {#    <div classans="inline field">#}
 {#        <label>작은손조회</label>#}

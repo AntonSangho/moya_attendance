@@ -6,6 +6,9 @@ import time
 import pandas as pd
 import datetime
 from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for, Response
+from flask_wtf import Form
+from wtforms import DateField
+from datetime import date
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
@@ -17,6 +20,11 @@ from flask.logging import default_handler
 import logging
 from logging.handlers import RotatingFileHandler
 from logging import Formatter
+
+
+class DateForm(Form):
+    dt = DateField('Pick a Date', format="%y-%m-%d")
+
 
 application = Flask(__name__, static_folder="static")
 
@@ -165,6 +173,7 @@ def download():
     else:
         return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
 
+
 # 자료받기 원하는 구간을 정하기
 @application.route('/daterange', methods=['GET', 'POST'])
 def daterange():
@@ -175,6 +184,9 @@ def daterange():
 # 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/inputdateform', methods=['GET', 'POST'])
 def inputdateform():
+    form = DateForm()
+    # if form.validate_on_submit():
+    #     return form.dt.data.strftime('%x')
     if request.method == 'POST':
         year = request.form['year']
         month = request.form['month']
@@ -194,7 +206,7 @@ def inputdateform():
             }
             userlist.append(user)
             print(user)
-        return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="")
+        return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="",form=form)
         # return '''<h1>{}</h1>'''.format(filterdate)
     else:
         # return f"""<form method="POST">
@@ -217,7 +229,7 @@ def inputdateform():
             }
             userlist.append(user)
             print(user)
-        return render_template('todaytable.html', user=user, userlist=userlist, title='도서관현황판', platform="")
+        return render_template('todaytable.html', user=user, userlist=userlist, title='도서관현황판', platform="", form= form)
 
 
 # 관리자 로그아웃시 index로 이동하는 페이지
