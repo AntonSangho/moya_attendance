@@ -24,7 +24,9 @@ from logging import Formatter
 
 
 class DateForm(Form):
-    dt = DateField('DatePicker', format='%Y-%m-%d')
+    dt = DateField('날짜선택', format='%Y-%m-%d')
+    dStart = DateField('시작일자', format='%Y-%m-%d')
+    dEnd = DateField('종료일자', format='%Y-%m-%d')
 
 
 application = Flask(__name__, static_folder="static")
@@ -156,13 +158,15 @@ def userlist():
 # 엑셀파일을 다운로드하는 페이지
 @application.route('/download', methods=['GET', 'POST'])
 def download():
+    form = DateForm()
     if request.method == 'POST':
         year = request.form['year']
         month = request.form['month']
         day = request.form['day']
         filterdate = year + '-' + month + '-' + day
         print(filterdate)
-
+        if form.validate_on_submit():
+            filterdate = form.dt.data.strftime('%Y-%m-%d')
         user = {'name': '관리자'}
         db = init_connect_db()
 
@@ -179,7 +183,8 @@ def download():
 @application.route('/daterange', methods=['GET', 'POST'])
 def daterange():
     user = {'name': '관리자'}
-    return render_template('/daterange.html', user=user, title='관리자')
+    form = DateForm()
+    return render_template('/daterange.html', user=user, title='관리자', form=form)
 
 
 # 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지

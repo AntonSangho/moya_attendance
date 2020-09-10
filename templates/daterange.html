@@ -2,11 +2,18 @@
 {% block content %}
  <h1 class="ui header" >다운로드 받을 구간을 정하세요 </h1>
  <form action="./download" method="post">
-     <div class="input text">
-         <p><label>year</label><input type="textbox" name="year" id="year" placeholder="ex)2020"></p>
-         <p><label>month</label><input type="textbox" name="month" id="month" placeholder="ex)08"></p>
-         <p><label>day</label><input type="textbox" name="day" id="day" placeholder="ex)14"></p>
+     <div class >
+        {{ form.dStart.label }}{{ form.dStart() }}
+        {{ form.dEnd.label }}{{ form.dEnd() }}
      </div>
+     <div class="input submit">
+        <button type="submit">검색</button>
+     </div>
+{#     <div class="input text">#}
+{#         <p><label>year</label><input type="textbox" name="year" id="year" placeholder="ex)2020"></p>#}
+{#         <p><label>month</label><input type="textbox" name="month" id="month" placeholder="ex)08"></p>#}
+{#         <p><label>day</label><input type="textbox" name="day" id="day" placeholder="ex)14"></p>#}
+{#     </div>#}
 {#     <div class="input submit">#}
 {#         <input type="submit" value="날짜검색">#}
 {#     </div>#}
