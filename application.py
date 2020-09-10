@@ -7,7 +7,8 @@ import pandas as pd
 import datetime
 from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for, Response
 from flask_wtf import Form
-from wtforms import DateField
+from wtforms.fields.html5 import DateField
+# from wtforms import DateField
 from datetime import date
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
@@ -23,7 +24,7 @@ from logging import Formatter
 
 
 class DateForm(Form):
-    dt = DateField('Pick a Date', format="%y-%m-%d")
+    dt = DateField('DatePicker', format='%Y-%m-%d')
 
 
 application = Flask(__name__, static_folder="static")
@@ -185,18 +186,12 @@ def daterange():
 @application.route('/inputdateform', methods=['GET', 'POST'])
 def inputdateform():
     form = DateForm()
-    # if form.validate_on_submit():
-    #     return form.dt.data.strftime('%x')
     if request.method == 'POST':
-        year = request.form['year']
-        month = request.form['month']
-        day = request.form['day']
-        filterdate = year + '-' + month + '-' + day
-
+        if form.validate_on_submit():
+            filterdate = form.dt.data.strftime('%Y-%m-%d')
         user = {'name': '관리자'}
         db = init_connect_db()
         userlist = []
-        # print(get_dayattendance(db, '2020-08-01'))
         for dbuser in get_dayattendance(db, filterdate):
             user = {
                 # 'profile': {'userid': dbuser['userid']}

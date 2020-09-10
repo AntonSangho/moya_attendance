@@ -1,23 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
  <h1 class="ui header" > 검색한 날짜의 입장 상황표 </h1>
- </form>
  <form action="./inputdateform" method="post">
-     <div class="input text">
-         <p><label>year</label><input type="textbox" name="year" id="year" placeholder="ex)2020"></p>
-         <p><label>month</label><input type="textbox" name="month" id="month" placeholder="ex)08"></p>
-         <p><label>day</label><input type="textbox" name="day" id="day" placeholder="ex)14"></p>
+     <div class >
+        {{ form.hidden_tag() }}
+        {{ form.dt(class='datepicker') }}
      </div>
      <div class="input submit">
-         <input type="submit" value="날짜검색">
-     </div>
- <h2 class="ui header">날짜선택</h2>
- </form>
-    <form method="post" action="">
-        {{ form.hidden_tag() }}
-        {{ form.dt(class="dtpick") }}
         <button type="submit">검색</button>
-    </form>
+     </div>
+ </form>
  <table class="ui celled table">
   <thead>
     <tr>
