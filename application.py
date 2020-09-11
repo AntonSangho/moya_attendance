@@ -13,7 +13,7 @@ from datetime import date
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
-    set_signup, is_rfid, add_newcard, get_rfid, get_dayattendance
+    set_signup, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance
 from sqlalchemy import create_engine
 
 from flask.logging import default_handler
@@ -184,6 +184,17 @@ def download():
 def daterange():
     user = {'name': '관리자'}
     form = DateForm()
+    if request.method == 'POST':
+        StartDate = form.dStart.data.strftime('%Y-%m-%d')
+        EndDate = form.dEnd.data.strftime('%Y-%m-%d')
+        print(StartDate)
+        print(EndDate)
+        db = init_connect_db()
+        df = pd.DataFrame(get_RangeAttendance(db, StartDate, EndDate))
+        csv_data = df.to_csv(index='false', encoding='utf-8')
+        response = Response(csv_data, mimetype='text/csv')
+        response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+        return response
     return render_template('/daterange.html', user=user, title='관리자', form=form)
 
 
