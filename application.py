@@ -210,8 +210,6 @@ def inputdateform():
         userlist = []
         for dbuser in get_dayattendance(db, filterdate):
             user = {
-                # 'profile': {'userid': dbuser['userid']}
-                # 'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
                 'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
                             'exits': dbuser['exits'], 'used': dbuser['used']}
             }
@@ -220,12 +218,6 @@ def inputdateform():
         return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="",form=form)
         # return '''<h1>{}</h1>'''.format(filterdate)
     else:
-        # return f"""<form method="POST">
-        #           year: <input type="text" name="year"><br>
-        #           month: <input type="text" name="month"><br>
-        #           day: <input type="day" name="day"></br>
-        #           <input type="submit" value="Submit"><br>
-        #       </form>"""
         today = datetime.datetime.today()
         print(today)
         user = {'name': '관리자'}
@@ -233,8 +225,6 @@ def inputdateform():
         userlist = []
         for dbuser in get_dayattendance(db, today):
             user = {
-                # 'profile': {'userid': dbuser['userid']}
-                # 'profile': {'userid': dbuser['userid'], 'entry': dbuser['entry_time'], 'exit':dbuser['exit_time'] }
                 'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
                             'exits': dbuser['exits'], 'used': dbuser['used']}
             }

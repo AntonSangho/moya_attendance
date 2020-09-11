@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
+    <h1 class="ui header">회원명부</h1>
+    <table class="ui celled table">
+        <tr>
+            <th>RFID No.</th>
+            <th>이름</th>
+            <th>성별</th>
+            <th>나이</th>
+            <th>보호자 연락처</th>
+        </tr>
+    </table>
+
 <ul>
     {% for user in userlist %}
     <li>
