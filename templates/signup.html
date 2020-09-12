@@ -1,9 +1,15 @@
-{#{% extends "base.html" %}#}
-{#{% block content %}#}
+{% extends "base.html" %}
+{% block content %}
 <h1 xmlns="http://www.w3.org/1999/html">신규 회원 등록</h1>
     <form method="POST" action="/signup">
         {{ form.csrf_token }}
+        <select id="rfid">
+         {% for user in userlist %}
+        <option value=" {{ user.profile.rfid }}">{{ user.profile.rfid }}</option>
+        {% endfor %}
+        </select>
         {{ form.name.label }} {{ form.name(size=20) }}
+        {{ form.yob.label }} {{ form.yob(size=20) }}
         <input type="submit" value="Go">
 
     </form>
@@ -43,5 +49,5 @@
 {#          }#}
 {#      }#}
 {#    </script>#}
-{#{% endblock %}#}
+{% endblock %}
 
