@@ -5,7 +5,7 @@
         {{ form.csrf_token }}
         <select id="rfid">
          {% for user in userlist %}
-        <option value=" {{ user.profile.rfid }}">{{ user.profile.rfid }}</option>
+        <option value=" {{ user.profile.rfid }} {{ user.profile.name }}">{{ user.profile.rfid }} - {{ user.profile.name }}</option>
         {% endfor %}
         </select>
         {{ form.name.label }} {{ form.name(size=20) }}

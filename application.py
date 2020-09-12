@@ -11,6 +11,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired
 from wtforms.fields.html5 import DateField
+from wtforms import SelectField
 # from wtforms import DateField
 from datetime import date
 
@@ -254,7 +255,7 @@ def logout():
 # 회원 신규 등록 페이지
 @application.route('/signup', methods=['POST', 'GET'])
 def signup():
-    user = {'name': '관리자'}
+    # user = {'name': '관리자'}
     db = init_connect_db()
     userlist = []
     for dbuser in get_userlist(db):
@@ -266,11 +267,10 @@ def signup():
         userlist.append(user)
     form = MyForm()
     if form.validate_on_submit():
-        db = init_connect_db()
         name = format(form.name.data)
         yob = format(form.yob.data)
         # if set_signup(db, name):
-        return '<h1>name={} year of birth ={}</h1> '.format(form.name.data, form.yob.data)
+        return '<h1>rfid = {} name={} year of birth ={}</h1> '.format(user.profile.rfid, form.name.data, form.yob.data)
     return render_template('signup.html', form=form, user=user, userlist=userlist)
     # if request.method == 'POST':
     #     rfid = request.form['rfid']
