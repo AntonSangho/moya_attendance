@@ -7,6 +7,9 @@ import pandas as pd
 import datetime
 from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for, Response
 from flask_wtf import Form
+from flask_wtf import FlaskForm
+from wtforms import StringField
+from wtforms.validators import DataRequired
 from wtforms.fields.html5 import DateField
 # from wtforms import DateField
 from datetime import date
@@ -23,10 +26,16 @@ from logging.handlers import RotatingFileHandler
 from logging import Formatter
 
 
+# datepicker에 사용됨
 class DateForm(Form):
     dt = DateField('날짜선택', format='%Y-%m-%d')
     dStart = DateField('시작일자', format='%Y-%m-%d')
     dEnd = DateField('종료일자', format='%Y-%m-%d')
+
+
+# signup신규등록에 사용됨
+class MyForm(FlaskForm):
+    name = StringField('name', validators=[DataRequired()])
 
 
 application = Flask(__name__, static_folder="static")
@@ -215,7 +224,7 @@ def inputdateform():
             }
             userlist.append(user)
             print(user)
-        return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="",form=form)
+        return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
         # return '''<h1>{}</h1>'''.format(filterdate)
     else:
         today = datetime.datetime.today()
@@ -230,7 +239,7 @@ def inputdateform():
             }
             userlist.append(user)
             print(user)
-        return render_template('todaytable.html', user=user, userlist=userlist, title='도서관현황판', platform="", form= form)
+        return render_template('todaytable.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
 
 
 # 관리자 로그아웃시 index로 이동하는 페이지
@@ -244,34 +253,40 @@ def logout():
 # 회원 신규 등록 페이지
 @application.route('/signup', methods=['POST', 'GET'])
 def signup():
-    if request.method == 'POST':
-        rfid = request.form['rfid']
-        name = request.form['name']
-        age = request.form['age']
-        memo = request.form['memo']
-
-        ## 데이타베이스 저장하는 코드
-        db = init_connect_db()
-        if set_signup(db, rfid, name):
-            return f"<h2>저장했습니다. 신규 유져 </h2>"
-        else:
-            return f"<h2>관리자한테 연락주세요</h2>"
-
-        ## 이상이 없으면 alert 창 뛰우기
-        return f"<h2>{age}post 입니다{rfid} </h2>"
-
-    usert = {'name': '관리자'}
-    db = init_connect_db()
-    userlist = []
-    for dbuser in get_userlist(db):
-        user = {
-            'profile': {'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
-            'status': '입장중',
-            'is': True
-        }
-        userlist.append(user)
-
-    return render_template('signup.html', title='신규 회원 등록', user=usert, userlist=userlist)
+    form = MyForm()
+    if form.validate_on_submit():
+        return f"<h2>sucess</h2>"
+    return render_template('signup.html',form=form)
+    # if request.method == 'POST':
+    #     rfid = request.form['rfid']
+    #     name = request.form['name']
+    #     age = request.form['age']
+    #     memo = request.form['memo']
+    #     print('*************')
+    #
+    #     ## 데이타베이스 저장하는 코드
+    #     db = init_connect_db()
+    #     if set_signup(db, rfid, name):
+    #         print('&&&&&&&&&&&')
+    #         return f"<h2>저장했습니다. 신규 유져 </h2>"
+    #     else:
+    #         return f"<h2>관리자한테 연락주세요</h2>"
+    #
+    #     ## 이상이 없으면 alert 창 뛰우기
+    #     return f"<h2>{age}post 입니다{rfid} </h2>"
+    #
+    # usert = {'name': '관리자'}
+    # db = init_connect_db()
+    # userlist = []
+    # for dbuser in get_userlist(db):
+    #     user = {
+    #         'profile': {'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+    #         'status': '입장중',
+    #         'is': True
+    #     }
+    #     userlist.append(user)
+    #
+    # return render_template('signup.html', title='신규 회원 등록', user=usert, userlist=userlist)
 
 
 # 퇴장시 RFID카드를 인식하는 페이지
