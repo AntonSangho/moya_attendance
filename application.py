@@ -288,7 +288,7 @@ def signup():
         print('*************')
 
         ## 데이타베이스 저장하는 코드
-        return f"<h1>{id} {rfid} {name} {year} {sex} {memo} </h1>"
+       
         db = init_connect_db()
         if set_signup(db, rfid, name):
             print('&&&&&&&&&&&')
