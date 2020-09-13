@@ -284,13 +284,14 @@ def signup():
         name = request.form['name']
         year = request.form['year']
         sex = request.form['sex']
+        phone = request.form['phone']
         memo = request.form['memo']
         print('*************')
 
         ## 데이타베이스 저장하는 코드
        
         db = init_connect_db()
-        if set_signup(db, rfid, name):
+        if set_signup(db, id, rfid, name, year, sex, phone, memo):
             print('&&&&&&&&&&&')
             return f"<h2>저장했습니다. 신규 유져 </h2>"
         else:
