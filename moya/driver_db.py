@@ -114,10 +114,12 @@ def get_userlist(db):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
-def set_signup(db, rfid, name, year, sex, phone, memo):
+def set_signup(db, id, rfid, name, sex, phone, year, memo):
     try:
         cursor = db.cursor()
-        cursor.execute(f"insert into users(rfid_uid, `name`) value ('{rfid_uid}', '{name}')")
+        sql = f"insert into users_detail(id,rfid,`name`, sex, phone, year ,memo) value ('{id}','{rfid}', '{name}','{sex}','{phone}','{year}','{memo}')"
+        print(sql)
+        cursor.execute(sql)
     except pymysql.Error as e:
         db.rollback()
         db.close()
