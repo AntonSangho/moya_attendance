@@ -256,52 +256,56 @@ def logout():
 @application.route('/signup', methods=['POST', 'GET'])
 def signup():
     # user = {'name': '관리자'}
-    db = init_connect_db()
-    userlist = []
-    for dbuser in get_userlist(db):
-        user = {
-            'profile': {'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
-            'status': '입장중',
-            'is': True
-        }
-        userlist.append(user)
-    form = MyForm()
-    if form.validate_on_submit():
-        name = format(form.name.data)
-        yob = format(form.yob.data)
-        # if set_signup(db, name):
-        return '<h1>rfid = {} name={} year of birth ={}</h1> '.format(user.profile.rfid, form.name.data, form.yob.data)
-    return render_template('signup.html', form=form, user=user, userlist=userlist)
-    # if request.method == 'POST':
-    #     rfid = request.form['rfid']
-    #     name = request.form['name']
-    #     age = request.form['age']
-    #     memo = request.form['memo']
-    #     print('*************')
-    #
-    #     ## 데이타베이스 저장하는 코드
-    #     db = init_connect_db()
-    #     if set_signup(db, rfid, name):
-    #         print('&&&&&&&&&&&')
-    #         return f"<h2>저장했습니다. 신규 유져 </h2>"
-    #     else:
-    #         return f"<h2>관리자한테 연락주세요</h2>"
-    #
-    #     ## 이상이 없으면 alert 창 뛰우기
-    #     return f"<h2>{age}post 입니다{rfid} </h2>"
-    #
-    # usert = {'name': '관리자'}
     # db = init_connect_db()
     # userlist = []
     # for dbuser in get_userlist(db):
     #     user = {
-    #         'profile': {'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+    #         'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
     #         'status': '입장중',
     #         'is': True
     #     }
     #     userlist.append(user)
-    #
-    # return render_template('signup.html', title='신규 회원 등록', user=usert, userlist=userlist)
+    # form = MyForm()
+    # if request.method == 'POST':
+    #     select = request.form.get('card_select')
+    #     if form.validate_on_submit():
+    #          name = format(form.name.data)
+    #          # yob = format(form.yob.data)
+    #     # if set_signup(db, name, ):
+    #     # return '<h1>name={} year of birth ={}</h1> '.format(form.name.data, form.yob.data)
+    #     return str(select)
+    # return render_template('signup.html', form=form, user=user, userlist=userlist)
+    if request.method == 'POST':
+        rfid = request.form['rfid']
+        name = request.form['name']
+        year = request.form['year']
+        sex = request.form['sex']
+        memo = request.form['memo']
+        print('*************')
+
+        ## 데이타베이스 저장하는 코드
+        db = init_connect_db()
+        if set_signup(db, rfid, name):
+            print('&&&&&&&&&&&')
+            return f"<h2>저장했습니다. 신규 유져 </h2>"
+        else:
+            return f"<h2>관리자한테 연락주세요</h2>"
+
+        ## 이상이 없으면 alert 창 뛰우기
+        return f"<h2>{age}post 입니다{rfid} </h2>"
+
+    usert = {'name': '관리자'}
+    db = init_connect_db()
+    userlist = []
+    for dbuser in get_userlist(db):
+        user = {
+            'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+            'status': '입장중',
+            'is': True
+        }
+        userlist.append(user)
+
+    return render_template('signup.html', title='신규 회원 등록', user=usert, userlist=userlist)
 
 
 # 퇴장시 RFID카드를 인식하는 페이지

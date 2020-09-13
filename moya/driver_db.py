@@ -108,12 +108,13 @@ def get_userlist(db):
     try:
         cursor = db.cursor()
         cursor.execute(f"SELECT * FROM users")
+        #이렇게 하면 나중에 돈 많이나옴.
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
-def set_signup(db, rfid_uid, name):
+def set_signup(db, rfid, name, year, sex, phone, memo):
     try:
         cursor = db.cursor()
         cursor.execute(f"insert into users(rfid_uid, `name`) value ('{rfid_uid}', '{name}')")
@@ -126,7 +127,6 @@ def set_signup(db, rfid_uid, name):
         db.commit()
         db.close()
         return 1
-
 
 # rfid 태깅기록
 # 입장기록 
