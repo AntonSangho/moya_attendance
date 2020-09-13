@@ -15,7 +15,7 @@
 {#    </form>#}
     <form action="./signup" method="post" onsubmit="validateForm()">
         <p><label>RFID</label>
-            <select id="rfid">
+            <select name="idrfid" id="idrfid">
                 {% for user in userlist %}
                     <option value="{{ user.profile.id }}^{{ user.profile.rfid }}"> {{ user.profile.id }} - {{ user.profile.rfid }} </option>
                 {% endfor %}

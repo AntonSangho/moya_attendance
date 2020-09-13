@@ -276,7 +276,11 @@ def signup():
     #     return str(select)
     # return render_template('signup.html', form=form, user=user, userlist=userlist)
     if request.method == 'POST':
-        rfid = request.form['rfid']
+
+        idrfid = request.form['idrfid']
+        print(idrfid)
+        id = idrfid.split("^")[0]
+        rfid = idrfid.split("^")[1]
         name = request.form['name']
         year = request.form['year']
         sex = request.form['sex']
@@ -284,6 +288,7 @@ def signup():
         print('*************')
 
         ## 데이타베이스 저장하는 코드
+        return f"<h1>{id} {rfid} {name} {year} {sex} {memo} </h1>"
         db = init_connect_db()
         if set_signup(db, rfid, name):
             print('&&&&&&&&&&&')
