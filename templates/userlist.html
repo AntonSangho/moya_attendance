@@ -2,6 +2,7 @@
 {% block content %}
     <h1 class="ui header">회원명부</h1>
     <table class="ui celled table">
+    <thead>
         <tr>
             <th>RFID No.</th>
             <th>이름</th>
@@ -9,20 +10,18 @@
             <th>나이</th>
             <th>보호자 연락처</th>
         </tr>
-    </table>
-
-<ul>
+    </thead>
+    <tbody>
     {% for user in userlist %}
-    <li>
-      사용자명 : {{ user.profile.name }} / card_id : {{ user.profile.rfid }} / 상태 :
-        {% if user.is == true %}
-            <span class="entry">{{ user.status }}</span>
-        {% else %}
-            <span class="exit">{{ user.status }}</span>
-        {% endif %}
-        
-    </li>
+    <tr>
+        <td> {{ user.profile.rfid }}</td>
+        <td> {{ user.profile.name }}</td>
+        <td> {{ user.profile.sex }}</td>
+        <td> {{ user.profile.year }}</td>
+        <td> {{ user.profile.phone }}</td>
+    </tr>
     {% endfor %}
-</ul>
+    </tbody>
+    </table>
 {% endblock %}
 
