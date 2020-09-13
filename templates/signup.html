@@ -17,7 +17,7 @@
         <p><label>RFID</label>
             <select id="rfid">
                 {% for user in userlist %}
-                    <option value="{{ user.profile.id }}{{ user.profile.rfid }}"> {{ user.profile.id }} - {{ user.profile.rfid }} </option>
+                    <option value="{{ user.profile.id }}^{{ user.profile.rfid }}"> {{ user.profile.id }} - {{ user.profile.rfid }} </option>
                 {% endfor %}
             </select>
         </p>
