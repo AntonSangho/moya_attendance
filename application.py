@@ -17,7 +17,7 @@ from datetime import date
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
-    set_signup, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance
+    set_signup, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, get_userdetail
 from sqlalchemy import create_engine
 
 from flask.logging import default_handler
@@ -149,9 +149,18 @@ def userlist():
     user = {'name': '관리자'}
     db = init_connect_db()
     userlist = []
-    for dbuser in get_userlist(db):
+    get_userdetail(db)
+    # return 'f<h1>dd</h1>'
+    for dbuser in get_userdetail(db):
         user = {
-            'profile': {'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+            'profile': {'id': dbuser['id'],
+                        'name': dbuser['name'],
+                        'rfid': dbuser['rfid'],
+                        'sex': dbuser['sex'],
+                        'phone': dbuser['phone'],
+                        'year': dbuser['year'],
+                        'memo': dbuser['memo']
+                        },
             'status': '입장중',
             'is': True
         }

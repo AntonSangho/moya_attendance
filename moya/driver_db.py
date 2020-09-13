@@ -108,10 +108,21 @@ def get_userlist(db):
     try:
         cursor = db.cursor()
         cursor.execute(f"SELECT * FROM users")
-        #이렇게 하면 나중에 돈 많이나옴.
+        # 이렇게 하면 나중에 돈 많이나옴.
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+
+def get_userdetail(db):
+    try:
+        cursor = db.cursor()
+        sql = f"select * from users_detail"
+        cursor.execute(f"SELECT * FROM users_detail")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
 
 
 def set_signup(db, id, rfid, name, sex, phone, year, memo):
@@ -129,6 +140,7 @@ def set_signup(db, id, rfid, name, sex, phone, year, memo):
         db.commit()
         db.close()
         return 1
+
 
 # rfid 태깅기록
 # 입장기록 
