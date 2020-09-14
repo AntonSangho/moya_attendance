@@ -2,8 +2,8 @@
 {% block content %}
  <h1 class="ui header" >다운로드 받을 구간을 정하세요 </h1>
  <form action="./daterange" method="post">
-        {{ form.dStart.label }}{{ form.dStart() }}
-        {{ form.dEnd.label }}{{ form.dEnd() }}
+     <p>{{ form.dStart.label }}{{ form.dStart() }}</p>
+     <p>{{ form.dEnd.label }}{{ form.dEnd() }}</p>
     </div>
     <div class="field">
         <button class="ui right floated button" type="submit" >액셀파일 다운로드</button>
