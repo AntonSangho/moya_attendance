@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
- <h1 class="ui header" >다운로드 받을 구간을 정하세요 </h1>
+ <h1 class="ui header" >자료다운로드 </h1>
+    <h3 class ="ui headaer"> 날짜를 선택하세요 </h3>
  <form action="./daterange" method="post">
      <p>{{ form.dStart.label }}{{ form.dStart() }}</p>
      <p>{{ form.dEnd.label }}{{ form.dEnd() }}</p>
