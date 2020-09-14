@@ -29,22 +29,9 @@
        <td data-label="Exit time">{{ user.profile.exits }}</td>
        <td data-label="Working time(min)">{{ user.profile.used }}</td>
    </tr>
-{#   {% else %}#}
-{#       <em> 이 날짜의 입장객은 없습니다.</em>#}
-{#   {% endfor %}#}
   </tbody>
 </table>
     {% else %}
        <em>오늘의 입장객은 없습니다.</em>
    {% endfor %}
-{#<form action="./download" , method="post", class="ui form">#}
-{#    <div classans="inline field">#}
-{#        <label>작은손조회</label>#}
-{#        <input type="text" name="name" placeholder="이름입력">#}
-{#        <button class="ui inline button" type="search">검색</button>#}
-{#    </div>#}
-{#    <div class="field"></div>#}
-{#    <button class="ui button" type="signup">작은손 신규등록</button>#}
-{#    <button class="ui right floated button" type="Downlaod">액셀파일 다운로드</button>#}
-{#</form>#}
 {% endblock %}
