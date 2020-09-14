@@ -7,8 +7,9 @@
             <th>카드번호</th>
             <th>이름</th>
             <th>성별</th>
-            <th>나이</th>
+            <th>출생년도</th>
             <th>보호자 연락처</th>
+            <th>메모</th>
         </tr>
     </thead>
     <tbody>
@@ -19,6 +20,7 @@
         <td> {{ user.profile.sex }}</td>
         <td> {{ user.profile.year }}</td>
         <td> {{ user.profile.phone }}</td>
+        <td> {{ user.profile.memo }}</td>
     </tr>
     {% endfor %}
     </tbody>
