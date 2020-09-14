@@ -117,7 +117,6 @@ def get_userlist(db):
 def get_userdetail(db):
     try:
         cursor = db.cursor()
-        sql = f"select * from users_detail"
         cursor.execute(f"SELECT * FROM users_detail")
         return cursor.fetchall()
     except pymysql.Error as e:
@@ -125,10 +124,10 @@ def get_userdetail(db):
         return 0
 
 
-def set_signup(db, id, rfid, name, sex, phone, year, memo):
+def set_signup(db, id, rfid, name, sex, year, phone, memo):
     try:
         cursor = db.cursor()
-        sql = f"insert into users_detail(id,rfid,`name`, sex, phone, year ,memo) value ('{id}','{rfid}', '{name}','{sex}','{phone}','{year}','{memo}')"
+        sql = f"insert into users_detail(id,rfid,`name`, sex, year, phone, memo) value ('{id}','{rfid}', '{name}','{sex}','{year}','{phone}','{memo}')"
         print(sql)
         cursor.execute(sql)
     except pymysql.Error as e:

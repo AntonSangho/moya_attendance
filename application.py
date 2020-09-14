@@ -300,9 +300,9 @@ def signup():
         ## 데이타베이스 저장하는 코드
        
         db = init_connect_db()
-        if set_signup(db, id, rfid, name, year, sex, phone, memo):
+        if set_signup(db, id, rfid, name, sex, year, phone, memo):
             print('&&&&&&&&&&&')
-            return f"<h2>저장했습니다. 신규 유져 </h2>"
+            return f"<h2>새로운 회원을 등록했습니다.</h2>"
         else:
             return f"<h2>관리자한테 연락주세요</h2>"
 
