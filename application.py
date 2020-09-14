@@ -264,26 +264,6 @@ def logout():
 # 회원 신규 등록 페이지
 @application.route('/signup', methods=['POST', 'GET'])
 def signup():
-    # user = {'name': '관리자'}
-    # db = init_connect_db()
-    # userlist = []
-    # for dbuser in get_userlist(db):
-    #     user = {
-    #         'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
-    #         'status': '입장중',
-    #         'is': True
-    #     }
-    #     userlist.append(user)
-    # form = MyForm()
-    # if request.method == 'POST':
-    #     select = request.form.get('card_select')
-    #     if form.validate_on_submit():
-    #          name = format(form.name.data)
-    #          # yob = format(form.yob.data)
-    #     # if set_signup(db, name, ):
-    #     # return '<h1>name={} year of birth ={}</h1> '.format(form.name.data, form.yob.data)
-    #     return str(select)
-    # return render_template('signup.html', form=form, user=user, userlist=userlist)
     if request.method == 'POST':
 
         idrfid = request.form['idrfid']

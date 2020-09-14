@@ -1,31 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
 <h1 xmlns="http://www.w3.org/1999/html">신규 회원 등록</h1>
-{#    <form method="POST" action="/signup">#}
-{#        {{ form.csrf_token }}#}
-{#        <select id="rfid" name="card_select">#}
-{#         {% for user in userlist %}#}
-{#        <option value=" {{ user.profile.id }} {{ user.profile.rfid }} "> {{ user.profile.id }} - {{ user.profile.rfid }}</option>#}
-{#        {% endfor %}#}
-{#        </select>#}
-{#        {{ form.name.label }} {{ form.name(size=20) }}#}
-{#        {{ form.yob.label }} {{ form.yob(size=20) }}#}
-{#        <input type="submit" value="Go">#}
-{##}
-{#    </form>#}
     <form action="./signup" method="post" onsubmit="validateForm()">
         <p><label>RFID</label>
             <select name="idrfid" id="idrfid">
                 {% for user in userlist %}
-                    <option value="{{ user.profile.id }}^{{ user.profile.rfid }}"> {{ user.profile.id }} - {{ user.profile.rfid }} </option>
+                    <option value="{{ user.profile.id }}^{{ user.profile.rfid }}"> {{ user.profile.id }} - {{ user.profile.name }} </option>
                 {% endfor %}
             </select>
         </p>
         <p><label>이름</label><input type="textbox" name="name" id="name"></p>
         <p><label>성별</label>
             <select name="sex">
-                <option value="남성">남성</option>
-                <option value="여성">여성</option>
+                <option value="남자">남자</option>
+                <option value="여자">여자</option>
                 <option value="미정">미정</option>
             </select>
         <p><label>출생년도</label><input type="textbox"  name="year" placeholder="4자리로 기입하세요"></p>
