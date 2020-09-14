@@ -4,7 +4,7 @@
     <table class="ui celled table">
     <thead>
         <tr>
-            <th>RFID No.</th>
+            <th>카드번호</th>
             <th>이름</th>
             <th>성별</th>
             <th>나이</th>
@@ -14,7 +14,7 @@
     <tbody>
     {% for user in userlist %}
     <tr>
-        <td> {{ user.profile.rfid }}</td>
+        <td> {{ user.profile.id }}</td>
         <td> {{ user.profile.name }}</td>
         <td> {{ user.profile.sex }}</td>
         <td> {{ user.profile.year }}</td>
