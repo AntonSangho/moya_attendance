@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
     <h1 class="ui header">회원명부</h1>
-    <table class="ui celled table">
+    <table class="ui celled table" method="post">
     <thead>
         <tr>
             <th>카드번호</th>
@@ -15,7 +15,7 @@
     <tbody>
     {% for user in userlist %}
     <tr>
-        <td><a href="/userlist/{{ user.profile.id }}">{{ user.profile.id }}</a></td>
+        <td><a href="{{ url_for('userinfo', id = 'user.profile.id') }}">{{ user.profile.id }}</a></td>
         <td> {{ user.profile.name }}</td>
         <td> {{ user.profile.sex }}</td>
         <td> {{ user.profile.year }}</td>
