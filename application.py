@@ -175,6 +175,12 @@ def userlist():
         return redirect(url_for('auth'))
 
 
+# 사용자를 확인하는 페이지
+@application.route('/userlist/<id>', methods=['GET'])
+def userinfo(id):
+    print(id)
+
+
 # 엑셀파일을 다운로드하는 페이지
 @application.route('/download', methods=['GET', 'POST'])
 def download():
@@ -278,7 +284,7 @@ def signup():
         print('*************')
 
         ## 데이타베이스 저장하는 코드
-       
+
         db = init_connect_db()
         if set_signup(db, id, rfid, name, sex, year, phone, memo):
             print('&&&&&&&&&&&')

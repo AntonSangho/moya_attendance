@@ -15,7 +15,7 @@
     <tbody>
     {% for user in userlist %}
     <tr>
-        <td><a href="admin.html">{{ user.profile.id }}</a></td>
+        <td><a href="/userlist/{{ user.profile.id }}">{{ user.profile.id }}</a></td>
         <td> {{ user.profile.name }}</td>
         <td> {{ user.profile.sex }}</td>
         <td> {{ user.profile.year }}</td>
