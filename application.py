@@ -145,7 +145,7 @@ def admin():
 # 현재 사용자를 확인하는 페이지
 @application.route('/userlist')
 def userlist():
-    print(application.env)
+    # print(application.env)
     user = {'name': '관리자'}
     db = init_connect_db()
     userlist = []
@@ -166,7 +166,7 @@ def userlist():
         }
         userlist.append(user)
 
-    print(userlist)
+    # print(userlist)
 
     if 'reliquum' in session:
         return render_template('userlist.html', title='도서관현황판', user=user, userlist=userlist)
@@ -176,9 +176,14 @@ def userlist():
 
 
 # 사용자를 확인하는 페이지
-@application.route('/userlist/<id>', methods=['GET'])
+@application.route('/userinfo/<id>', methods=['GET', 'POST'])
 def userinfo(id):
-    print(id)
+    print('*******')
+    user = {'name': '관리자'}
+    # if request.method == 'POST':
+    selected_id = request.args.get('id')
+    print(selected_id)
+    return render_template('userinfo.html', title='User detail', id=id,user=user)
 
 
 # 엑셀파일을 다운로드하는 페이지
