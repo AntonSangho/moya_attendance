@@ -74,6 +74,20 @@ def get_RangeAttendance(db, StartDate, EndDate):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
+def get_userattendance(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(
+            f""" 
+            SELECT a.id, a.name , b.* FROM users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
+            FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid 
+            where a.name ='{selected_name}'"""
+        )
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+
 def get_userinfo(db, userid, rfid_uid):
     try:
         cursor = db.cursor()

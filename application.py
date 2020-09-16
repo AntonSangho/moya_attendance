@@ -17,7 +17,7 @@ from datetime import date
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
-    set_signup, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, get_userdetail
+    set_signup, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, get_userdetail, get_userattendance
 from sqlalchemy import create_engine
 
 from flask.logging import default_handler
@@ -176,14 +176,25 @@ def userlist():
 
 
 # 사용자를 확인하는 페이지
-@application.route('/userinfo/<id>', methods=['GET', 'POST'])
-def userinfo(id):
-    print('*******')
-    user = {'name': '관리자'}
-    # if request.method == 'POST':
-    selected_id = request.args.get('id')
-    print(selected_id)
-    return render_template('userinfo.html', title='User detail', id=id,user=user)
+@application.route('/userinfo', methods=['GET', 'POST'])
+def userinfo():
+    if request.method == 'POST':
+        selected_name = request.form['name']
+        print(selected_name)
+
+        user = {'name': '관리자'}
+        db = init_connect_db()
+        userlist = []
+        for dbuser in get_userattendance(db, selected_name):
+            user = {
+                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                            'exits': dbuser['exits'], 'used': dbuser['used']}
+                }
+        userlist.append(user)
+        print(user)
+        return render_template('userinfo.html', title='검색', user=user, userlist=userlist)
+    else:
+        return f"<h1>not selected</h1>"
 
 
 # 엑셀파일을 다운로드하는 페이지
@@ -311,7 +322,7 @@ def signup():
         }
         userlist.append(user)
 
-    return render_template('signup.html', title='신규 회원 등록', user=usert, userlist=userlist)
+    return render_template('signup.html', title='신규 회원 등록', user=user, userlist=userlist)
 
 
 # 퇴장시 RFID카드를 인식하는 페이지
