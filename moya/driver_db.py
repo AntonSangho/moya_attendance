@@ -137,6 +137,21 @@ def get_userdetail(db):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0
 
+def set_modify(db, id, rfid, name, sex, year, phone, memo):
+    try:
+        cursor = db.cursor()
+        sql = f"update users_detail"
+        print(sql)
+        cursor.execute(sql)
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+    else:
+        db.commit()
+        db.close()
+        return 1
 
 def set_signup(db, id, rfid, name, sex, year, phone, memo):
     try:
