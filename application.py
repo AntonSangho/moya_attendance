@@ -18,7 +18,7 @@ from datetime import date
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
     set_signup, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, get_userdetail, \
-    get_userattendance
+    get_userattendance, set_modify
 from sqlalchemy import create_engine
 
 from flask.logging import default_handler
@@ -327,9 +327,41 @@ def signup():
 
 
 # 회원정보 수정하는 페이지
-@application.route('/modify', methods=['POST','GET'])
+@application.route('/modify', methods=['POST', 'GET'])
 def modify():
-    return render_template('modify.html', title='회원정보 수정')
+    usert = {'name': '관리자'}
+    db = init_connect_db()
+    userlist = []
+    for dbuser in get_userlist(db):
+        user = {
+            'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+            'status': '입장중',
+            'is': True
+        }
+        userlist.append(user)
+    # 데이터베이스 수정하는 코
+    if request.method == 'POST':
+
+        idrfid = request.form['idrfid']
+        print(idrfid)
+        id = idrfid.split("^")[0]
+        rfid = idrfid.split("^")[1]
+        name = request.form['name']
+        year = request.form['year']
+        sex = request.form['sex']
+        phone = request.form['phone']
+        memo = request.form['memo']
+        print('*************')
+
+        ## 데이타베이스 저장하는 코드
+
+        db = init_connect_db()
+        if set_modify(db, id, rfid, name, sex, year, phone, memo):
+            print('&&&&&&&&&&&')
+            return f"<h2>회원정보를 수정했습니다.</h2>"
+        else:
+            return f"<h2>관리자한테 연락주세요</h2>"
+    return render_template('modify.html', title='회원정보 수정', user=user, userlist=userlist)
 
 
 # 퇴장시 RFID카드를 인식하는 페이지
