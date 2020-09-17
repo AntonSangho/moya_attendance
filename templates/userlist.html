@@ -15,8 +15,8 @@
     <tbody>
     {% for user in userlist %}
     <tr>
-        <td><a href="{{ url_for('userinfo', id = user.profile.id) }}">{{ user.profile.id }}</a></td>
-        <td> {{ user.profile.name }}</td>
+        <td>{{ user.profile.id }}</td>
+        <td><a href="{{ url_for('userinfo', id = user.profile.name) }}">{{ user.profile.name }}</a></td>
         <td> {{ user.profile.sex }}</td>
         <td> {{ user.profile.year }}</td>
         <td> {{ user.profile.phone }}</td>
