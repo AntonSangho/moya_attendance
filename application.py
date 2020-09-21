@@ -198,6 +198,51 @@ def userinfo():
         return f"<h1>not selected</h1>"
 
 
+@application.route('/userinfo/<username>', methods=['POST', 'GET'])
+def modify(username):
+    if request.method == 'POST':
+        username = request.form['name']
+    try:
+        return render_template("modify.html", username=username)
+    except Exception as e:
+        return str(e)
+    # if request.method == 'POST':
+    #     print('*******xx')
+    #     usert = {'name': '관리자'}
+    #     db = init_connect_db()
+    #     userlist = []
+    #     for dbuser in get_userlist(db):
+    #         user = {
+    #             'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+    #             'status': '입장중',
+    #             'is': True
+    #         }
+    #         userlist.append(user)
+    # 데이터베이스 수정하는 코
+    # if request.method == 'POST':
+    #
+    #     idrfid = request.form['idrfid']
+    #     print(idrfid)
+    #     id = idrfid.split("^")[0]
+    #     rfid = idrfid.split("^")[1]
+    #     name = request.form['name']
+    #     year = request.form['year']
+    #     sex = request.form['sex']
+    #     phone = request.form['phone']
+    #     memo = request.form['memo']
+    #     print('*************')
+    #
+    #     ## 데이타베이스 저장하는 코드
+    #
+    #     db = init_connect_db()
+    #     if set_modify(db, id, rfid, name, sex, year, phone, memo):
+    #         print('&&&&&&&&&&&')
+    #         return f"<h2>회원정보를 수정했습니다.</h2>"
+    #     else:
+    #         return f"<h2>관리자한테 연락주세요</h2>"
+    # return render_template('modify.html', title='회원정보 수정', user=user, userlist=userlist)
+
+
 # 엑셀파일을 다운로드하는 페이지
 @application.route('/download', methods=['GET', 'POST'])
 def download():
@@ -324,44 +369,6 @@ def signup():
         userlist.append(user)
 
     return render_template('signup.html', title='신규 회원 등록', user=user, userlist=userlist)
-
-
-# 회원정보 수정하는 페이지
-@application.route('/modify', methods=['POST', 'GET'])
-def modify():
-    usert = {'name': '관리자'}
-    db = init_connect_db()
-    userlist = []
-    for dbuser in get_userlist(db):
-        user = {
-            'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
-            'status': '입장중',
-            'is': True
-        }
-        userlist.append(user)
-    # 데이터베이스 수정하는 코
-    if request.method == 'POST':
-
-        idrfid = request.form['idrfid']
-        print(idrfid)
-        id = idrfid.split("^")[0]
-        rfid = idrfid.split("^")[1]
-        name = request.form['name']
-        year = request.form['year']
-        sex = request.form['sex']
-        phone = request.form['phone']
-        memo = request.form['memo']
-        print('*************')
-
-        ## 데이타베이스 저장하는 코드
-
-        db = init_connect_db()
-        if set_modify(db, id, rfid, name, sex, year, phone, memo):
-            print('&&&&&&&&&&&')
-            return f"<h2>회원정보를 수정했습니다.</h2>"
-        else:
-            return f"<h2>관리자한테 연락주세요</h2>"
-    return render_template('modify.html', title='회원정보 수정', user=user, userlist=userlist)
 
 
 # 퇴장시 RFID카드를 인식하는 페이지
