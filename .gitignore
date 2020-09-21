@@ -152,7 +152,8 @@ deploy.zip
 .idea/deployment.xml
 .idea/webServers.xml
 .idea/misc.xml
-.idea/moya_attendance.iml 
+.idea/moya_attendance.iml
+.idea/sqldialects.xml
 
 # Semantic UI file
 static/semantic/
