@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1 class="ui header"> ***의 정보</h1>
+
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <th>RFID No.</th>
+            <th>이름</th>
+            <th>출입한 시간</th>
+            <th>퇴장한 시간</th>
+            <th>작업한 시간(분)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in userlist %}
+            <tr>
+                <td data-label="RFID No.">{{ user.profile.userid }}</td>
+                <td data-label="Name">{{ user.profile.name }}</td>
+                <td data-label="Entry time">{{ user.profile.entry }}</td>
+                <td data-label="Exit time">{{ user.profile.exits }}</td>
+                <td data-label="Working time(min)">{{ user.profile.used }}</td>
+            </tr>
+            </tbody>
+            </table>
+        {% else %}
+            <em>오늘의 입장객은 없습니다.</em>
+        {% endfor %}
+        <form action="./userinfo/<usename>" method="POST">
+            <input type="submit" value="수정하기">
+        </form>
+{% endblock %}
