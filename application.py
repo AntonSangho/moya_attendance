@@ -293,6 +293,8 @@ def inputdateform():
     if request.method == 'POST':
         if form.validate_on_submit():
             filterdate = form.dt.data.strftime('%Y-%m-%d')
+        else:
+            return redirect('/inputdateform')
         user = {'name': '관리자'}
         db = init_connect_db()
         userlist = []
