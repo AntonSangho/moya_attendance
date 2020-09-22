@@ -188,10 +188,14 @@ def userinfo():
         userlist = []
         for dbuser in get_userattendance(db, selected_name):
             user = {
-                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-                            'exits': dbuser['exits'], 'used': dbuser['used']}
-            }
-        userlist.append(user)
+                'profile': {'userid': dbuser['userid'],
+                            'name': dbuser['name'],
+                            'entry': dbuser['entry'],
+                            'exits': dbuser['exits'],
+                            'used': dbuser['used']
+                            }
+                    }
+            userlist.append(user)
         print(user)
         return render_template('userinfo.html', title='검색', user=user, userlist=userlist)
     else:
