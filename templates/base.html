@@ -30,7 +30,14 @@
     </style>
   </head>
   <body>
-    <span>로그인 : {{ user.name }}</span> <a href="./logout">나가기</a>
+<!--    <span>로그인 : {{ user.name }}</span> <a href="./logout">나가기</a>-->
+    <div class="ui secondary menu">
+        <a class="item active" href="./inputdateform">오늘의 현황</a>
+        <a class="item" href="./signup">작은손등록</a>
+        <a class="item" href="./userlist">회원명부</a>
+        <a class="item" href="./daterange">자료받기</a>
+        <a class="item" href="./auth">로그아웃</a>
+    </div>
 {#    <h1 id="clock" style="color: gray;">00:00</h1>#}
     <hr />
     {% block content %}{% endblock %}

@@ -114,7 +114,7 @@ def auth():
             if (hashlib.sha256(
                     pp.encode()).hexdigest().upper() == 'B6E01168DC7579E745D41638CBDA0D9EAEA5EE9E8DADD1DB250AFCAD9D6B29D2'):
                 session['reliquum'] = "active"
-                return redirect('./admin')
+                return redirect('./inputdateform')
 
             return f"""<h1> 비밀번호가 잘못되었습니다. : {pp}</h1>
                     <form method='post' action='./auth'>
@@ -132,7 +132,7 @@ def auth():
         return str(e)
 
 
-# 로그인된 관리자 페이지
+# 로그인된 관리자 페이지 <- 수정예정
 @application.route('/admin')
 def admin():
     print(application.env)
