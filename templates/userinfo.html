@@ -5,7 +5,12 @@
         <p> 보호자 연락처 : </p>
         <p> 생년월일 : </p>
         <p> 성별 : </p>
-    </div>
+
+    <form action="./userinfo/<usename>" method="POST">
+        <input type="submit" value="수정하기">
+    </form></div>
+<div>
+    <h3>입출입 기록</h3>
     <table class="ui celled table">
         <thead>
         <tr>
@@ -26,7 +31,5 @@
         {% endfor %}
         </tbody>
     </table>
-<form action="./userinfo/<usename>" method="POST">
-    <input type="submit" value="수정하기">
-</form>
+</div>
 {% endblock %}
