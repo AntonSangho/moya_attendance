@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1 class="ui header"> {{ user.profile.name }}</h1>
+    <div>
+        <h1> {{ user.profile.name }}</h1>
+        <p> 보호자 연락처 : </p>
+        <p> 생년월일 : </p>
+        <p> 성별 : </p>
+    </div>
     <table class="ui celled table">
         <thead>
         <tr>
