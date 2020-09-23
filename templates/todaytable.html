@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
- <h1 class="ui header"> 오늘 입장 상황표 </h1>
+<h1 class="ui header"> 오늘 입장 상황표 </h1>
+<h2 id="clock" style="color: gray;">00:00</h2>
  <form action="./inputdateform" method="post">
      <div>
         {{ form.hidden_tag() }}
