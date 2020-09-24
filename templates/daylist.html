@@ -2,16 +2,13 @@
 {% block content %}
  <h1 class="ui header" > 검색한 날짜의 입장 상황표 </h1>
  <form action="./inputdateform" method="post">
-     <div class >
+     <div class ="input submit" >
         {{ form.hidden_tag() }}
         {{ form.dt(class='datepicker') }}
-     </div>
-     <div class="input submit">
         <button type="submit">검색</button>
      </div>
 
  </form>
-<a href="./inputdateform" >오늘날짜</a>
  <table class="ui celled table">
   <thead>
     <tr>
