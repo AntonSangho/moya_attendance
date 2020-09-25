@@ -138,6 +138,15 @@ def get_userdetail(db):
         return 0
 
 
+def get_userselectdetail(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"SELECT * FROM users_detail where name = '{selected_name}'; ")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
 def set_modify(db, id, rfid, name, sex, year, phone, memo):
     try:
         cursor = db.cursor()
