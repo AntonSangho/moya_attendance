@@ -1,12 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-<h1 xmlns="http://www.w3.org/1999/html">회원정보 수정</h1>
+<h1 xmlns="http://www.w3.org/1999/html">{{username}}</h1>
+<form action="./update" method="post" onsubmit="validateform()">
     <body class="body">
-        <div class="container">
-            <p>{{ username }}</p>
-        </div>
-
+    <div class="container">
+        <p><label>성별</label>
+            <select name="sex">
+                <option value="남자">남자</option>
+                <option value="여자">여자</option>
+                <option value="미정">미정</option>
+            </select>
+        <p><label>출생년도</label><input type="textbox"  name="year" placeholder="4자리로 기입하세요"></p>
+        <p><label>보호자 연락처</label><input type="textbox"  name="phone" placeholder="- 없이 입력"></p>
+        <label>메모 </label><textarea value="memo" name="memo" placeholder="메모"></textarea>
+        <input type="submit" value="저장"/>
+        <input type="submit" value="취소"/>
+    </div>
     </body>
+</form>
 
 {#<select >#}
 {#{% for user in userlist %}#}

@@ -202,7 +202,6 @@ def userinfo():
             user_info = {
                 'info': {
                     'id': dbuser['id'],
-                    'rfid': dbuser['name'],
                     'sex': dbuser['sex'],
                     'phone': dbuser['phone'],
                     'year': dbuser['year'],
@@ -216,14 +215,17 @@ def userinfo():
         return f"<h1>not selected</h1>"
 
 
-@application.route('/userinfo/<username>', methods=['POST', 'GET'])
+@application.route('/<username>', methods=['POST', 'GET'])
 def modify(username):
-    if request.method == 'POST':
-        username = request.form['name']
-    try:
-        return render_template("modify.html", username=username)
-    except Exception as e:
-        return str(e)
+    user = {'name': '관리자'}
+    return render_template('modify.html', user=user, username=username)
+    # if request.method == 'POST':
+    #     username = request.form['name']
+    # try:
+    #     return render_template("modify.html", username=username)
+    # except Exception as e:
+    #     return str(e)
+
     # if request.method == 'POST':
     #     print('*******xx')
     #     usert = {'name': '관리자'}
