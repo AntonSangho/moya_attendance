@@ -194,10 +194,10 @@ def userinfo():
                             'exits': dbuser['exits'],
                             'used': dbuser['used']
                             }
-                    }
+            }
             userlist.append(user)
         print(user)
-        userlist_info =[]
+        userlist_info = []
         for dbuser in get_userselectdetail(db, selected_name):
             user_info = {
                 'info': {
@@ -210,15 +210,30 @@ def userinfo():
             }
             userlist_info.append(user_info)
         print(user_info)
-        return render_template('userinfo.html', title='검색', user=user, userlist=userlist, user_info=user_info,userlist_info=userlist_info)
+        return render_template('userinfo.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+                               userlist_info=userlist_info)
     else:
         return f"<h1>not selected</h1>"
 
 
-@application.route('/<username>', methods=['POST', 'GET'])
+@application.route('/userinfo/<username>', methods=['POST', 'GET'])
 def modify(username):
     user = {'name': '관리자'}
-    return render_template('modify.html', user=user, username=username)
+    db = init_connect_db()
+    userlist_info = []
+    for dbuser in get_userselectdetail(db, username):
+        user_info = {
+            'info': {
+                'id': dbuser['id'],
+                'sex': dbuser['sex'],
+                'phone': dbuser['phone'],
+                'year': dbuser['year'],
+                'memo': dbuser['memo']
+            }
+        }
+        userlist_info.append(user_info)
+    if request.method == "POST":
+        return render_template('test.html', nickname=username, user=user, user_info=user_info, userlist_info=userlist_info)
     # if request.method == 'POST':
     #     username = request.form['name']
     # try:
@@ -261,6 +276,19 @@ def modify(username):
     #     else:
     #         return f"<h2>관리자한테 연락주세요</h2>"
     # return render_template('modify.html', title='회원정보 수정', user=user, userlist=userlist)
+
+
+@application.route('/update', methods=['GET', 'POST'])
+def update(username):
+    if request.method == 'POST':
+        selected_name = username
+        year = request.form['year']
+        db = init_connect_db()
+        if set_modify(db, selected_name, year):
+            return f"<h2>회원정보수정</h2>"
+        else:
+            return f"<h2>수정안됨</h2>"
+    return render_template('userinfo.html', title='검색', user=user, userlist=userlist, user_info=user_info, userlist_info=userlist_info)
 
 
 # 엑셀파일을 다운로드하는 페이지
