@@ -233,6 +233,15 @@ def modify(username):
         }
         userlist_info.append(user_info)
     if request.method == "POST":
+        print(username)
+        db = init_connect_db()
+        year = request.form['year']
+        selected_name = username
+
+        if set_modify(db, selected_name, year):
+            print('******')
+        else:
+            print('not modified')
         return render_template('test.html', nickname=username, user=user, user_info=user_info, userlist_info=userlist_info)
     # if request.method == 'POST':
     #     username = request.form['name']
