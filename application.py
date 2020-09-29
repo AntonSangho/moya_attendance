@@ -181,7 +181,7 @@ def userlist():
 def userinfo():
     if request.method == 'POST':
         selected_name = request.form['name']
-        print(selected_name)
+        # print(selected_name)
 
         user = {'name': '관리자'}
         db = init_connect_db()
@@ -196,7 +196,7 @@ def userinfo():
                             }
             }
             userlist.append(user)
-        print(user)
+        # print(user)
         userlist_info = []
         for dbuser in get_userselectdetail(db, selected_name):
             user_info = {
@@ -209,7 +209,7 @@ def userinfo():
                 }
             }
             userlist_info.append(user_info)
-        print(user_info)
+        # print(user_info)
         return render_template('userinfo.html', title='검색', user=user, userlist=userlist, user_info=user_info,
                                userlist_info=userlist_info)
     else:
@@ -218,6 +218,7 @@ def userinfo():
 
 @application.route('/userinfo/<username>', methods=['POST', 'GET'])
 def modify(username):
+    print('수정하기')
     user = {'name': '관리자'}
     db = init_connect_db()
     userlist_info = []
@@ -233,16 +234,18 @@ def modify(username):
         }
         userlist_info.append(user_info)
     if request.method == "POST":
+        print('저')
         print(username)
         db = init_connect_db()
-        year = request.form['year']
+        year = request.form.get('year')
+        print(year)
         selected_name = username
 
         if set_modify(db, selected_name, year):
-            print('******')
+            print('modified')
         else:
             print('not modified')
-        return render_template('test.html', nickname=username, user=user, user_info=user_info, userlist_info=userlist_info)
+        return render_template('test.html', username=username, user=user, user_info=user_info, userlist_info=userlist_info )
     # if request.method == 'POST':
     #     username = request.form['name']
     # try:
@@ -288,16 +291,15 @@ def modify(username):
 
 
 @application.route('/update', methods=['GET', 'POST'])
-def update(username):
+def update(selected_name):
     if request.method == 'POST':
-        selected_name = username
-        year = request.form['year']
+        year = request.get.form('year')
         db = init_connect_db()
         if set_modify(db, selected_name, year):
             return f"<h2>회원정보수정</h2>"
         else:
             return f"<h2>수정안됨</h2>"
-    return render_template('userinfo.html', title='검색', user=user, userlist=userlist, user_info=user_info, userlist_info=userlist_info)
+    return render_template('userinfo.html', title='검색', user=user, username=username, userlist=userlist, user_info=user_info, userlist_info=userlist_info)
 
 
 # 엑셀파일을 다운로드하는 페이지
