@@ -246,7 +246,7 @@ def modify(username):
             # userinfo 페이지도 돌아가도록한다.
         else:
             print('not modified')
-        return render_template('test.html', username=username, user=user, user_info=user_info,
+        return render_template('update.html', username=username, user=user, user_info=user_info,
                                userlist_info=userlist_info)
 
 
