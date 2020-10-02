@@ -376,7 +376,16 @@ def inputdateform():
                             'exits': dbuser['exits'], 'used': dbuser['used']}
             }
             userlist.append(user)
-            print(user)
+
+        print('###379'+str(userlist) )
+        if  len(userlist) == 0 :
+            return """<h2>해당날짜에는 기록이 없습니다.</h2>
+            <script>
+            setTimeout(function(){
+                history.back()
+            }, 3000);
+            </script>"""
+        
         return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
         # return '''<h1>{}</h1>'''.format(filterdate)
     else:
