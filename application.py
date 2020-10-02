@@ -179,6 +179,11 @@ def userlist():
 # 사용자를 확인하는 페이지
 @application.route('/userinfo', methods=['GET', 'POST'])
 def userinfo():
+    if request.method == 'GET':
+        abort(403, '잘못된 접근입니다.')
+
+
+    print("######"+str(request.form))
     if request.method == 'POST':
         selected_name = request.form['name']
         # print(selected_name)
@@ -241,11 +246,14 @@ def modify(username):
         memo = request.form.get('memo')
         selected_name = username
 
+          
         if set_modify(db, selected_name, year, phone, memo):
             print('modified')
             # userinfo 페이지도 돌아가도록한다.
+            return redirect(url_for('userinfo'),code=307)
         else:
             print('not modified')
+
         return render_template('update.html', username=username, user=user, user_info=user_info,
                                userlist_info=userlist_info)
 
