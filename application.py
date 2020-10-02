@@ -260,7 +260,7 @@ def aftermodify(username):
             userlist_info.append(user_info)
         # print(user_info)
         print(selected_name)
-        return render_template('userinfo.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+        return render_template('afteruserinfo.html', title='검색', user=user, userlist=userlist, user_info=user_info,
                                userlist_info=userlist_info)
 
 
