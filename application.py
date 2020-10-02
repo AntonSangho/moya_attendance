@@ -181,7 +181,7 @@ def userlist():
 def userinfo():
     if request.method == 'GET':
         abort(403, '잘못된 접근입니다.')
-    print("######"+str(request.form))
+    print("######" + str(request.form))
     if request.method == 'POST':
         selected_name = request.form['name']
         user = {'name': '관리자'}
@@ -211,10 +211,10 @@ def userinfo():
             }
             userlist_info.append(user_info)
         # print(user_info)
-        print('****'+selected_name)
+        print('****' + selected_name)
         print(userlist)
         print(userlist_info)
-        if len(userlist_info) == 0 :
+        if len(userlist_info) == 0:
             return """<h2>해당사용자는 기록이 없습니다.</h2>
                         <script>
                         setTimeout(function(){
@@ -227,16 +227,16 @@ def userinfo():
     else:
         return f"<h1>not selected</h1>"
 
+
 # @application.route('/userinfo/userinfo/<username>', methods=['POST', 'GET'])
 # def fixed_url(username):
 #     return redirect('/userinfo/'+username)
 @application.route('/view/<username>', methods=['POST', 'GET'])
 def aftermodify(username):
-    print('270#########'+username)
+    print('270#########' + username)
     if request.method == 'GET':
         selected_name = username
         # print(selected_name)
-        
 
         user = {'name': '관리자'}
         db = init_connect_db()
@@ -266,7 +266,7 @@ def aftermodify(username):
             userlist_info.append(user_info)
         # print(user_info)
         print(selected_name)
-        if len(userlist_info) == 0 :
+        if len(userlist_info) == 0:
             return """<h2>해당사용자는 기록이 없습니다.</h2>
                         <script>
                         setTimeout(function(){
@@ -300,7 +300,6 @@ def modify(username):
         memo = request.form.get('memo')
         selected_name = username
 
-          
         if set_modify(db, selected_name, year, phone, memo):
             return redirect(url_for('aftermodify', username=selected_name))
             # print('modified')
@@ -317,11 +316,10 @@ def modify(username):
         return render_template('update.html', username=username, user=user, user_info=user_info,
                                userlist_info=userlist_info)
 
-@application.route('/modify')
-def findmodify():
-    return render_template('findmodify.html')
 
-
+# @application.route('/modify')
+# def findmodify():
+#     return render_template('findmodify.html')
 
 
 # 엑셀파일을 다운로드하는 페이지
@@ -386,15 +384,15 @@ def inputdateform():
             }
             userlist.append(user)
 
-        print('###379'+str(userlist) )
-        if  len(userlist) == 0 :
+        print('###379' + str(userlist))
+        if len(userlist) == 0:
             return """<h2>해당날짜에는 기록이 없습니다.</h2>
             <script>
             setTimeout(function(){
                 history.back()
             }, 3000);
             </script>"""
-        
+
         return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
         # return '''<h1>{}</h1>'''.format(filterdate)
     else:
