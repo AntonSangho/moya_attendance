@@ -222,6 +222,9 @@ def userinfo():
     else:
         return f"<h1>not selected</h1>"
 
+# @application.route('/userinfo/userinfo/<username>', methods=['POST', 'GET'])
+# def fixed_url(username):
+#     return redirect('/userinfo/'+username)
 
 @application.route('/userinfo/<username>', methods=['POST', 'GET'])
 def modify(username):
@@ -250,7 +253,11 @@ def modify(username):
         if set_modify(db, selected_name, year, phone, memo):
             print('modified')
             # userinfo 페이지도 돌아가도록한다.
-            return redirect(url_for('userinfo'),code=307)
+            import requests
+            url = 'http://localhost:5000/userinfo'
+            data = {'name':'김지유'}
+            return requests.post(url, data).text.replace('/userinfo','')
+            # return redirect(url_for('userinfo'),code=307)
         else:
             print('not modified')
 
