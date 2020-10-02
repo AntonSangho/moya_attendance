@@ -266,6 +266,13 @@ def aftermodify(username):
             userlist_info.append(user_info)
         # print(user_info)
         print(selected_name)
+        if len(userlist_info) == 0 :
+            return """<h2>해당사용자는 기록이 없습니다.</h2>
+                        <script>
+                        setTimeout(function(){
+                            history.back()
+                        }, 3000);
+                        </script>"""
         return render_template('afteruserinfo.html', title='검색', user=user, userlist=userlist, user_info=user_info,
                                userlist_info=userlist_info)
 

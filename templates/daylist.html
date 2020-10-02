@@ -23,7 +23,7 @@
    {% for user in userlist %}
    <tr>
        <td data-label="RFID No.">{{ user.profile.userid }}</td>
-       <td data-label="Name"><a href="./modify.html">{{ user.profile.name }}</a></td>
+       <td data-label="Name"><a href="{{ url_for('aftermodify', username = user.profile.name) }}">{{ user.profile.name }}</a></td>
        <td data-label="Entry time">{{ user.profile.entry }}</td>
        <td data-label="Exit time">{{ user.profile.exits }}</td>
        <td data-label="Working time(min)">{{ user.profile.used }}</td>
