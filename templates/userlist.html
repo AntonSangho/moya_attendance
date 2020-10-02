@@ -16,7 +16,7 @@
     {% for user in userlist %}
     <tr>
         <td>{{ user.profile.id }}</td>
-        <td><a href="{{ url_for('userinfo', id = user.profile.name) }}">{{ user.profile.name }}</a></td>
+        <td><a href="{{ url_for('aftermodify', username = user.profile.name) }}">{{ user.profile.name }}</a></td>
         <td> {{ user.profile.sex }}</td>
         <td> {{ user.profile.year }}</td>
         <td> {{ user.profile.phone }}</td>
