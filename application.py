@@ -180,19 +180,10 @@ def userlist():
 @application.route('/userinfo', methods=['GET', 'POST'])
 def userinfo():
     if request.method == 'GET':
-        # import requests
-        #     url = 'http://localhost:5000/userinfo'
-        #     data = {'name':'김지유'}
-        #     return requests.post(url, data).text.replace('/userinfo','')
         abort(403, '잘못된 접근입니다.')
-
-
-
     print("######"+str(request.form))
     if request.method == 'POST':
         selected_name = request.form['name']
-        # print(selected_name)
-
         user = {'name': '관리자'}
         db = init_connect_db()
         userlist = []
@@ -220,7 +211,16 @@ def userinfo():
             }
             userlist_info.append(user_info)
         # print(user_info)
-        print(selected_name)
+        print('****'+selected_name)
+        print(userlist)
+        print(userlist_info)
+        if len(userlist_info) == 0 :
+            return """<h2>해당사용자는 기록이 없습니다.</h2>
+                        <script>
+                        setTimeout(function(){
+                            history.back()
+                        }, 3000);
+                        </script>"""
         return render_template('userinfo.html', title='검색', user=user, userlist=userlist, user_info=user_info,
                                userlist_info=userlist_info)
 
