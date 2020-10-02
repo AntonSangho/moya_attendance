@@ -317,7 +317,9 @@ def modify(username):
         return render_template('update.html', username=username, user=user, user_info=user_info,
                                userlist_info=userlist_info)
 
-
+@application.route('/modify')
+def findmodify():
+    return render_template('findmodify.html')
 
 
 
