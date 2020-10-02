@@ -225,6 +225,44 @@ def userinfo():
 # @application.route('/userinfo/userinfo/<username>', methods=['POST', 'GET'])
 # def fixed_url(username):
 #     return redirect('/userinfo/'+username)
+@application.route('/view/<username>', methods=['POST', 'GET'])
+def aftermodify(username):
+    print('270#########'+username)
+    if request.method == 'GET':
+        selected_name = username
+        # print(selected_name)
+
+        user = {'name': '관리자'}
+        db = init_connect_db()
+        userlist = []
+        for dbuser in get_userattendance(db, selected_name):
+            user = {
+                'profile': {'userid': dbuser['userid'],
+                            'name': dbuser['name'],
+                            'entry': dbuser['entry'],
+                            'exits': dbuser['exits'],
+                            'used': dbuser['used']
+                            }
+            }
+            userlist.append(user)
+        # print(user)
+        userlist_info = []
+        for dbuser in get_userselectdetail(db, selected_name):
+            user_info = {
+                'info': {
+                    'id': dbuser['id'],
+                    'sex': dbuser['sex'],
+                    'phone': dbuser['phone'],
+                    'year': dbuser['year'],
+                    'memo': dbuser['memo']
+                }
+            }
+            userlist_info.append(user_info)
+        # print(user_info)
+        print(selected_name)
+        return render_template('userinfo.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+                               userlist_info=userlist_info)
+
 
 @application.route('/userinfo/<username>', methods=['POST', 'GET'])
 def modify(username):
@@ -251,18 +289,24 @@ def modify(username):
 
           
         if set_modify(db, selected_name, year, phone, memo):
-            print('modified')
-            # userinfo 페이지도 돌아가도록한다.
-            import requests
-            url = 'http://localhost:5000/userinfo'
-            data = {'name':'김지유'}
-            return requests.post(url, data).text.replace('/userinfo','')
-            # return redirect(url_for('userinfo'),code=307)
+            return redirect(url_for('aftermodify', username=selected_name))
+            # print('modified')
+            # # userinfo 페이지도 돌아가도록한다.
+            # import requests
+            # url = 'http://localhost:5000/userinfo'
+            # data = {'name':'김지유'}
+            # return requests.post(url, data).text.replace('/userinfo','')
+            # # return redirect(url_for('userinfo'),code=307)
+            # return redirect(url_for('aftermodify'), username='김지유')
         else:
             print('not modified')
 
         return render_template('update.html', username=username, user=user, user_info=user_info,
                                userlist_info=userlist_info)
+
+
+
+
 
 
 # 엑셀파일을 다운로드하는 페이지
