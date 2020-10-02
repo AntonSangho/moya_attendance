@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+   <body>
+      <div>
+        <h1> {{ username }}</h1>
+        <form action="./{{ username }}" method="POST" >
+        <p> 카드번호 : {{ user_info.info.id }}</p>
+        <p>
+            보호자 연락처 : <input type="text" name="phone" value="{{ user_info.info.phone }}">
+        </p>
+        <p>
+            생년월일 :<input type="text" name="year" value="{{ user_info.info.year }}">
+        </p>
+        <p>
+            메모 : <input type="text" name="memo" value="{{ user_info.info.memo }}">
+        </p>
+            <input type="submit" value="저장">
+        </form>
+    </div>
+   </body>
+</html>
