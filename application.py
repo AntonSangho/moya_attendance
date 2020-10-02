@@ -180,7 +180,12 @@ def userlist():
 @application.route('/userinfo', methods=['GET', 'POST'])
 def userinfo():
     if request.method == 'GET':
+        # import requests
+        #     url = 'http://localhost:5000/userinfo'
+        #     data = {'name':'김지유'}
+        #     return requests.post(url, data).text.replace('/userinfo','')
         abort(403, '잘못된 접근입니다.')
+
 
 
     print("######"+str(request.form))
@@ -231,6 +236,7 @@ def aftermodify(username):
     if request.method == 'GET':
         selected_name = username
         # print(selected_name)
+        
 
         user = {'name': '관리자'}
         db = init_connect_db()
