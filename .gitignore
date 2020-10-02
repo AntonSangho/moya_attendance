@@ -156,7 +156,6 @@ deploy.zip
 .idea/sqldialects.xml
 
 # Semantic UI file
-static/semantic/
 
 #sql for test
 stat.sql
