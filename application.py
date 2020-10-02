@@ -210,15 +210,16 @@ def userinfo():
             }
             userlist_info.append(user_info)
         # print(user_info)
+        print(selected_name)
         return render_template('userinfo.html', title='검색', user=user, userlist=userlist, user_info=user_info,
                                userlist_info=userlist_info)
+
     else:
         return f"<h1>not selected</h1>"
 
 
 @application.route('/userinfo/<username>', methods=['POST', 'GET'])
 def modify(username):
-    print('수정하기')
     user = {'name': '관리자'}
     db = init_connect_db()
     userlist_info = []
@@ -234,72 +235,19 @@ def modify(username):
         }
         userlist_info.append(user_info)
     if request.method == "POST":
-        print('저')
-        print(username)
         db = init_connect_db()
         year = request.form.get('year')
-        print(year)
+        phone = request.form.get('phone')
+        memo = request.form.get('memo')
         selected_name = username
 
-        if set_modify(db, selected_name, year):
+        if set_modify(db, selected_name, year, phone, memo):
             print('modified')
+            # userinfo 페이지도 돌아가도록한다.
         else:
             print('not modified')
-        return render_template('test.html', username=username, user=user, user_info=user_info, userlist_info=userlist_info )
-    # if request.method == 'POST':
-    #     username = request.form['name']
-    # try:
-    #     return render_template("modify.html", username=username)
-    # except Exception as e:
-    #     return str(e)
-
-    # if request.method == 'POST':
-    #     print('*******xx')
-    #     usert = {'name': '관리자'}
-    #     db = init_connect_db()
-    #     userlist = []
-    #     for dbuser in get_userlist(db):
-    #         user = {
-    #             'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
-    #             'status': '입장중',
-    #             'is': True
-    #         }
-    #         userlist.append(user)
-    # 데이터베이스 수정하는 코
-    # if request.method == 'POST':
-    #
-    #     idrfid = request.form['idrfid']
-    #     print(idrfid)
-    #     id = idrfid.split("^")[0]
-    #     rfid = idrfid.split("^")[1]
-    #     name = request.form['name']
-    #     year = request.form['year']
-    #     sex = request.form['sex']
-    #     phone = request.form['phone']
-    #     memo = request.form['memo']
-    #     print('*************')
-    #
-    #     ## 데이타베이스 저장하는 코드
-    #
-    #     db = init_connect_db()
-    #     if set_modify(db, id, rfid, name, sex, year, phone, memo):
-    #         print('&&&&&&&&&&&')
-    #         return f"<h2>회원정보를 수정했습니다.</h2>"
-    #     else:
-    #         return f"<h2>관리자한테 연락주세요</h2>"
-    # return render_template('modify.html', title='회원정보 수정', user=user, userlist=userlist)
-
-
-@application.route('/update', methods=['GET', 'POST'])
-def update(selected_name):
-    if request.method == 'POST':
-        year = request.get.form('year')
-        db = init_connect_db()
-        if set_modify(db, selected_name, year):
-            return f"<h2>회원정보수정</h2>"
-        else:
-            return f"<h2>수정안됨</h2>"
-    return render_template('userinfo.html', title='검색', user=user, username=username, userlist=userlist, user_info=user_info, userlist_info=userlist_info)
+        return render_template('test.html', username=username, user=user, user_info=user_info,
+                               userlist_info=userlist_info)
 
 
 # 엑셀파일을 다운로드하는 페이지
