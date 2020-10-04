@@ -1,37 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
- <h1 class="ui header" >  날짜 입장 상황표 </h1>
- <form action="./inputdateform" method="post">
-     <div class ="input submit" >
-        {{ form.hidden_tag() }}
-        {{ form.dt(class='datepicker') }}
-        <button type="submit">검색</button>
-     </div>
-
- </form>
- <table class="ui celled table">
-  <thead>
-    <tr>
-        <th>RFID No.</th>
-        <th>이름</th>
-        <th>출입한 시간</th>
-        <th>퇴장한 시간</th>
-        <th>작업한 시간(분)</th>
-    </tr>
-  </thead>
-  <tbody>
-   {% for user in userlist %}
-   <tr>
-       <td data-label="RFID No.">{{ user.profile.userid }}</td>
-       <td data-label="Name"><a href="{{ url_for('aftermodify', username = user.profile.name) }}">{{ user.profile.name }}</a></td>
-       <td data-label="Entry time">{{ user.profile.entry }}</td>
-       <td data-label="Exit time">{{ user.profile.exits }}</td>
-       <td data-label="Working time(min)">{{ user.profile.used }}</td>
-   </tr>
-   {% else %}
-       <em>선택하신 날짜의 입장객은 없습니다.</em>
-   {% endfor %}
-  </tbody>
-</table>
-<form action="./download" , method="post", class="ui form"></form>
+<div class="ui padded segments">
+    <div class="ui padded segment">
+         <h1 class="ui header" > 날짜 검색 </h1>
+         <form action="./inputdateform" method="post">
+             <div class ="input submit" >
+                {{ form.hidden_tag() }}
+                {{ form.dt(class='datepicker') }}
+                <button type="submit">검색</button>
+             </div>
+         </form>
+    </div>
+    <div class="ui padded segment">
+        <h1 class="ui header">검색한 날짜 상황</h1>
+        <table class="ui celled table">
+          <thead>
+            <tr>
+                <th>RFID No.</th>
+                <th>이름</th>
+                <th>출입한 시간</th>
+                <th>퇴장한 시간</th>
+                <th>작업한 시간(분)</th>
+            </tr>
+          </thead>
+          <tbody>
+           {% for user in userlist %}
+           <tr>
+               <td data-label="RFID No.">{{ user.profile.userid }}</td>
+               <td data-label="Name"><a href="{{ url_for('aftermodify', username = user.profile.name) }}">{{ user.profile.name }}</a></td>
+               <td data-label="Entry time">{{ user.profile.entry }}</td>
+               <td data-label="Exit time">{{ user.profile.exits }}</td>
+               <td data-label="Working time(min)">{{ user.profile.used }}</td>
+               {% else %}
+<!--               <em>선택하신 날짜의 입장객은 없습니다.</em>-->
+           {% endfor %}
+           </tr>
+          </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
