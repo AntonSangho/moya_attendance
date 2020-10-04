@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+<h2> 개인정보 </h2>
 <div class="ui padded segment">
-    <h1> {{ user.profile.name }}</h1>
+    <h3> {{ user.profile.name }}</h3>
     <p> 카드번호 : {{ user_info.info.id }}</p>
     <p> 보호자 연락처 : {{ user_info.info.phone }}</p>
     <p> 생년월일 : {{ user_info.info.year }}</p>
@@ -9,7 +10,7 @@
 </div>
 <!--    <a href="/inputdateform">이동하기</a>-->
 <div>
-    <h3>입출입 기록</h3>
+    <h2>입출입 기록</h2>
     <table class="ui celled table">
         <thead>
         <tr>
