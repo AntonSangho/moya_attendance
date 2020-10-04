@@ -440,7 +440,11 @@ def signup():
         db = init_connect_db()
         if set_signup(db, id, rfid, name, sex, year, phone, memo):
             print('&&&&&&&&&&&')
-            return f"<h2>새로운 회원을 등록했습니다.</h2>"
+            return """<h2>새로운 회원을 등록했습니다.</h2><script>
+            setTimeout(function(){
+                history.back()
+            }, 3000);
+            </script>"""
         else:
             return f"<h2>관리자한테 연락주세요</h2>"
 
