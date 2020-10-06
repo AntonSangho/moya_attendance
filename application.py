@@ -18,7 +18,7 @@ from datetime import date
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
     set_signup, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, get_userdetail, \
-    get_userattendance, set_modify, get_userselectdetail
+    get_userattendance, set_modify, get_userselectdetail, set_addname
 from sqlalchemy import create_engine
 
 from flask.logging import default_handler
@@ -267,7 +267,7 @@ def aftermodify(username):
         # print(user_info)
         print(selected_name)
         if len(userlist_info) == 0:
-            return """<h2>해당사용자는 기록이 없습니다.</h2>
+            return """<h2>해당사용자는 아직 개인정보가 없습니다.</h2>
                         <script>
                         setTimeout(function(){
                             history.back()
@@ -425,7 +425,6 @@ def signup():
     if request.method == 'POST':
 
         idrfid = request.form['idrfid']
-        print(idrfid)
         id = idrfid.split("^")[0]
         rfid = idrfid.split("^")[1]
         name = request.form['name']
@@ -433,20 +432,25 @@ def signup():
         sex = request.form['sex']
         phone = request.form['phone']
         memo = request.form['memo']
-        print('*************')
 
         ## 데이타베이스 저장하는 코드
 
         db = init_connect_db()
         if set_signup(db, id, rfid, name, sex, year, phone, memo):
-            print('&&&&&&&&&&&')
+            # user table을 업데이트하는 구문이 필요.
+            # print("변경될 것" + name )
+            print('set_signup실')
+
+            # rfid_add = rfid
+            set_addname(db, name, rfid)
+            print('set_aadname')
             return """<h2>새로운 회원을 등록했습니다.</h2><script>
             setTimeout(function(){
                 history.back()
             }, 3000);
             </script>"""
         else:
-            return f"<h2>관리자한테 연락주세요</h2>"
+            return f"<h2>관리자한테 연락주세요</h2>" #이미등록된 카드일 경우 알려줄 필요가 있음.
 
         ## 이상이 없으면 alert 창 뛰우기
         return f"<h2>{age}post 입니다{rfid} </h2>"
