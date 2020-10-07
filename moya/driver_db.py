@@ -1,4 +1,5 @@
 import pymysql
+import pymysql.cursors
 import os
 
 
@@ -153,22 +154,8 @@ def get_userselectdetail(db, selected_name):
 def set_modify(db, selected_name, year, phone, memo):
     try:
         cursor = db.cursor()
-        cursor.execute(f"UPDATE users_detail SET year={year}, phone={phone}, memo={memo} where name ='{selected_name}' ;")
-    except pymysql.Error as e:
-        db.rollback()
-        db.close()
-        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
-        return 0
-    else:
-        db.commit()
-        db.close()
-        return 1
-
-
-def set_addname(db, name, rfid):
-    try:
-        cursor = db.cursor()
-        cursor.execute(f"UPDATE users SET name='{name}' where rfid_uid ='{rfid}';")
+        cursor.execute(
+            f"UPDATE users_detail SET year={year}, phone={phone}, memo={memo} where name ='{selected_name}' ;")
     except pymysql.Error as e:
         db.rollback()
         db.close()
@@ -183,9 +170,11 @@ def set_addname(db, name, rfid):
 def set_signup(db, id, rfid, name, sex, year, phone, memo):
     try:
         cursor = db.cursor()
-        sql = f"insert into users_detail(id,rfid,`name`, sex, year, phone, memo) value ('{id}','{rfid}', '{name}','{sex}','{year}','{phone}','{memo}')"
-        print(sql)
-        cursor.execute(sql)
+        sql_1 = f"insert into users_detail(id,rfid,`name`, sex, year, phone, memo) value ('{id}','{rfid}', '{name}','{sex}','{year}','{phone}','{memo}');"
+        cursor.execute(sql_1)
+        db.commit()
+        sql_2 = f"update users set name='{name}' where rfid_uid ='{rfid}';"
+        cursor.execute(sql_2)
     except pymysql.Error as e:
         db.rollback()
         db.close()

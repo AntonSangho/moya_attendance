@@ -437,20 +437,13 @@ def signup():
 
         db = init_connect_db()
         if set_signup(db, id, rfid, name, sex, year, phone, memo):
-            # user table을 업데이트하는 구문이 필요.
-            # print("변경될 것" + name )
-            print('set_signup실')
-
-            # rfid_add = rfid
-            set_addname(db, name, rfid)
-            print('set_aadname')
             return """<h2>새로운 회원을 등록했습니다.</h2><script>
             setTimeout(function(){
                 history.back()
             }, 3000);
             </script>"""
         else:
-            return f"<h2>관리자한테 연락주세요</h2>" #이미등록된 카드일 경우 알려줄 필요가 있음.
+            return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
 
         ## 이상이 없으면 alert 창 뛰우기
         return f"<h2>{age}post 입니다{rfid} </h2>"
