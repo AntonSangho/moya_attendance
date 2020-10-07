@@ -18,7 +18,7 @@ from datetime import date
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
     set_signup, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, get_userdetail, \
-    get_userattendance, set_modify, get_userselectdetail, set_addname
+    get_userattendance, set_modify, get_userselectdetail
 from sqlalchemy import create_engine
 
 from flask.logging import default_handler
