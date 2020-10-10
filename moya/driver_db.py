@@ -131,6 +131,17 @@ def get_userlist(db):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
+def get_adduserlist(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"select users.id, users.name, users.rfid_uid from users left join users_detail on users.id <> users_detail.id;")
+        # 카드등록시 미등록된 리스트만 나오도록 하기위함.
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pomysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+
 def get_userdetail(db):
     try:
         cursor = db.cursor()
