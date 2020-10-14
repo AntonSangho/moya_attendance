@@ -458,17 +458,7 @@ def signup():
             'is': True
         }
         userlist.append(user)
-    print(userlist)
-    # for dbuser in get_adduserlist(db):
-    #     user = {
-    #         'profile': {'id': dbuser['id'],
-    #                     'name': dbuser['name'],
-    #                     'rfid': dbuser['rfid_uid']
-    #                     }
-    #     }
-    #     userlist.append(user)
-
-    return render_template('signup.html', title='신규 회원 등록', user=user, userlist=userlist)
+    return render_template('signup.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
 
 
 # 퇴장시 RFID카드를 인식하는 페이지
