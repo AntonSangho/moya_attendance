@@ -165,11 +165,12 @@ def get_userselectdetail(db, selected_name):
 def set_modify(db, selected_name, year, phone, memo):
     try:
         cursor = db.cursor()
-        cursor.execute(
-            f"UPDATE users_detail SET year={year}, phone={phone}, memo={memo} where name ='{selected_name}' ;")
+        cursor.execute(f"UPDATE users_detail SET year={year}, phone={phone}, memo='{memo}' where name ='{selected_name}' ;")
+        # print("1_1 - set_modify try")
     except pymysql.Error as e:
         db.rollback()
         db.close()
+        # print("1_2 - set_modify exception")
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0
     else:
