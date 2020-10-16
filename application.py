@@ -300,29 +300,10 @@ def modify(username):
         year = request.form.get('year')
         phone = request.form.get('phone')
         memo = request.form.get('memo')
+        sex = request.form.get('sex')
         selected_name = username
-
-        if set_modify(db, selected_name, year, phone, memo):
-            # print('2 - set_modified')
+        if set_modify(db, selected_name, sex, year, phone, memo):
             return redirect(url_for('aftermodify', username=selected_name))
-            # return """<h2>회원정보를 수정했습니다.</h2><script>
-            # setTimeout(function(){
-            #     history.back()
-            # }, 3000);
-            # </script>"""
-        # else:
-        #     return f"<h2>관리자한테 연락주세요</h2>"
-            # print('modified')
-            # # userinfo 페이지도 돌아가도록한다.
-            # import requests
-            # url = 'http://localhost:5000/userinfo'
-            # data = {'name':'김지유'}
-            # return requests.post(url, data).text.replace('/userinfo','')
-            # # return redirect(url_for('userinfo'),code=307)
-            # return redirect(url_for('aftermodify'), username='김지유')
-        # else:
-        #     print('not modified')
-
         return render_template('update.html', username=username, user=user, user_info=user_info,
                                userlist_info=userlist_info)
 
