@@ -368,6 +368,7 @@ def inputdateform():
         user = {'name': '관리자'}
         db = init_connect_db()
         userlist = []
+        print(filterdate)
         for dbuser in get_dayattendance(db, filterdate):
             user = {
                 'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
@@ -387,7 +388,7 @@ def inputdateform():
         return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
         # return '''<h1>{}</h1>'''.format(filterdate)
     else:
-        today = datetime.datetime.today()
+        today = datetime.date.today()
         print(today)
         user = {'name': '관리자'}
         db = init_connect_db()
