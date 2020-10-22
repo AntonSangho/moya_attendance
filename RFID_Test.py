@@ -3,6 +3,8 @@ import sys
 from mfrc522 import SimpleMFRC522
 read = SimpleMFRC522()
 
+import RPi.GPIO as GPIO
+
 try:
     while True:
         print("Hold a tag near the reader")
