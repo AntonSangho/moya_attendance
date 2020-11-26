@@ -18,7 +18,7 @@ from datetime import date
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
     set_signup, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, get_userdetail, \
-    get_userattendance, set_modify, get_userselectdetail, get_adduserlist, set_attendance_mh
+    get_userattendance, set_modify, get_userselectdetail, get_adduserlist
 from sqlalchemy import create_engine
 
 from flask.logging import default_handler
@@ -502,7 +502,7 @@ def endpoint_rfid_read_entry():
                 rfid_uid = rst[1]
                 # print("*****************2")
                 name = get_userinfo(db, userid, rfid_uid)
-                rst.append("DB TRUE" if set_attendance_mh(db, userid) else "DB FALSE")
+                rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
 
                 # print("*****************3")
                 if len(name) > 0:
