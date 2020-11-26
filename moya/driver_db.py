@@ -134,7 +134,8 @@ def get_userlist(db):
 def get_adduserlist(db):
     try:
         cursor = db.cursor()
-        cursor.execute(f"select users.id, users.name, users.rfid_uid from users where not exists(select users_detail.id from users_detail where users.id = users_detail.id);")
+        cursor.execute(
+            f"select users.id, users.name, users.rfid_uid from users where not exists(select users_detail.id from users_detail where users.id = users_detail.id);")
         # 카드등록시 미등록된 리스트만 나오도록 하기위함.
         return cursor.fetchall()
     except pymysql.Error as e:
@@ -165,7 +166,8 @@ def get_userselectdetail(db, selected_name):
 def set_modify(db, selected_name, sex, year, phone, memo):
     try:
         cursor = db.cursor()
-        cursor.execute(f"UPDATE users_detail SET sex='{sex}', year={year}, phone={phone}, memo='{memo}' where name ='{selected_name}' ;")
+        cursor.execute(
+            f"UPDATE users_detail SET sex='{sex}', year={year}, phone={phone}, memo='{memo}' where name ='{selected_name}' ;")
         # print("1_1 - set_modify try")
     except pymysql.Error as e:
         db.rollback()
@@ -198,7 +200,7 @@ def set_signup(db, id, rfid, name, sex, year, phone, memo):
         return 1
 
 
-# rfid 태깅기록
+## rfid 태깅기록
 # 제천도서관 입장기록
 def set_attendance(db, userid):
     try:
@@ -213,6 +215,7 @@ def set_attendance(db, userid):
         db.commit()
         db.close()
         return 1
+
 
 # 마하도서관 입장기록
 def set_attendance_mh(db, userid):
@@ -229,7 +232,8 @@ def set_attendance_mh(db, userid):
         db.close()
         return 1
 
-# rfid 태깅기록
+
+## rfid 태깅기록
 # 제천도서관 퇴장기록
 def set_exit(db, userid):
     try:
@@ -245,6 +249,7 @@ def set_exit(db, userid):
         db.commit()
         db.close()
         return 1
+
 
 # 마하도서관 퇴장기록
 def set_exit_mh(db, userid):
@@ -262,11 +267,29 @@ def set_exit_mh(db, userid):
         db.close()
         return 1
 
-# rfid 카드등록
+
+## rfid 카드등록
+# 제천도서관 카드등록
 def add_newcard(db, rfid_uid, name):
     try:
         cursor = db.cursor()
         cursor.execute(f"INSERT INTO users(rfid_uid, `name`) VALUES ('{rfid_uid}','{name}')")
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+    else:
+        db.commit()
+        db.close()
+        return 1
+
+
+# 마하도서관 카드등록
+def add_newcard_mh(db, rfid_uid, name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"INSERT INTO mh_users(rfid_uid, `name`) VALUES ('{rfid_uid}','{name}')")
     except pymysql.Error as e:
         db.rollback()
         db.close()
