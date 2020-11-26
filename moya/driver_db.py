@@ -111,6 +111,14 @@ def is_rfid(db, rfid_uid):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
+def is_rfid_mh(db, rfid_uid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"select count(*) as cnt from mh_users where rfid_uid = {rfid_uid};")
+        return cursor.fetchone()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
 def get_rfid(db, rfid_uid):
     try:
         cursor = db.cursor()
