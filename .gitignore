@@ -154,7 +154,7 @@ deploy.zip
 .idea/misc.xml
 .idea/moya_attendance.iml
 .idea/sqldialects.xml
-
+.idea/sshConfigs.xml
 # Semantic UI file
 
 #sql for test
