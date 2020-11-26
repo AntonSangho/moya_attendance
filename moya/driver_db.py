@@ -199,7 +199,7 @@ def set_signup(db, id, rfid, name, sex, year, phone, memo):
 
 
 # rfid 태깅기록
-# 입장기록 
+# 제천도서관 입장기록
 def set_attendance(db, userid):
     try:
         cursor = db.cursor()
@@ -230,7 +230,7 @@ def set_attendance_mh(db, userid):
         return 1
 
 # rfid 태깅기록
-# 퇴장기록 
+# 제천도서관 퇴장기록
 def set_exit(db, userid):
     try:
         cursor = db.cursor()
@@ -246,6 +246,21 @@ def set_exit(db, userid):
         db.close()
         return 1
 
+# 마하도서관 퇴장기록
+def set_exit_mh(db, userid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"INSERT INTO mh_exits(user_id) VALUES ({userid})")
+        print("db commit successfully")
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        raise
+    else:
+        db.commit()
+        db.close()
+        return 1
 
 # rfid 카드등록
 def add_newcard(db, rfid_uid, name):
