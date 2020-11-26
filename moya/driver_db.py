@@ -94,8 +94,8 @@ def get_userattendance(db, selected_name):
 def get_userinfo(db, userid, rfid_uid):
     try:
         cursor = db.cursor()
-        print("$$$$$$$$")
-        print(userid, rfid_uid)
+        # print("$$$$$$$$")
+        # print(userid, rfid_uid)
         cursor.execute(f"SELECT name FROM users WHERE id = {userid} and rfid_uid = {rfid_uid};")
         return cursor.fetchall()
     except pymysql.Error as e:
