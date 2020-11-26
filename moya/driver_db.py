@@ -214,6 +214,20 @@ def set_attendance(db, userid):
         db.close()
         return 1
 
+# 마하도서관 입장기록
+def set_attendance_mh(db, userid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"INSERT INTO mh_attendance(user_id) VALUES ({userid})")
+        print("db commit successfully")
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+    else:
+        db.commit()
+        db.close()
+        return 1
 
 # rfid 태깅기록
 # 퇴장기록 
