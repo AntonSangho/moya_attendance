@@ -65,7 +65,6 @@ def index():
     # print(application.env)
     return render_template('index.html', platform="마하")
 
-
 # YouTube embedded page
 @application.route('/intro')
 def intro():
