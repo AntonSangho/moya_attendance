@@ -63,7 +63,7 @@ application.config['LOGGING_BACKUP_COUNT'] = 1000
 @application.route('/')
 def index():
     # print(application.env)
-    return render_template('index.html', platform="")
+    return render_template('index.html', platform="마하")
 
 
 # YouTube embedded page
