@@ -58,6 +58,7 @@ application.config['LOGGING_BACKUP_COUNT'] = 1000
 
 # global blocking
 # blocking = False
+db = init_connect_db(1)
 
 # 관리자 메인 페이지 (기획에 없음)
 @application.route('/')
@@ -148,7 +149,6 @@ def admin():
 def userlist():
     # print(application.env)
     user = {'name': '관리자'}
-    db = init_connect_db()
     userlist = []
     get_userdetail(db)
     # return 'f<h1>dd</h1>'
@@ -185,7 +185,7 @@ def userinfo():
     if request.method == 'POST':
         selected_name = request.form['name']
         user = {'name': '관리자'}
-        db = init_connect_db()
+        #db = init_connect_db()
         userlist = []
         for dbuser in get_userattendance(db, selected_name):
             user = {
@@ -239,7 +239,7 @@ def aftermodify(username):
         # print(selected_name)
 
         user = {'name': '관리자'}
-        db = init_connect_db()
+        #db = init_connect_db()
         userlist = []
         for dbuser in get_userattendance(db, selected_name):
             user = {
@@ -280,7 +280,7 @@ def aftermodify(username):
 @application.route('/userinfo/<username>', methods=['POST', 'GET'])
 def modify(username):
     user = {'name': '관리자'}
-    db = init_connect_db()
+    #db = init_connect_db()
     userlist_info = []
     for dbuser in get_userselectdetail(db, username):
         user_info = {
@@ -296,7 +296,7 @@ def modify(username):
         # print(user_info)
     if request.method == "POST":
         # print('1 - request POST')
-        db = init_connect_db()
+        #db = init_connect_db()
         year = request.form.get('year')
         phone = request.form.get('phone')
         memo = request.form.get('memo')
@@ -326,7 +326,7 @@ def download():
         if form.validate_on_submit():
             filterdate = form.dt.data.strftime('%Y-%m-%d')
         user = {'name': '관리자'}
-        db = init_connect_db()
+        #db = init_connect_db()
 
         df = pd.DataFrame(get_dayattendance(db, filterdate))
         csv_data = df.to_csv(index='false', encoding='utf-8')
@@ -347,7 +347,7 @@ def daterange():
         EndDate = form.dEnd.data.strftime('%Y-%m-%d')
         print(StartDate)
         print(EndDate)
-        db = init_connect_db()
+        #db = init_connect_db()
         df = pd.DataFrame(get_RangeAttendance(db, StartDate, EndDate))
         csv_data = df.to_csv(index='false', encoding='utf-8')
         response = Response(csv_data, mimetype='text/csv')
@@ -366,7 +366,7 @@ def inputdateform():
         else:
             return redirect('/inputdateform')
         user = {'name': '관리자'}
-        db = init_connect_db()
+        #db = init_connect_db()
         userlist = []
         print(filterdate)
         for dbuser in get_dayattendance(db, filterdate):
@@ -391,7 +391,7 @@ def inputdateform():
         today = datetime.date.today()
         print(today)
         user = {'name': '관리자'}
-        db = init_connect_db()
+        #db = init_connect_db()
         userlist = []
         for dbuser in get_dayattendance(db, today):
             user = {
@@ -427,7 +427,7 @@ def signup():
 
         ## 데이타베이스 저장하는 코드
 
-        db = init_connect_db()
+        #db = init_connect_db()
         if set_signup(db, id, rfid, name, sex, year, phone, memo):
             return """<h2>새로운 회원을 등록했습니다.</h2><script>
             setTimeout(function(){
@@ -441,7 +441,7 @@ def signup():
         return f"<h2>{age}post 입니다{rfid} </h2>"
 
     usert = {'name': '관리자'}
-    db = init_connect_db()
+    #db = init_connect_db()
     userlist = []
     for dbuser in get_adduserlist(db):
         user = {
@@ -468,7 +468,7 @@ def endpoint_rfid_read_exit():
         rst = rfid_read()
         print("rfid buzz test-----")
         if rst[0] != "not support this platform.":
-            db = init_connect_db()
+            #db = init_connect_db()
             if rst[2] != None:
                 userid = int(rst[2])
                 rfid_uid = rst[1]
@@ -495,7 +495,7 @@ def endpoint_rfid_read_entry():
 
         rst = rfid_read()
         if rst[0] != "not support this platform.":
-            db = init_connect_db()
+            #db = init_connect_db()
             if rst[2] != None:
                 # print("*****************1")
                 userid = rst[2]
@@ -525,7 +525,7 @@ def endpoint_rfid_read():
         uid = 0
         rst = rfid_read()
         if rst[0] != "not support the platform.":
-            db = init_connect_db()
+            #db = init_connect_db()
             if rst[1] != None:
                 rfid_uid = rst[1]
 
