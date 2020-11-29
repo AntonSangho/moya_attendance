@@ -7,7 +7,7 @@ import os
 
 def init_connect_db(switch_db):
     if switch_db == 1 :
-        return db = pymysql.connect(
+        db = pymysql.connect(
             # if app.env =='development':
             # user=os.getenv('DB_USER'),
             # passwd=os.getenv('DB_PASSWORD'), #beanstalk 환경변수 이용
@@ -20,7 +20,11 @@ def init_connect_db(switch_db):
             host='moy.cismqc0tinee.ap-northeast-2.rds.amazonaws.com',  # beanstalk 환경변수 이용
             charset='utf8',  # beanstalk 환경변수 이용
             cursorclass=pymysql.cursors.DictCursor
+            
         )
+
+        print("1 번 유저로 로그인")
+        return db
 
     
 
@@ -31,13 +35,15 @@ def init_connect_db(switch_db):
         # db=os.getenv('DB_NAME'), #beanstalk 환경변수 이용
         # host=os.getenv('DB_HOST'), #beanstalk 환경변수 이용
         # charset='utf8', #beanstalk 환경변수 이용
-        user='righthand',
-        passwd='moya_0526',  # beanstalk 환경변수 이용
+        user='righthand_01',
+        passwd='1cl1kc02,!c',  # beanstalk 환경변수 이용
         db='moya',  # beanstalk 환경변수 이용
         host='moy.cismqc0tinee.ap-northeast-2.rds.amazonaws.com',  # beanstalk 환경변수 이용
         charset='utf8',  # beanstalk 환경변수 이용
         cursorclass=pymysql.cursors.DictCursor
     )
+
+    print("righthand_01 번 유저로 로그인")
     return db
 
 

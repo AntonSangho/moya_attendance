@@ -3,9 +3,9 @@ import os
 import shutil
 import hashlib
 import time
-import pandas as pd
+#import pandas as pd
 import datetime
-from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for, Response
+from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for, Response, make_response
 from flask_wtf import Form
 from flask_wtf import FlaskForm
 from wtforms import StringField
@@ -26,6 +26,8 @@ from flask.logging import default_handler
 import logging
 from logging.handlers import RotatingFileHandler
 from logging import Formatter
+
+db = init_connect_db(2)
 
 
 # datepicker에 사용됨
@@ -58,7 +60,7 @@ application.config['LOGGING_BACKUP_COUNT'] = 1000
 
 # global blocking
 # blocking = False
-db = init_connect_db(1)
+
 
 # 관리자 메인 페이지 (기획에 없음)
 @application.route('/')
@@ -115,7 +117,16 @@ def auth():
             if (hashlib.sha256(
                     pp.encode()).hexdigest().upper() == 'B6E01168DC7579E745D41638CBDA0D9EAEA5EE9E8DADD1DB250AFCAD9D6B29D2'):
                 session['reliquum'] = "active"
+                db = init_connect_db(1);
                 return redirect('./admin')
+
+#lib2password
+            if (hashlib.sha256(
+                                pp.encode()).hexdigest().upper() == "ac4624660c6bd995ae624f978cd85865e3e6aa40db3a95bbf119780f03080671".upper()) :
+                session['reliquum'] = "active"
+                db = init_connect_db(2);
+                return redirect('./admin')
+            
 
             return f"""<h1> 비밀번호가 잘못되었습니다. : {pp}</h1>
                     <form method='post' action='./auth'>
@@ -132,15 +143,25 @@ def auth():
     except Exception as e:
         return str(e)
 
+def get_conn():
+     conn = request.cookies.get('conn')
+     if conn == "r1" :
+        return init_connect_db(1)
+     else:
+        return init_connect_db(2)
 
 # 로그인된 관리자 페이지 <- 수정예정
 @application.route('/admin')
 def admin():
     print(application.env)
     user = {'name': '관리자'}
+
+    res = make_response(render_template('admin.html', title='관리자', user=user))
+    res.set_cookie('conn', 'r1', max_age=60*60*24*365*2)
+                
     if 'reliquum' in session:
         on_active = session['reliquum']
-        return render_template('admin.html', title='관리자', user=user)
+        return res
     return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
 
 
@@ -391,7 +412,7 @@ def inputdateform():
         today = datetime.date.today()
         print(today)
         user = {'name': '관리자'}
-        #db = init_connect_db()
+        db = get_conn()
         userlist = []
         for dbuser in get_dayattendance(db, today):
             user = {
