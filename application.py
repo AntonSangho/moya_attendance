@@ -118,14 +118,19 @@ def auth():
                     pp.encode()).hexdigest().upper() == 'B6E01168DC7579E745D41638CBDA0D9EAEA5EE9E8DADD1DB250AFCAD9D6B29D2'):
                 session['reliquum'] = "active"
                 db = init_connect_db(1);
-                return redirect('./admin')
+                res = make_response(redirect('./admin'))
+                res.set_cookie('conn', '1', max_age=60*60*24*365*2)
+                return  res
 
 #lib2password
             if (hashlib.sha256(
                                 pp.encode()).hexdigest().upper() == "ac4624660c6bd995ae624f978cd85865e3e6aa40db3a95bbf119780f03080671".upper()) :
                 session['reliquum'] = "active"
                 db = init_connect_db(2);
-                return redirect('./admin')
+
+                res = make_response(redirect('./admin'))
+                res.set_cookie('conn', '2', max_age=60*60*24*365*2)
+                return res
             
 
             return f"""<h1> 비밀번호가 잘못되었습니다. : {pp}</h1>
@@ -145,23 +150,22 @@ def auth():
 
 def get_conn():
      conn = request.cookies.get('conn')
-     if conn == "r1" :
+     if conn == "1" :
         return init_connect_db(1)
-     else:
+     elif conn == "2" :
         return init_connect_db(2)
+     else:
+        return init_connect_db(3)
 
 # 로그인된 관리자 페이지 <- 수정예정
 @application.route('/admin')
 def admin():
     print(application.env)
     user = {'name': '관리자'}
-
-    res = make_response(render_template('admin.html', title='관리자', user=user))
-    res.set_cookie('conn', 'r1', max_age=60*60*24*365*2)
-                
+        
     if 'reliquum' in session:
         on_active = session['reliquum']
-        return res
+        return render_template('admin.html', title='관리자', user=user)
     return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
 
 
@@ -387,7 +391,7 @@ def inputdateform():
         else:
             return redirect('/inputdateform')
         user = {'name': '관리자'}
-        #db = init_connect_db()
+        db = get_conn()
         userlist = []
         print(filterdate)
         for dbuser in get_dayattendance(db, filterdate):
@@ -546,12 +550,12 @@ def endpoint_rfid_read():
         uid = 0
         rst = rfid_read()
         if rst[0] != "not support the platform.":
-            #db = init_connect_db()
+            db = get_conn()
             if rst[1] != None:
                 rfid_uid = rst[1]
 
                 if is_rfid(db, rfid_uid)['cnt'] == 0:
-                    add_newcard(db, rfid_uid, '이름없음')
+                    add_newcard(db, rfid_uid, '이름없음', get_conn())
                     time.sleep(1)
                     # DB에 접속해서 배정된 카드번호 표시
                 else:

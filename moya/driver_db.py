@@ -5,6 +5,23 @@ import os
 
 # 데이타베이스 초기화 정보
 
+sqlmapper ={
+    #sqltype_connectionUserNum  
+    "sql_1_admin1" : "SELECT id, user_id, clock_in FROM attendance ORDER BY id DESC",  
+    "sql_1_admin2" : "SELECT id, user_id, clock_in FROM attendance ORDER BY id DESC",  
+    "sql_1_admin3" : "SELECT id, user_id, clock_in FROM attendance ORDER BY id DESC",  
+    "sql_2_admin1":"""SELECT a.id, a.name , b.* FROM users a LEFT JOIN 
+            (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(date_format(entry_time,"%r")) AS entry, MAX(date_format(exit_time,"%r")) AS exits, max(used_time) AS used
+            FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+            b ON a.id = b.userid 
+            where b.ent""",
+    "sql_3_admin1" : "INSERT INTO users(rfid_uid, `name`) VALUES",
+    "sql_3_admin2" : "INSERT INTO mh_users(rfid_uid, `name`) VALUES",
+    "sql_4_admin1" : "INSERT INTO mh_users(rfid_uid, `name`) VALUES"
+
+}  
+
+
 def init_connect_db(switch_db):
     if switch_db == 1 :
         db = pymysql.connect(
@@ -48,10 +65,11 @@ def init_connect_db(switch_db):
 
 
 # rfid 태그값 가져오기
-def get_attendance(db):
+def get_attendance(db, conn):
     try:
         cursor = db.cursor()
-        cursor.execute("SELECT id, user_id, clock_in FROM attendance ORDER BY id DESC")
+        cursor.execute( sqlmapper["sql_1_admin1"] if conn == 1 else sqlmapper["sql_1_admin"+conn] )
+
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
@@ -63,12 +81,7 @@ def get_dayattendance(db, filter_date):
         print(filter_date)
 
         cursor.execute(
-            f""" 
-            SELECT a.id, a.name , b.* FROM users a LEFT JOIN 
-            (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(date_format(entry_time,"%r")) AS entry, MAX(date_format(exit_time,"%r")) AS exits, max(used_time) AS used
-            FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
-            b ON a.id = b.userid 
-            where b.ent ='{filter_date}'"""
+            f"""{sqlmapper["sql_2_admin1"]}='{filter_date}'"""
         )
         # cursor.execute(
         #     f'SELECT userid, substr(entry_time, 1, 10), max(used_time) '
@@ -99,6 +112,8 @@ def get_RangeAttendance(db, StartDate, EndDate):
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+
 
 
 def get_userattendance(db, selected_name):
@@ -267,7 +282,7 @@ def set_attendance_mh(db, userid):
 
 ## rfid 태깅기록
 # 제천도서관 퇴장기록
-def set_exit(db, userid):
+def set_exit(db, userid, conn):
     try:
         cursor = db.cursor()
         cursor.execute(f"INSERT INTO exits(user_id) VALUES ({userid})")
@@ -302,10 +317,13 @@ def set_exit_mh(db, userid):
 
 ## rfid 카드등록
 # 제천도서관 카드등록
-def add_newcard(db, rfid_uid, name):
+def add_newcard(db, rfid_uid, name, conn):
     try:
         cursor = db.cursor()
-        cursor.execute(f"INSERT INTO users(rfid_uid, `name`) VALUES ('{rfid_uid}','{name}')")
+
+        cursor.execute(f"{sqlmapper['sql_3_admin1'] if conn == 1 else sqlmapper['sql_3_admin'+conn]}  ('{rfid_uid}','{name}')")
+
+
     except pymysql.Error as e:
         db.rollback()
         db.close()
@@ -317,17 +335,3 @@ def add_newcard(db, rfid_uid, name):
         return 1
 
 
-# 마하도서관 카드등록
-def add_newcard_mh(db, rfid_uid, name):
-    try:
-        cursor = db.cursor()
-        cursor.execute(f"INSERT INTO mh_users(rfid_uid, `name`) VALUES ('{rfid_uid}','{name}')")
-    except pymysql.Error as e:
-        db.rollback()
-        db.close()
-        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
-        return 0
-    else:
-        db.commit()
-        db.close()
-        return 1
