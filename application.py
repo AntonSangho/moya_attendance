@@ -18,7 +18,7 @@ from datetime import date
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
     set_signup, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, get_userdetail, \
-    get_userattendance, set_modify, get_userselectdetail, get_adduserlist
+    get_userattendance, set_modify, get_userselectdetail, get_adduserlist, get_dayattendance_mh
 from sqlalchemy import create_engine
 
 from flask.logging import default_handler
@@ -128,7 +128,7 @@ def auth():
                 session['reliquum'] = "active"
                 db = init_connect_db(2);
 
-                res = make_response(redirect('./admin'))
+                res = make_response(redirect('./mh/admin'))
                 res.set_cookie('conn', '2', max_age=60*60*24*365*2)
                 return res
             
@@ -157,17 +157,28 @@ def get_conn():
      else:
         return init_connect_db(3)
 
-# 로그인된 관리자 페이지 <- 수정예정
+# 총괄 관리자 페이지
 @application.route('/admin')
 def admin():
     print(application.env)
     user = {'name': '관리자'}
-        
+    print('admin')
     if 'reliquum' in session:
         on_active = session['reliquum']
         return render_template('admin.html', title='관리자', user=user)
     return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
 
+
+# 마하도서관 관리자페이지
+@application.route('/mh/admin')
+def admin_mh():
+    print(application.env)
+    user = {'name': '관리자'}
+    print('mh')
+    if 'reliquum' in session:
+        on_active = session['reliquum']
+        return render_template('admin_mh.html', title='관리자', user=user)
+    return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
 
 # 현재 사용자를 확인하는 페이지
 @application.route('/userlist')
@@ -427,6 +438,52 @@ def inputdateform():
             print(user)
         return render_template('todaytable.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
 
+
+# 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
+@application.route('/mh/inputdateform', methods=['GET', 'POST'])
+def inputdateform_mh():
+    form = DateForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            filterdate = form.dt.data.strftime('%Y-%m-%d')
+        else:
+            return redirect('/mh/inputdateform')
+        user = {'name': '관리자'}
+        db = get_conn()
+        userlist = []
+        print(filterdate)
+        for dbuser in get_dayattendance_mh(db, filterdate):
+            user = {
+                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                            'exits': dbuser['exits'], 'used': dbuser['used']}
+            }
+            userlist.append(user)
+
+        print('###379' + str(userlist))
+        if len(userlist) == 0:
+            return """<h2>해당날짜에는 기록이 없습니다.</h2>
+            <script>
+            setTimeout(function(){
+                history.back()
+            }, 3000);
+            </script>"""
+
+        return render_template('daylist_mh.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
+        # return '''<h1>{}</h1>'''.format(filterdate)
+    else:
+        today = datetime.date.today()
+        print(today)
+        user = {'name': '관리자'}
+        db = get_conn()
+        userlist = []
+        for dbuser in get_dayattendance_mh(db, today):
+            user = {
+                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                            'exits': dbuser['exits'], 'used': dbuser['used']}
+            }
+            userlist.append(user)
+            print(user)
+        return render_template('todaytable_mh.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
 
 # 관리자 로그아웃시 index로 이동하는 페이지
 @application.route('/logout')
