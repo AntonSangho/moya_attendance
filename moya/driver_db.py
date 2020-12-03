@@ -101,7 +101,9 @@ def get_dayattendance(db, filter_date):
 def get_dayattendance_mh(db, filter_date):
     try:
         cursor = db.cursor()
+        print('get_dayattendance_mh')
         print(filter_date)
+        print('filterdate')
 
         cursor.execute(
             f"""{sqlmapper["sql_2_admin2"]}='{filter_date}'"""
