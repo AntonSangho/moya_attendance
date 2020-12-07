@@ -18,7 +18,7 @@ from datetime import date
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_exit_mh, get_userinfo, get_userlist, \
     set_signup, is_rfid_mh, get_rfid, get_dayattendance, get_RangeAttendance, get_userdetail, \
-    get_userattendance, set_modify, get_userselectdetail, get_adduserlist, set_attendance_mh
+    get_userattendance, set_modify, get_userselectdetail, get_adduserlist, set_attendance_mh, add_newcard
 from sqlalchemy import create_engine
 
 from flask.logging import default_handler
@@ -609,7 +609,7 @@ def endpoint_rfid_read():
                 rfid_uid = rst[1]
 
                 if is_rfid_mh(db, rfid_uid)['cnt'] == 0:
-                    add_newcard_mh(db, rfid_uid, '이름없음')
+                    add_newcard(db, rfid_uid, '이름없음')
                     time.sleep(1)
                     # DB에 접속해서 배정된 카드번호 표시
                 else:
@@ -618,7 +618,6 @@ def endpoint_rfid_read():
                     rfid_write(str(uid))
                     print("uid write %d", uid)
                     rfid_uid = 00000
-
     except Exception as e:
         print("error", e)
         return abort(500)
