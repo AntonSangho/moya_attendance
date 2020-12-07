@@ -306,7 +306,7 @@ def set_attendance_mh(db, userid):
 
 ## rfid 태깅기록
 # 제천도서관 퇴장기록
-def set_exit(db, userid, conn):
+def set_exit(db, userid):
     try:
         cursor = db.cursor()
         cursor.execute(f"INSERT INTO exits(user_id) VALUES ({userid})")
