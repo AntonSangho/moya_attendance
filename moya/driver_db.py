@@ -340,14 +340,11 @@ def set_exit_mh(db, userid):
 
 
 ## rfid 카드등록
-# 제천도서관 카드등록
+# 도서관 카드등록
 def add_newcard(db, rfid_uid, name, conn):
     try:
         cursor = db.cursor()
-
-        cursor.execute(f"{sqlmapper['sql_3_admin1'] if conn == 1 else sqlmapper['sql_3_admin'+conn]}  ('{rfid_uid}','{name}')")
-
-
+        cursor.execute(f"{sqlmapper['sql_3_admin1'] if conn == 1 else sqlmapper['sql_3_admin'+str(conn)]}  ('{rfid_uid}','{name}')")
     except pymysql.Error as e:
         db.rollback()
         db.close()

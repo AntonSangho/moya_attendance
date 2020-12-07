@@ -607,7 +607,6 @@ def endpoint_rfid_read():
             db = get_conn()
             if rst[1] != None:
                 rfid_uid = rst[1]
-
                 if is_rfid_mh(db, rfid_uid)['cnt'] == 0:
                     add_newcard(db, rfid_uid, '이름없음', 2)
                     time.sleep(1)
