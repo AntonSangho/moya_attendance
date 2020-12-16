@@ -361,7 +361,7 @@ def download():
         user = {'name': '관리자'}
         #db = init_connect_db()
 
-        df = pd.DataFrame(get_dayattendance(db, filterdate))
+        df = pd.DataFrame(get_dayattendance_mh(db, filterdate))
         csv_data = df.to_csv(index='false', encoding='utf-8')
         response = Response(csv_data, mimetype='text/csv')
         response.headers.set("Content-Disposition", "attachment", filename="data.csv")
@@ -402,7 +402,7 @@ def inputdateform():
         db = get_conn()
         userlist = []
         print(filterdate)
-        for dbuser in get_dayattendance(db, filterdate):
+        for dbuser in get_dayattendance_mh(db, filterdate):
             user = {
                 'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
                             'exits': dbuser['exits'], 'used': dbuser['used']}
@@ -426,7 +426,7 @@ def inputdateform():
         user = {'name': '관리자'}
         db = get_conn()
         userlist = []
-        for dbuser in get_dayattendance(db, today):
+        for dbuser in get_dayattendance_mh(db, today):
             user = {
                 'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
                             'exits': dbuser['exits'], 'used': dbuser['used']}
