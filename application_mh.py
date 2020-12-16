@@ -16,8 +16,8 @@ from wtforms import SelectField
 from datetime import date
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
-from moya.driver_db import init_connect_db, get_attendance, set_exit_mh, get_userinfo, get_userlist, \
-    set_signup, is_rfid_mh, get_rfid, get_dayattendance, get_RangeAttendance, get_userdetail, \
+from moya.driver_db import init_connect_db, get_attendance, set_exit_mh, get_userinfo_mh, get_userlist, \
+    set_signup, is_rfid_mh, get_rfid_mh, get_dayattendance, get_RangeAttendance, get_userdetail, \
     get_userattendance, set_modify, get_userselectdetail, get_adduserlist, set_attendance_mh, add_newcard
 from sqlalchemy import create_engine
 
@@ -543,15 +543,15 @@ def exis():
 @application.route('/api/v1.0/exits', methods=['GET'])
 def endpoint_rfid_read_exit():
     try:
-        print("rpi buzz test- exit")
+        # print("rpi buzz test- exit")
         rst = rfid_read()
-        print("rfid buzz test-----")
+        # print("rfid buzz test-----")
         if rst[0] != "not support this platform.":
             #db = init_connect_db()
             if rst[2] != None:
                 userid = int(rst[2])
                 rfid_uid = rst[1]
-                name = get_userinfo(db, userid, rfid_uid)
+                name = get_userinfo_mh(db, userid, rfid_uid)
                 rst.append("DB TRUE" if set_exit_mh(db, userid) else "DB FALSE")
                 if len(name) > 0:
                     rst.append(name[0])
@@ -577,10 +577,10 @@ def endpoint_rfid_read_entry():
             #db = init_connect_db()
             if rst[2] != None:
                 # print("*****************1")
-                userid = rst[2]
+                userid = int(rst[2])
                 rfid_uid = rst[1]
                 # print("*****************2")
-                name = get_userinfo(db, userid, rfid_uid)
+                name = get_userinfo_mh(db, userid, rfid_uid)
                 rst.append("DB TRUE" if set_attendance_mh(db, userid) else "DB FALSE")
 
                 # print("*****************3")
@@ -612,7 +612,7 @@ def endpoint_rfid_read():
                     time.sleep(1)
                     # DB에 접속해서 배정된 카드번호 표시
                 else:
-                    uid = get_rfid(db, rfid_uid)['id']
+                    uid = get_rfid_mh(db, rfid_uid)['id']
                     # 이미카드가 있는 경우
                     rfid_write(str(uid))
                     print("uid write %d", uid)

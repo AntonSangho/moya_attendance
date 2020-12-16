@@ -459,7 +459,7 @@ def inputdateform_mh():
             }
             userlist.append(user)
 
-        print('###379' + str(userlist))
+        print('mh_attendace' + str(userlist))
         if len(userlist) == 0:
             return """<h2>해당날짜에는 기록이 없습니다.</h2>
             <script>
