@@ -17,8 +17,8 @@ from datetime import date
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
-    set_signup, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, get_userdetail, \
-    get_userattendance, set_modify, get_userselectdetail, get_adduserlist, get_dayattendance_mh
+    set_signup, set_signup_mh, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, get_userdetail, \
+    get_userattendance, set_modify, get_userselectdetail, get_adduserlist, get_adduserlist_mh, get_dayattendance_mh
 from sqlalchemy import create_engine
 
 from flask.logging import default_handler
@@ -439,7 +439,7 @@ def inputdateform():
         return render_template('todaytable.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
 
 
-# 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
+# [마하도서관] 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/mh/inputdateform', methods=['GET', 'POST'])
 def inputdateform_mh():
     form = DateForm()
@@ -534,6 +534,47 @@ def signup():
         userlist.append(user)
     return render_template('signup.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
 
+
+# [마하도서관] 회원 신규 등록 페이지
+@application.route('/mh/signup', methods=['POST', 'GET'])
+def signup_mh():
+    if request.method == 'POST':
+
+        idrfid = request.form['idrfid']
+        id = idrfid.split("^")[0]
+        rfid = idrfid.split("^")[1]
+        name = request.form['name']
+        year = request.form['year']
+        sex = request.form['sex']
+        phone = request.form['phone']
+        memo = request.form['memo']
+
+        ## 데이타베이스 저장하는 코드
+
+        #db = init_connect_db()
+        if set_signup_mh(db, id, rfid, name, sex, year, phone, memo):
+            return """<h2>새로운 회원을 등록했습니다.</h2><script>
+            setTimeout(function(){
+                history.back()
+            }, 3000);
+            </script>"""
+        else:
+            return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
+
+        ## 이상이 없으면 alert 창 뛰우기
+        return f"<h2>{age}post 입니다{rfid} </h2>"
+
+    usert = {'name': '관리자'}
+    #db = init_connect_db()
+    userlist = []
+    for dbuser in get_adduserlist_mh(db):
+        user = {
+            'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+            'status': '입장중',
+            'is': True
+        }
+        userlist.append(user)
+    return render_template('signup_mh.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
 
 # 퇴장시 RFID카드를 인식하는 페이지
 @application.route('/exits')
