@@ -17,7 +17,7 @@ from datetime import date
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
-    set_signup, set_signup_mh, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, get_userdetail, \
+    set_signup, set_signup_mh, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, get_userdetail,get_userdetail_mh, \
     get_userattendance, set_modify, get_userselectdetail, get_adduserlist, get_adduserlist_mh, get_dayattendance_mh
 from sqlalchemy import create_engine
 
@@ -211,6 +211,37 @@ def userlist():
     else:
         return redirect(url_for('auth'))
 
+
+# [마하도서관] 현재 사용자를 확인하는 페이지
+@application.route('/mh/userlist')
+def userlist_mh():
+    # print(application.env)
+    user = {'name': '관리자'}
+    userlist = []
+    get_userdetail(db)
+    # return 'f<h1>dd</h1>'
+    for dbuser in get_userdetail_mh(db):
+        user = {
+            'profile': {'id': dbuser['id'],
+                        'name': dbuser['name'],
+                        'rfid': dbuser['rfid'],
+                        'sex': dbuser['sex'],
+                        'phone': dbuser['phone'],
+                        'year': dbuser['year'],
+                        'memo': dbuser['memo']
+                        },
+            'status': '입장중',
+            'is': True
+        }
+        userlist.append(user)
+
+    # print(userlist)
+
+    if 'reliquum' in session:
+        return render_template('userlist_mh.html', title='도서관현황판', user=user, userlist=userlist)
+
+    else:
+        return redirect(url_for('mh/auth'))
 
 # 사용자를 확인하는 페이지
 @application.route('/userinfo', methods=['GET', 'POST'])

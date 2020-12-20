@@ -255,6 +255,16 @@ def get_userdetail(db):
         return 0
 
 
+def get_userdetail_mh(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"SELECT * FROM mh_users_detail")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+
 def get_userselectdetail(db, selected_name):
     try:
         cursor = db.cursor()
