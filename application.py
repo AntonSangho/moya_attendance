@@ -594,6 +594,7 @@ def endpoint_rfid_read_exit():
         print("rfid buzz test-----")
         if rst[0] != "not support this platform.":
             #db = init_connect_db()
+            db = get_conn()
             if rst[2] != None:
                 userid = int(rst[2])
                 rfid_uid = rst[1]
@@ -621,6 +622,7 @@ def endpoint_rfid_read_entry():
         rst = rfid_read()
         if rst[0] != "not support this platform.":
             #db = init_connect_db()
+            db = get_conn()
             if rst[2] != None:
                 # print("*****************1")
                 userid = int(rst[2])
