@@ -3,7 +3,7 @@ import os
 import shutil
 import hashlib
 import time
-#import pandas as pd
+import pandas as pd
 import datetime
 from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for, Response, make_response
 from flask_wtf import Form
@@ -17,7 +17,7 @@ from datetime import date
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
-    set_signup, set_signup_mh, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, get_userdetail,get_userdetail_mh, \
+    set_signup, set_signup_mh, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance,get_RangeAttendance_mh, get_userdetail,get_userdetail_mh, \
     get_userattendance, set_modify, get_userselectdetail, get_adduserlist, get_adduserlist_mh, get_dayattendance_mh
 from sqlalchemy import create_engine
 
@@ -422,6 +422,24 @@ def daterange():
         return response
     return render_template('/daterange.html', user=user, title='관리자', form=form)
 
+
+# [마하도서관] 자료받기 원하는 구간을 정하기
+@application.route('/mh/daterange', methods=['GET', 'POST'])
+def daterange_mh():
+    user = {'name': '관리자'}
+    form = DateForm()
+    if request.method == 'POST':
+        StartDate = form.dStart.data.strftime('%Y-%m-%d')
+        EndDate = form.dEnd.data.strftime('%Y-%m-%d')
+        print(StartDate)
+        print(EndDate)
+        #db = init_connect_db()
+        df = pd.DataFrame(get_RangeAttendance_mh(db, StartDate, EndDate))
+        csv_data = df.to_csv(index='false', encoding='utf-8')
+        response = Response(csv_data, mimetype='text/csv')
+        response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+        return response
+    return render_template('daterange_mh.html', user=user, title='관리자', form=form)
 
 # 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/inputdateform', methods=['GET', 'POST'])

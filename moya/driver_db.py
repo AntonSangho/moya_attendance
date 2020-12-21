@@ -136,6 +136,27 @@ def get_RangeAttendance(db, StartDate, EndDate):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
+def get_RangeAttendance_mh(db, StartDate, EndDate):
+    try:
+        cursor = db.cursor()
+        print()
+
+        cursor.execute(
+            f""" 
+            SELECT a.id, a.name , b.* FROM mh_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(date_format(entry_time,"%r")) AS entry, MAX(date_format(exit_time,"%r")) AS exits, max(used_time) AS used
+            FROM mh_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid 
+            where b.ent between '{StartDate}'AND '{EndDate}'"""
+        )
+        # cursor.execute(
+        #     f'SELECT userid, substr(entry_time, 1, 10), max(used_time) '
+        #     f'from stat_attentance '
+        #     f'WHERE substr(entry_time, 1, 10) = \'2020-08-21\' '
+        #     f'group by userid, substr(entry_time, 1, 10);')
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+
 def get_userattendance(db, selected_name):
     try:
         cursor = db.cursor()
