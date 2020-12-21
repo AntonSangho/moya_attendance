@@ -1,0 +1,33 @@
+{% extends "base_mh.html"%}
+{% block content %}
+
+<form action="./{{ username }}" method="post" onsubmit="validateForm()">
+    <div class="ui grid">
+        <div class="one wide column"></div>
+        <div class="six wide column">
+            <div class="ui padded segment form">
+                <h1 class="ui header"> {{ username }} </h1>
+                <div class="field">
+                    <label>성별</label>
+                    <input type="textbox" name="sex" value="{{ user_info.info.sex }}">
+                </div>
+                <div class="field">
+                    <label>출생년도</label>
+                    <input type="textbox"  name="year"  value="{{ user_info.info.year }}">
+                </div>
+                <div class="field">
+                    <label>보호자 연락처</label>
+                    <input type="textbox"  name="phone" value="{{ user_info.info.phone }}" >
+                </div>
+                <div class="field">
+                    <div class="six wide field">
+                        <label>메모 </label>
+                        <textarea value="memo" name="memo" placeholder="메모" >{{ user_info.info.memo }}</textarea>
+                        <input type="submit" value="저장">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

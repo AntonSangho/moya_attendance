@@ -19,7 +19,7 @@ from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
     set_signup, set_signup_mh, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, \
     get_RangeAttendance_mh, get_userdetail, get_userdetail_mh, \
-    get_userattendance, get_userattendance_mh, set_modify, get_userselectdetail, get_userselectdetail_mh, \
+    get_userattendance, get_userattendance_mh, set_modify, set_modify_mh, get_userselectdetail, get_userselectdetail_mh, \
     get_adduserlist, get_adduserlist_mh, get_dayattendance_mh
 from sqlalchemy import create_engine
 
@@ -300,6 +300,58 @@ def userinfo():
         return f"<h1>not selected</h1>"
 
 
+# [마하도서관] 사용자를 확인하는 페이지
+@application.route('/mh/userinfo', methods=['GET', 'POST'])
+def userinfo_mh():
+    if request.method == 'GET':
+        abort(403, '잘못된 접근입니다.')
+    # print("######" + str(request.form))
+    if request.method == 'POST':
+        selected_name = request.form['name']
+        user = {'name': '관리자'}
+        # db = init_connect_db()
+        userlist = []
+        for dbuser in get_userattendance_mh(db, selected_name):
+            user = {
+                'profile': {'userid': dbuser['userid'],
+                            'name': dbuser['name'],
+                            'entry': dbuser['entry'],
+                            'exits': dbuser['exits'],
+                            'used': dbuser['used']
+                            }
+            }
+            userlist.append(user)
+        # print(user)
+        userlist_info = []
+        for dbuser in get_userselectdetail_mh(db, selected_name):
+            user_info = {
+                'info': {
+                    'id': dbuser['id'],
+                    'sex': dbuser['sex'],
+                    'phone': dbuser['phone'],
+                    'year': dbuser['year'],
+                    'memo': dbuser['memo']
+                }
+            }
+            userlist_info.append(user_info)
+        # print(user_info)
+        # print('****' + selected_name)
+        # print(userlist)
+        # print(userlist_info)
+        if len(userlist_info) == 0:
+            return """<h2>해당사용자는 기록이 없습니다.</h2>
+                        <script>
+                        setTimeout(function(){
+                            history.back()
+                        }, 3000);
+                        </script>"""
+        return render_template('userinfo_mh.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+                               userlist_info=userlist_info)
+
+    else:
+        return f"<h1>not selected</h1>"
+
+
 # @application.route('/userinfo/userinfo/<username>', methods=['POST', 'GET'])
 # def fixed_url(username):
 #     return redirect('/userinfo/'+username)
@@ -397,6 +449,7 @@ def aftermodify_mh(username):
                                userlist_info=userlist_info)
 
 
+## 수정하는 기능
 @application.route('/userinfo/<username>', methods=['POST', 'GET'])
 def modify(username):
     user = {'name': '관리자'}
@@ -425,6 +478,39 @@ def modify(username):
         if set_modify(db, selected_name, sex, year, phone, memo):
             return redirect(url_for('aftermodify', username=selected_name))
         return render_template('update.html', username=username, user=user, user_info=user_info,
+                               userlist_info=userlist_info)
+
+
+## [마하도서관] 수정하는 기능
+@application.route('/mh/userinfo/<username>', methods=['POST', 'GET'])
+def modify_mh(username):
+    user = {'name': '관리자'}
+    # db = init_connect_db()
+    db = get_conn()
+    userlist_info = []
+    for dbuser in get_userselectdetail_mh(db, username):
+        user_info = {
+            'info': {
+                'id': dbuser['id'],
+                'sex': dbuser['sex'],
+                'phone': dbuser['phone'],
+                'year': dbuser['year'],
+                'memo': dbuser['memo']
+            }
+        }
+        userlist_info.append(user_info)
+        # print(user_info)
+    if request.method == "POST":
+        # print('1 - request POST')
+        # db = init_connect_db()
+        year = request.form.get('year')
+        phone = request.form.get('phone')
+        memo = request.form.get('memo')
+        sex = request.form.get('sex')
+        selected_name = username
+        if set_modify_mh(db, selected_name, sex, year, phone, memo):
+            return redirect(url_for('aftermodify_mh', username=selected_name))
+        return render_template('update_mh.html', username=username, user=user, user_info=user_info,
                                userlist_info=userlist_info)
 
 

@@ -338,6 +338,24 @@ def set_modify(db, selected_name, sex, year, phone, memo):
         return 1
 
 
+def set_modify_mh(db, selected_name, sex, year, phone, memo):
+    try:
+        cursor = db.cursor()
+        cursor.execute(
+            f"UPDATE mh_users_detail SET sex='{sex}', year={year}, phone={phone}, memo='{memo}' where name ='{selected_name}' ;")
+        # print("1_1 - set_modify try")
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        # print("1_2 - set_modify exception")
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+    else:
+        db.commit()
+        db.close()
+        return 1
+
+
 def set_signup(db, id, rfid, name, sex, year, phone, memo):
     try:
         cursor = db.cursor()
