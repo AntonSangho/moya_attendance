@@ -171,6 +171,20 @@ def get_userattendance(db, selected_name):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
+def get_userattendance_mh(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(
+            f""" 
+            SELECT a.id, a.name , b.* FROM mh_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
+            FROM mh_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid 
+            where a.name ='{selected_name}'"""
+        )
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+
 def get_userinfo(db, userid, rfid_uid):
     try:
         cursor = db.cursor()
@@ -290,6 +304,16 @@ def get_userselectdetail(db, selected_name):
     try:
         cursor = db.cursor()
         cursor.execute(f"SELECT * FROM users_detail where name = '{selected_name}'; ")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+
+def get_userselectdetail_mh(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"SELECT * FROM mh_users_detail where name = '{selected_name}'; ")
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))

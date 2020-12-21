@@ -17,8 +17,10 @@ from datetime import date
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, get_userlist, \
-    set_signup, set_signup_mh, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance,get_RangeAttendance_mh, get_userdetail,get_userdetail_mh, \
-    get_userattendance, set_modify, get_userselectdetail, get_adduserlist, get_adduserlist_mh, get_dayattendance_mh
+    set_signup, set_signup_mh, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, \
+    get_RangeAttendance_mh, get_userdetail, get_userdetail_mh, \
+    get_userattendance, get_userattendance_mh, set_modify, get_userselectdetail, get_userselectdetail_mh, \
+    get_adduserlist, get_adduserlist_mh, get_dayattendance_mh
 from sqlalchemy import create_engine
 
 from flask.logging import default_handler
@@ -119,19 +121,18 @@ def auth():
                 session['reliquum'] = "active"
                 db = init_connect_db(1);
                 res = make_response(redirect('./admin'))
-                res.set_cookie('conn', '1', max_age=60*60*24*365*2)
-                return  res
+                res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
+                return res
 
-#lib2password
+            # lib2password
             if (hashlib.sha256(
-                                pp.encode()).hexdigest().upper() == "ac4624660c6bd995ae624f978cd85865e3e6aa40db3a95bbf119780f03080671".upper()) :
+                    pp.encode()).hexdigest().upper() == "ac4624660c6bd995ae624f978cd85865e3e6aa40db3a95bbf119780f03080671".upper()):
                 session['reliquum'] = "active"
                 db = init_connect_db(2);
 
                 res = make_response(redirect('./mh/admin'))
-                res.set_cookie('conn', '2', max_age=60*60*24*365*2)
+                res.set_cookie('conn', '2', max_age=60 * 60 * 24 * 365 * 2)
                 return res
-            
 
             return f"""<h1> 비밀번호가 잘못되었습니다. : {pp}</h1>
                     <form method='post' action='./auth'>
@@ -148,14 +149,16 @@ def auth():
     except Exception as e:
         return str(e)
 
+
 def get_conn():
-     conn = request.cookies.get('conn')
-     if conn == "1" :
+    conn = request.cookies.get('conn')
+    if conn == "1":
         return init_connect_db(1)
-     elif conn == "2" :
+    elif conn == "2":
         return init_connect_db(2)
-     else:
+    else:
         return init_connect_db(3)
+
 
 # 총괄 관리자 페이지
 @application.route('/admin')
@@ -179,6 +182,7 @@ def admin_mh():
         on_active = session['reliquum']
         return render_template('admin_mh.html', title='관리자', user=user)
     return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
+
 
 # 현재 사용자를 확인하는 페이지
 @application.route('/userlist')
@@ -243,6 +247,7 @@ def userlist_mh():
     else:
         return redirect(url_for('mh/auth'))
 
+
 # 사용자를 확인하는 페이지
 @application.route('/userinfo', methods=['GET', 'POST'])
 def userinfo():
@@ -252,7 +257,7 @@ def userinfo():
     if request.method == 'POST':
         selected_name = request.form['name']
         user = {'name': '관리자'}
-        #db = init_connect_db()
+        # db = init_connect_db()
         userlist = []
         for dbuser in get_userattendance(db, selected_name):
             user = {
@@ -306,7 +311,7 @@ def aftermodify(username):
         # print(selected_name)
 
         user = {'name': '관리자'}
-        #db = init_connect_db()
+        # db = init_connect_db()
         userlist = []
         for dbuser in get_userattendance(db, selected_name):
             user = {
@@ -344,10 +349,58 @@ def aftermodify(username):
                                userlist_info=userlist_info)
 
 
+## [마하도서관] 사용자이름 선택시 정보 확인
+@application.route('/mh/view/<username>', methods=['POST', 'GET'])
+def aftermodify_mh(username):
+    # print('270#########' + username)
+    if request.method == 'GET':
+        selected_name = username
+        # print(selected_name)
+
+        user = {'name': '관리자'}
+        # db = init_connect_db()
+        db = get_conn()
+        userlist = []
+        for dbuser in get_userattendance_mh(db, selected_name):
+            user = {
+                'profile': {'userid': dbuser['userid'],
+                            'name': dbuser['name'],
+                            'entry': dbuser['entry'],
+                            'exits': dbuser['exits'],
+                            'used': dbuser['used']
+                            }
+            }
+            userlist.append(user)
+        print(userlist)
+        userlist_info = []
+        for dbuser in get_userselectdetail_mh(db, selected_name):
+            user_info = {
+                'info': {
+                    'id': dbuser['id'],
+                    'sex': dbuser['sex'],
+                    'phone': dbuser['phone'],
+                    'year': dbuser['year'],
+                    'memo': dbuser['memo']
+                }
+            }
+            userlist_info.append(user_info)
+        print(user_info)
+        print(selected_name)
+        if len(userlist_info) == 0:
+            return """<h2>해당사용자는 아직 개인정보가 없습니다.</h2>
+                        <script>
+                        setTimeout(function(){
+                            history.back()
+                        }, 3000);
+                        </script>"""
+        return render_template('afteruserinfo_mh.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+                               userlist_info=userlist_info)
+
+
 @application.route('/userinfo/<username>', methods=['POST', 'GET'])
 def modify(username):
     user = {'name': '관리자'}
-    #db = init_connect_db()
+    # db = init_connect_db()
     userlist_info = []
     for dbuser in get_userselectdetail(db, username):
         user_info = {
@@ -363,7 +416,7 @@ def modify(username):
         # print(user_info)
     if request.method == "POST":
         # print('1 - request POST')
-        #db = init_connect_db()
+        # db = init_connect_db()
         year = request.form.get('year')
         phone = request.form.get('phone')
         memo = request.form.get('memo')
@@ -380,28 +433,28 @@ def modify(username):
 #     return render_template('findmodify.html')
 
 
-# 엑셀파일을 다운로드하는 페이지
-@application.route('/download', methods=['GET', 'POST'])
-def download():
-    form = DateForm()
-    if request.method == 'POST':
-        year = request.form['year']
-        month = request.form['month']
-        day = request.form['day']
-        filterdate = year + '-' + month + '-' + day
-        print(filterdate)
-        if form.validate_on_submit():
-            filterdate = form.dt.data.strftime('%Y-%m-%d')
-        user = {'name': '관리자'}
-        #db = init_connect_db()
-
-        df = pd.DataFrame(get_dayattendance(db, filterdate))
-        csv_data = df.to_csv(index='false', encoding='utf-8')
-        response = Response(csv_data, mimetype='text/csv')
-        response.headers.set("Content-Disposition", "attachment", filename="data.csv")
-        return response
-    else:
-        return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
+# # 엑셀파일을 다운로드하는 페이지
+# @application.route('/download', methods=['GET', 'POST'])
+# def download():
+#     form = DateForm()
+#     if request.method == 'POST':
+#         year = request.form['year']
+#         month = request.form['month']
+#         day = request.form['day']
+#         filterdate = year + '-' + month + '-' + day
+#         print(filterdate)
+#         if form.validate_on_submit():
+#             filterdate = form.dt.data.strftime('%Y-%m-%d')
+#         user = {'name': '관리자'}
+#         #db = init_connect_db()
+#
+#         df = pd.DataFrame(get_dayattendance(db, filterdate))
+#         csv_data = df.to_csv(index='false', encoding='utf-8')
+#         response = Response(csv_data, mimetype='text/csv')
+#         response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+#         return response
+#     else:
+#         return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
 
 
 # 자료받기 원하는 구간을 정하기
@@ -414,7 +467,7 @@ def daterange():
         EndDate = form.dEnd.data.strftime('%Y-%m-%d')
         print(StartDate)
         print(EndDate)
-        #db = init_connect_db()
+        # db = init_connect_db()
         df = pd.DataFrame(get_RangeAttendance(db, StartDate, EndDate))
         csv_data = df.to_csv(index='false', encoding='utf-8')
         response = Response(csv_data, mimetype='text/csv')
@@ -433,13 +486,14 @@ def daterange_mh():
         EndDate = form.dEnd.data.strftime('%Y-%m-%d')
         print(StartDate)
         print(EndDate)
-        #db = init_connect_db()
+        # db = init_connect_db()
         df = pd.DataFrame(get_RangeAttendance_mh(db, StartDate, EndDate))
         csv_data = df.to_csv(index='false', encoding='utf-8')
         response = Response(csv_data, mimetype='text/csv')
         response.headers.set("Content-Disposition", "attachment", filename="data.csv")
         return response
     return render_template('daterange_mh.html', user=user, title='관리자', form=form)
+
 
 # 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/inputdateform', methods=['GET', 'POST'])
@@ -532,7 +586,9 @@ def inputdateform_mh():
             }
             userlist.append(user)
             print(user)
-        return render_template('todaytable_mh.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
+        return render_template('todaytable_mh.html', user=user, userlist=userlist, title='도서관현황판', platform="",
+                               form=form)
+
 
 # 관리자 로그아웃시 index로 이동하는 페이지
 @application.route('/logout')
@@ -558,7 +614,7 @@ def signup():
 
         ## 데이타베이스 저장하는 코드
 
-        #db = init_connect_db()
+        # db = init_connect_db()
         if set_signup(db, id, rfid, name, sex, year, phone, memo):
             return """<h2>새로운 회원을 등록했습니다.</h2><script>
             setTimeout(function(){
@@ -572,7 +628,7 @@ def signup():
         return f"<h2>{age}post 입니다{rfid} </h2>"
 
     usert = {'name': '관리자'}
-    #db = init_connect_db()
+    # db = init_connect_db()
     userlist = []
     for dbuser in get_adduserlist(db):
         user = {
@@ -600,7 +656,7 @@ def signup_mh():
 
         ## 데이타베이스 저장하는 코드
 
-        #db = init_connect_db()
+        # db = init_connect_db()
         db = get_conn()
         if set_signup_mh(db, id, rfid, name, sex, year, phone, memo):
             return """<h2>새로운 회원을 등록했습니다.</h2><script>
@@ -615,7 +671,7 @@ def signup_mh():
         return f"<h2>{age}post 입니다{rfid} </h2>"
 
     usert = {'name': '관리자'}
-    #db = init_connect_db()
+    # db = init_connect_db()
     db = get_conn()
     userlist = []
     for dbuser in get_adduserlist_mh(db):
@@ -626,6 +682,7 @@ def signup_mh():
         }
         userlist.append(user)
     return render_template('signup_mh.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
+
 
 # 퇴장시 RFID카드를 인식하는 페이지
 @application.route('/exits')
@@ -642,7 +699,7 @@ def endpoint_rfid_read_exit():
         rst = rfid_read()
         print("rfid buzz test-----")
         if rst[0] != "not support this platform.":
-            #db = init_connect_db()
+            # db = init_connect_db()
             db = get_conn()
             if rst[2] != None:
                 userid = int(rst[2])
@@ -670,7 +727,7 @@ def endpoint_rfid_read_entry():
 
         rst = rfid_read()
         if rst[0] != "not support this platform.":
-            #db = init_connect_db()
+            # db = init_connect_db()
             db = get_conn()
             if rst[2] != None:
                 # print("*****************1")
