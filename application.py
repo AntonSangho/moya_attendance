@@ -190,8 +190,6 @@ def userlist():
     # print(application.env)
     user = {'name': '관리자'}
     userlist = []
-    get_userdetail(db)
-    # return 'f<h1>dd</h1>'
     for dbuser in get_userdetail(db):
         user = {
             'profile': {'id': dbuser['id'],
@@ -206,12 +204,8 @@ def userlist():
             'is': True
         }
         userlist.append(user)
-
-    # print(userlist)
-
     if 'reliquum' in session:
         return render_template('userlist.html', title='도서관현황판', user=user, userlist=userlist)
-
     else:
         return redirect(url_for('auth'))
 

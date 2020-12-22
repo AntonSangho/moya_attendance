@@ -21,8 +21,12 @@ sqlmapper = {
             where b.ent""",
     "sql_3_admin1": "INSERT INTO users(rfid_uid, `name`) VALUES",
     "sql_3_admin2": "INSERT INTO mh_users(rfid_uid, `name`) VALUES",
-    "sql_4_admin1": "INSERT INTO mh_users(rfid_uid, `name`) VALUES"
-
+    "sql_4_admin1": "INSERT INTO mh_users(rfid_uid, `name`) VALUES",
+    "sql_5_admin1": "SELECT * FROM users_detail",
+    "sql_5_admin2": "SELECT * FROM mh_users_detail"
+    # "sql_6_admin1": """SELECT a.id, a.name , b.* FROM users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
+    #         FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
+    #         where a.name ='{selected_name}'"""
 }
 
 
@@ -80,8 +84,6 @@ def get_attendance(db, conn):
 def get_dayattendance(db, filter_date):
     try:
         cursor = db.cursor()
-        print(filter_date)
-
         cursor.execute(
             f"""{sqlmapper["sql_2_admin1"]}='{filter_date}'"""
         )
@@ -98,10 +100,6 @@ def get_dayattendance(db, filter_date):
 def get_dayattendance_mh(db, filter_date):
     try:
         cursor = db.cursor()
-        print('get_dayattendance_mh')
-        print(filter_date)
-        print('filterdate')
-
         cursor.execute(
             f"""{sqlmapper["sql_2_admin2"]}='{filter_date}'"""
         )
@@ -118,19 +116,12 @@ def get_dayattendance_mh(db, filter_date):
 def get_RangeAttendance(db, StartDate, EndDate):
     try:
         cursor = db.cursor()
-        print()
-
         cursor.execute(
-            f""" 
+            f"""
             SELECT a.id, a.name , b.* FROM users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(date_format(entry_time,"%r")) AS entry, MAX(date_format(exit_time,"%r")) AS exits, max(used_time) AS used
-            FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid 
+            FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
             where b.ent between '{StartDate}'AND '{EndDate}'"""
         )
-        # cursor.execute(
-        #     f'SELECT userid, substr(entry_time, 1, 10), max(used_time) '
-        #     f'from stat_attentance '
-        #     f'WHERE substr(entry_time, 1, 10) = \'2020-08-21\' '
-        #     f'group by userid, substr(entry_time, 1, 10);')
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
@@ -139,19 +130,12 @@ def get_RangeAttendance(db, StartDate, EndDate):
 def get_RangeAttendance_mh(db, StartDate, EndDate):
     try:
         cursor = db.cursor()
-        print()
-
         cursor.execute(
             f""" 
             SELECT a.id, a.name , b.* FROM mh_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(date_format(entry_time,"%r")) AS entry, MAX(date_format(exit_time,"%r")) AS exits, max(used_time) AS used
             FROM mh_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid 
             where b.ent between '{StartDate}'AND '{EndDate}'"""
         )
-        # cursor.execute(
-        #     f'SELECT userid, substr(entry_time, 1, 10), max(used_time) '
-        #     f'from stat_attentance '
-        #     f'WHERE substr(entry_time, 1, 10) = \'2020-08-21\' '
-        #     f'group by userid, substr(entry_time, 1, 10);')
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
@@ -160,10 +144,13 @@ def get_RangeAttendance_mh(db, StartDate, EndDate):
 def get_userattendance(db, selected_name):
     try:
         cursor = db.cursor()
+        # cursor.execute(
+        #     f"""{sqlmapper["sql_6_admin1"]}='{selected_name}'"""
+        # )
         cursor.execute(
-            f""" 
+            f"""
             SELECT a.id, a.name , b.* FROM users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
-            FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid 
+            FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
             where a.name ='{selected_name}'"""
         )
         return cursor.fetchall()
@@ -283,7 +270,8 @@ def get_adduserlist_mh(db):
 def get_userdetail(db):
     try:
         cursor = db.cursor()
-        cursor.execute(f"SELECT * FROM users_detail")
+        # cursor.execute(f"SELECT * FROM users_detail")
+        cursor.execute(f"{sqlmapper['sql_5_admin1']}")
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
@@ -293,7 +281,8 @@ def get_userdetail(db):
 def get_userdetail_mh(db):
     try:
         cursor = db.cursor()
-        cursor.execute(f"SELECT * FROM mh_users_detail")
+        # cursor.execute(f"SELECT * FROM mh_users_detail")
+        cursor.execute(f"{sqlmapper['sql_5_admin2']}")
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
