@@ -36,6 +36,7 @@ sqlmapper = {
             SELECT a.id, a.name , b.* FROM mh_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
             FROM mh_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
             where a.name = %s"""
+    # "sql_9_admin1": "UPDATE users_detail SET sex=%s, year=%s, phone=%s, memo=%s where name =%s"
 
 }
 
@@ -329,13 +330,12 @@ def get_userselectdetail_mh(db, selected_name):
 def set_modify(db, selected_name, sex, year, phone, memo):
     try:
         cursor = db.cursor()
+        # cursor.execute(f"{sqlmapper['sql_9_admin1']}", ([sex], [year], [phone], [memo], [selected_name]))
         cursor.execute(
             f"UPDATE users_detail SET sex='{sex}', year={year}, phone={phone}, memo='{memo}' where name ='{selected_name}' ;")
-        # print("1_1 - set_modify try")
     except pymysql.Error as e:
         db.rollback()
         db.close()
-        # print("1_2 - set_modify exception")
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0
     else:

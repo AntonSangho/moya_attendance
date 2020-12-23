@@ -190,6 +190,7 @@ def userlist():
     # print(application.env)
     user = {'name': '관리자'}
     userlist = []
+    db = get_conn()
     for dbuser in get_userdetail(db):
         user = {
             'profile': {'id': dbuser['id'],
@@ -304,6 +305,7 @@ def userinfo_mh():
         selected_name = request.form['name']
         user = {'name': '관리자'}
         # db = init_connect_db()
+        db = get_conn()
         userlist = []
         for dbuser in get_userattendance_mh(db, selected_name):
             user = {
@@ -448,6 +450,7 @@ def aftermodify_mh(username):
 def modify(username):
     user = {'name': '관리자'}
     # db = init_connect_db()
+    db = get_conn()
     userlist_info = []
     for dbuser in get_userselectdetail(db, username):
         user_info = {
