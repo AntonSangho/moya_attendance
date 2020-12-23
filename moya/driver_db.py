@@ -23,10 +23,20 @@ sqlmapper = {
     "sql_3_admin2": "INSERT INTO mh_users(rfid_uid, `name`) VALUES",
     "sql_4_admin1": "INSERT INTO mh_users(rfid_uid, `name`) VALUES",
     "sql_5_admin1": "SELECT * FROM users_detail",
-    "sql_5_admin2": "SELECT * FROM mh_users_detail"
-    # "sql_6_admin1": """SELECT a.id, a.name , b.* FROM users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
-    #         FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
-    #         where a.name ='{selected_name}'"""
+    "sql_5_admin2": "SELECT * FROM mh_users_detail",
+    "sql_6_admin1": "select users.id, users.name, users.rfid_uid from users where not exists(select users_detail.id from users_detail where users.id = users_detail.id);",
+    "sql_6_admin2": "select mh_users.id, mh_users.name, mh_users.rfid_uid from moya.mh_users where not exists(select mh_users_detail.id from mh_users_detail where mh_users.id = mh_users_detail.id);",
+    "sql_7_admin1": "SELECT * FROM users_detail where name = %s",
+    "sql_7_admin2": "SELECT * FROM mh_users_detail where name = %s",
+    "sql_8_admin1": """
+            SELECT a.id, a.name , b.* FROM users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
+            FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
+            where a.name = %s""",
+    "sql_8_admin2": """
+            SELECT a.id, a.name , b.* FROM mh_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
+            FROM mh_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
+            where a.name = %s"""
+
 }
 
 
@@ -144,15 +154,13 @@ def get_RangeAttendance_mh(db, StartDate, EndDate):
 def get_userattendance(db, selected_name):
     try:
         cursor = db.cursor()
+        cursor.execute(f"{sqlmapper['sql_8_admin1']}", [selected_name])
         # cursor.execute(
-        #     f"""{sqlmapper["sql_6_admin1"]}='{selected_name}'"""
+        #     f"""
+        #     SELECT a.id, a.name , b.* FROM users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
+        #     FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
+        #     where a.name ='{selected_name}'"""
         # )
-        cursor.execute(
-            f"""
-            SELECT a.id, a.name , b.* FROM users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
-            FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
-            where a.name ='{selected_name}'"""
-        )
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
@@ -161,12 +169,13 @@ def get_userattendance(db, selected_name):
 def get_userattendance_mh(db, selected_name):
     try:
         cursor = db.cursor()
-        cursor.execute(
-            f""" 
-            SELECT a.id, a.name , b.* FROM mh_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
-            FROM mh_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid 
-            where a.name ='{selected_name}'"""
-        )
+        cursor.execute(f"{sqlmapper['sql_8_admin2']}", [selected_name])
+        # cursor.execute(
+        #     f"""
+        #     SELECT a.id, a.name , b.* FROM mh_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
+        #     FROM mh_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
+        #     where a.name ='{selected_name}'"""
+        # )
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
@@ -232,21 +241,24 @@ def get_rfid_mh(db, rfid_uid):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
-def get_userlist(db):
-    try:
-        cursor = db.cursor()
-        cursor.execute(f"SELECT * FROM users")
-        # 이렇게 하면 나중에 돈 많이나옴.
-        return cursor.fetchall()
-    except pymysql.Error as e:
-        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+# def get_userlist(db):
+#     try:
+#         cursor = db.cursor()
+#         cursor.execute(f"SELECT * FROM users")
+#         # 이렇게 하면 나중에 돈 많이나옴.
+#         return cursor.fetchall()
+#     except pymysql.Error as e:
+#         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
 def get_adduserlist(db):
     try:
         cursor = db.cursor()
         cursor.execute(
-            f"select users.id, users.name, users.rfid_uid from users where not exists(select users_detail.id from users_detail where users.id = users_detail.id);")
+            f"""{sqlmapper["sql_6_admin1"]}"""
+        )
+        # cursor.execute(
+        #     f"select users.id, users.name, users.rfid_uid from users where not exists(select users_detail.id from users_detail where users.id = users_detail.id);")
         # 카드등록시 미등록된 리스트만 나오도록 하기위함.
         return cursor.fetchall()
     except pymysql.Error as e:
@@ -259,7 +271,10 @@ def get_adduserlist_mh(db):
     try:
         cursor = db.cursor()
         cursor.execute(
-            f"select mh_users.id, mh_users.name, mh_users.rfid_uid from moya.mh_users where not exists(select mh_users_detail.id from mh_users_detail where mh_users.id = mh_users_detail.id);")
+            f"""{sqlmapper["sql_6_admin2"]}"""
+        )
+        # cursor.execute(
+        #     f"select mh_users.id, mh_users.name, mh_users.rfid_uid from moya.mh_users where not exists(select mh_users_detail.id from mh_users_detail where mh_users.id = mh_users_detail.id);")
         # 카드등록시 미등록된 리스트만 나오도록 하기위함.
         return cursor.fetchall()
     except pymysql.Error as e:
@@ -292,7 +307,8 @@ def get_userdetail_mh(db):
 def get_userselectdetail(db, selected_name):
     try:
         cursor = db.cursor()
-        cursor.execute(f"SELECT * FROM users_detail where name = '{selected_name}'; ")
+        cursor.execute(f"{sqlmapper['sql_7_admin1']}",[selected_name])
+        # cursor.execute(f"SELECT * FROM users_detail where name = '{selected_name}'; ")
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
@@ -302,7 +318,8 @@ def get_userselectdetail(db, selected_name):
 def get_userselectdetail_mh(db, selected_name):
     try:
         cursor = db.cursor()
-        cursor.execute(f"SELECT * FROM mh_users_detail where name = '{selected_name}'; ")
+        cursor.execute(f"{sqlmapper['sql_7_admin2']}", [selected_name])
+        # cursor.execute(f"SELECT * FROM mh_users_detail where name = '{selected_name}'; ")
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
