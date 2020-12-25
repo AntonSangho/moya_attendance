@@ -6,38 +6,42 @@ import os
 
 sqlmapper = {
     # sqltype_connectionUserNum
-    "sql_1_admin1": "SELECT id, user_id, clock_in FROM attendance ORDER BY id DESC",
-    "sql_1_admin2": "SELECT id, user_id, clock_in FROM attendance ORDER BY id DESC",
-    "sql_1_admin3": "SELECT id, user_id, clock_in FROM attendance ORDER BY id DESC",
+    # 제천기적의도서관
     "sql_2_admin1": """SELECT a.id, a.name , b.* FROM users a LEFT JOIN 
             (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(date_format(entry_time,"%r")) AS entry, MAX(date_format(exit_time,"%r")) AS exits, max(used_time) AS used
             FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
             b ON a.id = b.userid 
             where b.ent""",
+    "sql_3_admin1": "INSERT INTO users(rfid_uid, `name`) VALUES",
+    "sql_5_admin1": "SELECT * FROM users_detail",
+    "sql_6_admin1": "select users.id, users.name, users.rfid_uid from users where not exists(select users_detail.id from users_detail where users.id = users_detail.id);",
+    "sql_7_admin1": "SELECT * FROM users_detail where name = %s",
+    "sql_8_admin1": """
+            SELECT a.id, a.name , b.* FROM users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
+            FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
+            where a.name = %s""",
+
+    # 진주마하도서관
     "sql_2_admin2": """SELECT a.id, a.name , b.* FROM mh_users a LEFT JOIN 
             (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(date_format(entry_time,"%r")) AS entry, MAX(date_format(exit_time,"%r")) AS exits, max(used_time) AS used
             FROM mh_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
             b ON a.id = b.userid 
             where b.ent""",
-    "sql_3_admin1": "INSERT INTO users(rfid_uid, `name`) VALUES",
     "sql_3_admin2": "INSERT INTO mh_users(rfid_uid, `name`) VALUES",
-    "sql_4_admin1": "INSERT INTO mh_users(rfid_uid, `name`) VALUES",
-    "sql_5_admin1": "SELECT * FROM users_detail",
     "sql_5_admin2": "SELECT * FROM mh_users_detail",
-    "sql_6_admin1": "select users.id, users.name, users.rfid_uid from users where not exists(select users_detail.id from users_detail where users.id = users_detail.id);",
     "sql_6_admin2": "select mh_users.id, mh_users.name, mh_users.rfid_uid from moya.mh_users where not exists(select mh_users_detail.id from mh_users_detail where mh_users.id = mh_users_detail.id);",
-    "sql_7_admin1": "SELECT * FROM users_detail where name = %s",
     "sql_7_admin2": "SELECT * FROM mh_users_detail where name = %s",
-    "sql_8_admin1": """
-            SELECT a.id, a.name , b.* FROM users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
-            FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
-            where a.name = %s""",
     "sql_8_admin2": """
             SELECT a.id, a.name , b.* FROM mh_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
             FROM mh_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
             where a.name = %s"""
-    # "sql_9_admin1": "UPDATE users_detail SET sex=%s, year=%s, phone=%s, memo=%s where name =%s"
 
+    # 수원바른샘도서
+
+    # 미정
+    # "sql_1_admin1": "SELECT id, user_id, clock_in FROM attendance ORDER BY id DESC",
+    # "sql_1_admin2": "SELECT id, user_id, clock_in FROM attendance ORDER BY id DESC",
+    # "sql_1_admin3": "SELECT id, user_id, clock_in FROM attendance ORDER BY id DESC",
 }
 
 
@@ -267,7 +271,6 @@ def get_adduserlist(db):
         return 0
 
 
-# 마하도서관
 def get_adduserlist_mh(db):
     try:
         cursor = db.cursor()
@@ -308,7 +311,7 @@ def get_userdetail_mh(db):
 def get_userselectdetail(db, selected_name):
     try:
         cursor = db.cursor()
-        cursor.execute(f"{sqlmapper['sql_7_admin1']}",[selected_name])
+        cursor.execute(f"{sqlmapper['sql_7_admin1']}", [selected_name])
         # cursor.execute(f"SELECT * FROM users_detail where name = '{selected_name}'; ")
         return cursor.fetchall()
     except pymysql.Error as e:
@@ -347,9 +350,10 @@ def set_modify(db, selected_name, sex, year, phone, memo):
 def set_modify_mh(db, selected_name, sex, year, phone, memo):
     try:
         cursor = db.cursor()
+        # cursor.execute(f"{sqlmapper['sql_9_admin2']}",({sex}, {year}, {phone}, {memo}, {selected_name}))
         cursor.execute(
             f"UPDATE mh_users_detail SET sex='{sex}', year={year}, phone={phone}, memo='{memo}' where name ='{selected_name}' ;")
-        # print("1_1 - set_modify try")
+        print("1_1 - set_modify try")
     except pymysql.Error as e:
         db.rollback()
         db.close()
@@ -401,7 +405,6 @@ def set_signup_mh(db, id, rfid, name, sex, year, phone, memo):
 
 
 ## rfid 태깅기록
-# 제천도서관 입장기록
 def set_attendance(db, userid):
     try:
         cursor = db.cursor()
@@ -417,7 +420,6 @@ def set_attendance(db, userid):
         return 1
 
 
-# 마하도서관 입장기록
 def set_attendance_mh(db, userid):
     try:
         cursor = db.cursor()
@@ -434,7 +436,6 @@ def set_attendance_mh(db, userid):
 
 
 ## rfid 태깅기록
-# 제천도서관 퇴장기록
 def set_exit(db, userid):
     try:
         cursor = db.cursor()
@@ -451,7 +452,6 @@ def set_exit(db, userid):
         return 1
 
 
-# 마하도서관 퇴장기록
 def set_exit_mh(db, userid):
     try:
         cursor = db.cursor()
@@ -469,7 +469,6 @@ def set_exit_mh(db, userid):
 
 
 ## rfid 카드등록
-# 도서관 카드등록
 def add_newcard(db, rfid_uid, name, conn):
     try:
         cursor = db.cursor()
