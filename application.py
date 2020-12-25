@@ -134,6 +134,15 @@ def auth():
                 res.set_cookie('conn', '2', max_age=60 * 60 * 24 * 365 * 2)
                 return res
 
+            # adminmoya
+            if (hashlib.sha256(
+                    pp.encode()).hexdigest().upper() == '203D45443356D2BB30B4A2D6C0119F18A8B54E9E686D6D17FF636D85112E8351'):
+                session['reliquum'] = "active"
+                db = init_connect_db(3);
+                res = make_response(redirect('./adminmoya'))
+                res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
+                return res
+
             return f"""<h1> 비밀번호가 잘못되었습니다. : {pp}</h1>
                     <form method='post' action='./auth'>
                     <input type='password' value='' name='pp' placehold='비밀번호 입력해주세요' /> 
@@ -171,6 +180,16 @@ def admin():
         return render_template('admin.html', title='관리자', user=user)
     return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
 
+# adminmoya관리 페이지
+@application.route('/adminmoya')
+def adminmoya():
+    print(application.env)
+    user = {'name': '관리자'}
+    print('admin')
+    if 'reliquum' in session:
+        on_active = session['reliquum']
+        return render_template('adminmoya.html', title='관리자', user=user)
+    return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
 
 # 마하도서관 관리자페이지
 @application.route('/mh/admin')
