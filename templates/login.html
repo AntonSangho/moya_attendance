@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인페이지</title>
+    <link rel="stylesheet" type="text/css" href="/static/semantic/semantic.css">
+    <script
+          src="https://code.jquery.com/jquery-3.1.1.min.js"
+          integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+          crossorigin="anonymous"></script>
+    <script src="/static/semantic/semantic.js"></script>
+</head>
+<style>
+   #v-container {
+  background: #ddd;
+  height: 100vh;
+  width: 100%;
+}
+
+.image-margin {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.image-border {
+  border-radius: 4px !important;
+}
+
+.no-background {
+  background: transparent !important;
+}
+</style>
+<body>
+<div id="v-container" class="ui grid middle aligned">
+  <div class="row">
+    <div class="column" align="middle">
+      <div class="ui raised card ">
+        <div class="ui small centered image no-background ">
+          <img class="image-margin image-border" src="https://semantic-ui.com/images/wireframe/image.png">
+        </div>
+        <div class="content">
+          <div class="ui header">모야관리자 페이지</div>
+          <div class="content">
+            비밀번호를 입력하세요.
+          </div>
+          <form class="ui large form">
+              <input type="password" name="passowrd" placeholder="비밀번호"></input>
+              <div class="ui fluid large submit button">로그인</div>
+          </form>
+            <div class="ui error message">비밀번호가 잘못되었습니다.</div>
+
+          </div>
+        </div>
+        <div class="extra content block">
+            <h5 class="content"> 문의처: reliquum2f@gmail.com</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

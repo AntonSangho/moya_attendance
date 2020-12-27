@@ -64,12 +64,16 @@ application.config['LOGGING_BACKUP_COUNT'] = 1000
 # blocking = False
 
 
-# 관리자 메인 페이지 (기획에 없음)
+# 로그인 페이지
 @application.route('/')
+def login():
+    # print(application.env)
+    return render_template('login.html', platform="")
+
+@application.route('/webapp')
 def index():
     # print(application.env)
-    return render_template('index.html', platform="")
-
+    return render_template('webapp.html', platform="")
 
 # YouTube embedded page
 @application.route('/intro')
