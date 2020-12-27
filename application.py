@@ -65,10 +65,45 @@ application.config['LOGGING_BACKUP_COUNT'] = 1000
 
 
 # 로그인 페이지
-@application.route('/')
+@application.route('/', methods=['POST', 'GET'])
 def login():
-    # print(application.env)
-    return render_template('login.html', platform="")
+    """Login Form"""
+    if request.method == 'GET':
+        return render_template('login.html')
+    else:
+        pp = request.form['pp']
+        try:
+            if (hashlib.sha256(
+                    pp.encode()).hexdigest().upper() == 'B6E01168DC7579E745D41638CBDA0D9EAEA5EE9E8DADD1DB250AFCAD9D6B29D2'):
+                session['reliquum'] = "active"
+                db = init_connect_db(1);
+                res = make_response(redirect('./admin'))
+                res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
+                return res
+
+            # lib2password
+            if (hashlib.sha256(
+                    pp.encode()).hexdigest().upper() == "ac4624660c6bd995ae624f978cd85865e3e6aa40db3a95bbf119780f03080671".upper()):
+                session['reliquum'] = "active"
+                db = init_connect_db(2);
+
+                res = make_response(redirect('./mh/admin'))
+                res.set_cookie('conn', '2', max_age=60 * 60 * 24 * 365 * 2)
+                return res
+
+            # adminmoya
+            if (hashlib.sha256(
+                    pp.encode()).hexdigest().upper() == '203D45443356D2BB30B4A2D6C0119F18A8B54E9E686D6D17FF636D85112E8351'):
+                session['reliquum'] = "active"
+                db = init_connect_db(3);
+                res = make_response(redirect('./adminmoya'))
+                res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
+                return res
+
+            else:
+                return render_template('login.html')
+        except:
+            return 'Dontlogin'
 
 @application.route('/webapp')
 def index():
