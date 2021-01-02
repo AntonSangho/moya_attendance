@@ -101,9 +101,9 @@ def login():
                 return res
 
             else:
-                return render_template('login.html')
+                return render_template('login_error.html')
         except:
-            return 'Dontlogin'
+            return render_template('login.html')
 
 @application.route('/webapp')
 def index():
