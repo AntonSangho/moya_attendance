@@ -77,7 +77,7 @@ def login():
                     pp.encode()).hexdigest().upper() == 'B6E01168DC7579E745D41638CBDA0D9EAEA5EE9E8DADD1DB250AFCAD9D6B29D2'):
                 session['reliquum'] = "active"
                 db = init_connect_db(1);
-                res = make_response(redirect('./admin'))
+                res = make_response(redirect('./inputdateform'))
                 res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
                 return res
 
@@ -87,7 +87,7 @@ def login():
                 session['reliquum'] = "active"
                 db = init_connect_db(2);
 
-                res = make_response(redirect('./mh/admin'))
+                res = make_response(redirect('./mh/inputdateform'))
                 res.set_cookie('conn', '2', max_age=60 * 60 * 24 * 365 * 2)
                 return res
 
