@@ -2,6 +2,9 @@
 {% block content %}
 <div class="ui padded segment">
     <h1 class="ui header">회원명부</h1>
+    <form method="post" action="./userlist">
+        <input type="submit" name="Download" method="post" value="download"></input>
+    </form>
     <table class="ui celled table" method="post">
     <thead>
         <tr>

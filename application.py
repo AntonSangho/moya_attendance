@@ -243,7 +243,7 @@ def admin_mh():
 
 
 # 현재 사용자를 확인하는 페이지
-@application.route('/userlist')
+@application.route('/userlist', methods=['GET','POST'])
 def userlist():
     # print(application.env)
     user = {'name': '관리자'}
@@ -263,11 +263,21 @@ def userlist():
             'is': True
         }
         userlist.append(user)
+    print(request.method)
+    if request.method == 'POST':
+        df = pd.DataFrame(get_userdetail(db))
+        csv_data = df.to_csv(index='false', encoding='utf-8')
+        response = Response(csv_data, mimetype='text/csv')
+        response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+        return response
     if 'reliquum' in session:
         return render_template('userlist.html', title='도서관현황판', user=user, userlist=userlist)
     else:
         return redirect(url_for('auth'))
 
+    #     return render_template('userlist.html',user=user)
+    # elif request.method == 'GET':
+    #     return render_template('userlist.html',user=user)
 
 # [마하도서관] 현재 사용자를 확인하는 페이지
 @application.route('/mh/userlist')
