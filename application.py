@@ -780,6 +780,7 @@ def signup():
 
     usert = {'name': '관리자'}
     # db = init_connect_db()
+    db = get_conn()
     userlist = []
     for dbuser in get_adduserlist(db):
         user = {
