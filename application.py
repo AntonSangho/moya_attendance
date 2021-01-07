@@ -275,9 +275,7 @@ def userlist():
     else:
         return redirect(url_for('auth'))
 
-    #     return render_template('userlist.html',user=user)
-    # elif request.method == 'GET':
-    #     return render_template('userlist.html',user=user)
+
 
 # [마하도서관] 현재 사용자를 확인하는 페이지
 @application.route('/mh/userlist')
