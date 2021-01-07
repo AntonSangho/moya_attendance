@@ -32,17 +32,17 @@
   <body>
 <!--    <span>로그인 : {{ user.name }}</span> <a href="./logout">나가기</a>-->
     <div class="ui secondary menu">
-        <h3 class="header item">제천기적의 도서관</h3>
-        <a class="item" href="/inputdateform">오늘의 현황</a>
-        <a class="item" href="/signup">작은손등록</a>
-        <a class="item" href="/userlist">회원명부</a>
-        <a class="item" href="/daterange">자료받기</a>
+        <h3 class="header item">마하 어린이청소년도서관</h3>
+        <a class="item" href="/mh/inputdateform">오늘의 현황</a>
+        <a class="item" href="/mh/signup">작은손등록</a>
+        <a class="item" href="/mh/userlist">회원명부</a>
+        <a class="item" href="/mh/daterange">자료받기</a>
 
         <div class="right menu">
             <div class="item">
                 <div class="ui icon input">
-            <form action="/userinfo" method="POST">
-                <input type="search" name="name" placeholder="작은손검색"></input>
+            <form action="/mh/userinfo" method="POST">
+                <input type="search" name="name" placeholder="작은손검색">
                 <input type="submit" value="검색"></input>
             </form>
                 </div>

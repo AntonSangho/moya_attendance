@@ -1,9 +1,9 @@
-{% extends "base.html" %}
+{% extends "base_mh.html" %}
 {% block content %}
 <div class="ui padded segments">
     <div class="ui padded segment">
          <h1 class="ui header" > 날짜 검색 </h1>
-         <form action="./inputdateform" method="post">
+         <form action="/mh/inputdateform" method="post">
              <div class ="input submit" >
                 {{ form.hidden_tag() }}
                 {{ form.dt(class='datepicker') }}
