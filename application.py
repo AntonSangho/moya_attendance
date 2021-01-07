@@ -16,7 +16,7 @@ from wtforms import SelectField
 from datetime import date
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
-from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo,  \
+from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, \
     set_signup, set_signup_mh, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, \
     get_RangeAttendance_mh, get_userdetail, get_userdetail_mh, \
     get_userattendance, get_userattendance_mh, set_modify, set_modify_mh, get_userselectdetail, get_userselectdetail_mh, \
@@ -97,18 +97,28 @@ def login():
                 session['reliquum'] = "active"
                 db = init_connect_db(3);
                 res = make_response(redirect('./adminmoya'))
-                res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
+                res.set_cookie('conn', '3', max_age=60 * 60 * 24 * 365 * 2)
                 return res
 
+            # suwon1
+            if (hashlib.sha256(
+                    pp.encode()).hexdigest().upper() == 'AB42590B4070E9B6C79B1E650C464FBCC7834E1BA7871F0B2E935B28F58A6856'):
+                session['reliquum'] = "active"
+                db = init_connect_db(4);
+                res = make_response(redirect('./sw/inputdateform'))
+                res.set_cookie('conn', '4', max_age=60 * 60 * 24 * 365 * 2)
+                return res
             else:
                 return render_template('login_error.html')
         except:
             return render_template('login.html')
 
+
 @application.route('/webapp')
 def index():
     # print(application.env)
     return render_template('webapp.html', platform="")
+
 
 # YouTube embedded page
 @application.route('/intro')
@@ -147,55 +157,56 @@ def newcard():
         return str(e)
 
 
-# 관리자 로그인 창
-@application.route('/auth', methods=['POST', 'GET'])
-def auth():
-    try:
-        print(application.env)
-        if request.method == "POST":
-            pp = request.form['pp']
-
-            if (hashlib.sha256(
-                    pp.encode()).hexdigest().upper() == 'B6E01168DC7579E745D41638CBDA0D9EAEA5EE9E8DADD1DB250AFCAD9D6B29D2'):
-                session['reliquum'] = "active"
-                db = init_connect_db(1);
-                res = make_response(redirect('./admin'))
-                res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
-                return res
-
-            # lib2password
-            if (hashlib.sha256(
-                    pp.encode()).hexdigest().upper() == "ac4624660c6bd995ae624f978cd85865e3e6aa40db3a95bbf119780f03080671".upper()):
-                session['reliquum'] = "active"
-                db = init_connect_db(2);
-
-                res = make_response(redirect('./mh/admin'))
-                res.set_cookie('conn', '2', max_age=60 * 60 * 24 * 365 * 2)
-                return res
-
-            # adminmoya
-            if (hashlib.sha256(
-                    pp.encode()).hexdigest().upper() == '203D45443356D2BB30B4A2D6C0119F18A8B54E9E686D6D17FF636D85112E8351'):
-                session['reliquum'] = "active"
-                db = init_connect_db(3);
-                res = make_response(redirect('./adminmoya'))
-                res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
-                return res
-
-            return f"""<h1> 비밀번호가 잘못되었습니다. : {pp}</h1>
-                    <form method='post' action='./auth'>
-                    <input type='password' value='' name='pp' placehold='비밀번호 입력해주세요' /> 
-                    <input type='submit' value='login' />
-                    </form>
-                    """
-        else:
-            return """<h1> 관리자 비밀번호를 입력해주세요</h1>
-                    <form method='post' action='./auth'>
-                    <input type='password' value='' name='pp' placehold='비밀번호 입력해주세요' /> 
-                    <input type='submit' value='login' />
-                    </form>"""
-    except Exception as e:
-        return str(e)
+# # 관리자 로그인 창
+# @application.route('/auth', methods=['POST', 'GET'])
+# def auth():
+#     try:
+#         print(application.env)
+#         if request.method == "POST":
+#             pp = request.form['pp']
+#
+#             if (hashlib.sha256(
+#                     pp.encode()).hexdigest().upper() == 'B6E01168DC7579E745D41638CBDA0D9EAEA5EE9E8DADD1DB250AFCAD9D6B29D2'):
+#                 session['reliquum'] = "active"
+#                 db = init_connect_db(1);
+#                 res = make_response(redirect('./admin'))
+#                 res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
+#                 return res
+#
+#             # lib2password
+#             if (hashlib.sha256(
+#                     pp.encode()).hexdigest().upper() == "ac4624660c6bd995ae624f978cd85865e3e6aa40db3a95bbf119780f03080671".upper()):
+#                 session['reliquum'] = "active"
+#                 db = init_connect_db(2);
+#
+#                 res = make_response(redirect('./mh/admin'))
+#                 res.set_cookie('conn', '2', max_age=60 * 60 * 24 * 365 * 2)
+#                 return res
+#
+#             # adminmoya
+#             if (hashlib.sha256(
+#                     pp.encode()).hexdigest().upper() == '203D45443356D2BB30B4A2D6C0119F18A8B54E9E686D6D17FF636D85112E8351'):
+#                 session['reliquum'] = "active"
+#                 db = init_connect_db(3);
+#                 res = make_response(redirect('./adminmoya'))
+#                 res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
+#                 return res
+#
+#
+#             return f"""<h1> 비밀번호가 잘못되었습니다. : {pp}</h1>
+#                     <form method='post' action='./auth'>
+#                     <input type='password' value='' name='pp' placehold='비밀번호 입력해주세요' />
+#                     <input type='submit' value='login' />
+#                     </form>
+#                     """
+#         else:
+#             return """<h1> 관리자 비밀번호를 입력해주세요</h1>
+#                     <form method='post' action='./auth'>
+#                     <input type='password' value='' name='pp' placehold='비밀번호 입력해주세요' />
+#                     <input type='submit' value='login' />
+#                     </form>"""
+#     except Exception as e:
+#         return str(e)
 
 
 def get_conn():
@@ -204,8 +215,10 @@ def get_conn():
         return init_connect_db(1)
     elif conn == "2":
         return init_connect_db(2)
-    else:
+    elif conn == "3":
         return init_connect_db(3)
+    else:
+        return init_connect_db(4)
 
 
 # 총괄 관리자 페이지
@@ -219,6 +232,7 @@ def admin():
         return render_template('admin.html', title='관리자', user=user)
     return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
 
+
 # adminmoya관리 페이지
 @application.route('/adminmoya')
 def adminmoya():
@@ -230,20 +244,21 @@ def adminmoya():
         return render_template('adminmoya.html', title='관리자', user=user)
     return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
 
-# 마하도서관 관리자페이지
-@application.route('/mh/admin')
-def admin_mh():
-    print(application.env)
-    user = {'name': '관리자'}
-    print('mh')
-    if 'reliquum' in session:
-        on_active = session['reliquum']
-        return render_template('admin_mh.html', title='관리자', user=user)
-    return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
+
+# # 마하도서관 관리자페이지
+# @application.route('/mh/admin')
+# def admin_mh():
+#     print(application.env)
+#     user = {'name': '관리자'}
+#     print('mh')
+#     if 'reliquum' in session:
+#         on_active = session['reliquum']
+#         return render_template('admin_mh.html', title='관리자', user=user)
+#     return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
 
 
 # 현재 사용자를 확인하는 페이지
-@application.route('/userlist', methods=['GET','POST'])
+@application.route('/userlist', methods=['GET', 'POST'])
 def userlist():
     # print(application.env)
     user = {'name': '관리자'}
@@ -276,13 +291,13 @@ def userlist():
         return redirect(url_for('auth'))
 
 
-
 # [마하도서관] 현재 사용자를 확인하는 페이지
-@application.route('/mh/userlist')
+@application.route('/mh/userlist', methods=['GET', 'POST'])
 def userlist_mh():
     # print(application.env)
     user = {'name': '관리자'}
     userlist = []
+    db = get_conn()
     get_userdetail(db)
     # return 'f<h1>dd</h1>'
     for dbuser in get_userdetail_mh(db):
@@ -301,12 +316,57 @@ def userlist_mh():
         userlist.append(user)
 
     # print(userlist)
-
+    print(request.method)
+    if request.method == 'POST':
+        df = pd.DataFrame(get_userdetail(db))
+        csv_data = df.to_csv(index='false', encoding='utf-8')
+        response = Response(csv_data, mimetype='text/csv')
+        response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
+        return response
     if 'reliquum' in session:
         return render_template('userlist_mh.html', title='도서관현황판', user=user, userlist=userlist)
 
     else:
         return redirect(url_for('mh/auth'))
+
+
+# [바른샘도서관] 현재 사용자를 확인하는 페이지
+@application.route('/sw/userlist', methods=['GET', 'POST'])
+def userlist_sw():
+    # print(application.env)
+    user = {'name': '관리자'}
+    userlist = []
+    db = get_conn()
+    get_userdetail(db)
+    # return 'f<h1>dd</h1>'
+    for dbuser in get_userdetail_mh(db):
+        user = {
+            'profile': {'id': dbuser['id'],
+                        'name': dbuser['name'],
+                        'rfid': dbuser['rfid'],
+                        'sex': dbuser['sex'],
+                        'phone': dbuser['phone'],
+                        'year': dbuser['year'],
+                        'memo': dbuser['memo']
+                        },
+            'status': '입장중',
+            'is': True
+        }
+        userlist.append(user)
+
+    # print(userlist)
+    print(request.method)
+    if request.method == 'POST':
+        df = pd.DataFrame(get_userdetail(db))
+        csv_data = df.to_csv(index='false', encoding='utf-8')
+        response = Response(csv_data, mimetype='text/csv')
+        response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
+        return response
+    if 'reliquum' in session:
+        return render_template('userlist_sw.html', title='도서관현황판', user=user, userlist=userlist)
+
+    else:
+        return redirect(url_for('sw/auth'))
 
 
 # 사용자를 확인하는 페이지
@@ -414,6 +474,57 @@ def userinfo_mh():
         return f"<h1>not selected</h1>"
 
 
+# [바른샘도서관] 사용자를 확인하는 페이지
+@application.route('/sw/userinfo', methods=['GET', 'POST'])
+def userinfo_sw():
+    if request.method == 'GET':
+        abort(403, '잘못된 접근입니다.')
+    # print("######" + str(request.form))
+    if request.method == 'POST':
+        selected_name = request.form['name']
+        user = {'name': '관리자'}
+        # db = init_connect_db()
+        db = get_conn()
+        userlist = []
+        for dbuser in get_userattendance_mh(db, selected_name):
+            user = {
+                'profile': {'userid': dbuser['userid'],
+                            'name': dbuser['name'],
+                            'entry': dbuser['entry'],
+                            'exits': dbuser['exits'],
+                            'used': dbuser['used']
+                            }
+            }
+            userlist.append(user)
+        # print(user)
+        userlist_info = []
+        for dbuser in get_userselectdetail_mh(db, selected_name):
+            user_info = {
+                'info': {
+                    'id': dbuser['id'],
+                    'sex': dbuser['sex'],
+                    'phone': dbuser['phone'],
+                    'year': dbuser['year'],
+                    'memo': dbuser['memo']
+                }
+            }
+            userlist_info.append(user_info)
+        # print(user_info)
+        # print('****' + selected_name)
+        # print(userlist)
+        # print(userlist_info)
+        if len(userlist_info) == 0:
+            return """<h2>해당사용자는 기록이 없습니다.</h2>
+                        <script>
+                        setTimeout(function(){
+                            history.back()
+                        }, 3000);
+                        </script>"""
+        return render_template('userinfo_sw.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+                               userlist_info=userlist_info)
+
+    else:
+        return f"<h1>not selected</h1>"
 # @application.route('/userinfo/userinfo/<username>', methods=['POST', 'GET'])
 # def fixed_url(username):
 #     return redirect('/userinfo/'+username)
@@ -508,6 +619,54 @@ def aftermodify_mh(username):
                         }, 3000);
                         </script>"""
         return render_template('afteruserinfo_mh.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+                               userlist_info=userlist_info)
+
+
+## [바른샘도서관] 사용자이름 선택시 정보 확인
+@application.route('/sw/view/<username>', methods=['POST', 'GET'])
+def aftermodify_sw(username):
+    # print('270#########' + username)
+    if request.method == 'GET':
+        selected_name = username
+        # print(selected_name)
+
+        user = {'name': '관리자'}
+        # db = init_connect_db()
+        db = get_conn()
+        userlist = []
+        for dbuser in get_userattendance_mh(db, selected_name):
+            user = {
+                'profile': {'userid': dbuser['userid'],
+                            'name': dbuser['name'],
+                            'entry': dbuser['entry'],
+                            'exits': dbuser['exits'],
+                            'used': dbuser['used']
+                            }
+            }
+            userlist.append(user)
+        print(userlist)
+        userlist_info = []
+        for dbuser in get_userselectdetail_mh(db, selected_name):
+            user_info = {
+                'info': {
+                    'id': dbuser['id'],
+                    'sex': dbuser['sex'],
+                    'phone': dbuser['phone'],
+                    'year': dbuser['year'],
+                    'memo': dbuser['memo']
+                }
+            }
+            userlist_info.append(user_info)
+        print(user_info)
+        print(selected_name)
+        if len(userlist_info) == 0:
+            return """<h2>해당사용자는 아직 개인정보가 없습니다.</h2>
+                        <script>
+                        setTimeout(function(){
+                            history.back()
+                        }, 3000);
+                        </script>"""
+        return render_template('afteruserinfo_sw.html', title='검색', user=user, userlist=userlist, user_info=user_info,
                                userlist_info=userlist_info)
 
 
@@ -644,6 +803,25 @@ def daterange_mh():
     return render_template('daterange_mh.html', user=user, title='관리자', form=form)
 
 
+# [바른샘도서관] 자료받기 원하는 구간을 정하기
+@application.route('/sw/daterange', methods=['GET', 'POST'])
+def daterange_sw():
+    user = {'name': '관리자'}
+    form = DateForm()
+    if request.method == 'POST':
+        StartDate = form.dStart.data.strftime('%Y-%m-%d')
+        EndDate = form.dEnd.data.strftime('%Y-%m-%d')
+        print(StartDate)
+        print(EndDate)
+        # db = init_connect_db()
+        df = pd.DataFrame(get_RangeAttendance_mh(db, StartDate, EndDate))
+        csv_data = df.to_csv(index='false', encoding='utf-8')
+        response = Response(csv_data, mimetype='text/csv')
+        response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+        return response
+    return render_template('daterange_sw.html', user=user, title='관리자', form=form)
+
+
 # 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/inputdateform', methods=['GET', 'POST'])
 def inputdateform():
@@ -736,6 +914,54 @@ def inputdateform_mh():
             userlist.append(user)
             print(user)
         return render_template('todaytable_mh.html', user=user, userlist=userlist, title='도서관현황판', platform="",
+                               form=form)
+
+
+# [바른샘도서관] 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
+@application.route('/sw/inputdateform', methods=['GET', 'POST'])
+def inputdateform_sw():
+    form = DateForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            filterdate = form.dt.data.strftime('%Y-%m-%d')
+        else:
+            return redirect('/sw/inputdateform')
+        user = {'name': '관리자'}
+        db = get_conn()
+        userlist = []
+        print(filterdate)
+        for dbuser in get_dayattendance_mh(db, filterdate):
+            user = {
+                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                            'exits': dbuser['exits'], 'used': dbuser['used']}
+            }
+            userlist.append(user)
+
+        print('mh_attendace' + str(userlist))
+        if len(userlist) == 0:
+            return """<h2>해당날짜에는 기록이 없습니다.</h2>
+            <script>
+            setTimeout(function(){
+                history.back()
+            }, 3000);
+            </script>"""
+
+        return render_template('daylist_sw.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
+        # return '''<h1>{}</h1>'''.format(filterdate)
+    else:
+        today = datetime.date.today()
+        print(today)
+        user = {'name': '관리자'}
+        db = get_conn()
+        userlist = []
+        for dbuser in get_dayattendance_mh(db, today):
+            user = {
+                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                            'exits': dbuser['exits'], 'used': dbuser['used']}
+            }
+            userlist.append(user)
+            print(user)
+        return render_template('todaytable_sw.html', user=user, userlist=userlist, title='도서관현황판', platform="",
                                form=form)
 
 
@@ -832,6 +1058,50 @@ def signup_mh():
         }
         userlist.append(user)
     return render_template('signup_mh.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
+
+
+# [바른샘도서관] 회원 신규 등록 페이지
+@application.route('/sw/signup', methods=['POST', 'GET'])
+def signup_sw():
+    if request.method == 'POST':
+
+        idrfid = request.form['idrfid']
+        id = idrfid.split("^")[0]
+        rfid = idrfid.split("^")[1]
+        name = request.form['name']
+        year = request.form['year']
+        sex = request.form['sex']
+        phone = request.form['phone']
+        memo = request.form['memo']
+
+        ## 데이타베이스 저장하는 코드
+
+        # db = init_connect_db()
+        db = get_conn()
+        if set_signup_mh(db, id, rfid, name, sex, year, phone, memo):
+            return """<h2>새로운 회원을 등록했습니다.</h2><script>
+            setTimeout(function(){
+                history.back()
+            }, 3000);
+            </script>"""
+        else:
+            return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
+
+        ## 이상이 없으면 alert 창 뛰우기
+        return f"<h2>{age}post 입니다{rfid} </h2>"
+
+    usert = {'name': '관리자'}
+    # db = init_connect_db()
+    db = get_conn()
+    userlist = []
+    for dbuser in get_adduserlist_mh(db):
+        user = {
+            'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+            'status': '입장중',
+            'is': True
+        }
+        userlist.append(user)
+    return render_template('signup_sw.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
 
 
 # 퇴장시 RFID카드를 인식하는 페이지
