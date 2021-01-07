@@ -268,7 +268,7 @@ def userlist():
         df = pd.DataFrame(get_userdetail(db))
         csv_data = df.to_csv(index='false', encoding='utf-8')
         response = Response(csv_data, mimetype='text/csv')
-        response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+        response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
         return response
     if 'reliquum' in session:
         return render_template('userlist.html', title='도서관현황판', user=user, userlist=userlist)
