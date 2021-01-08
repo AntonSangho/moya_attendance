@@ -20,7 +20,9 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     set_signup, set_signup_mh, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, \
     get_RangeAttendance_mh, get_userdetail, get_userdetail_mh, \
     get_userattendance, get_userattendance_mh, set_modify, set_modify_mh, get_userselectdetail, get_userselectdetail_mh, \
-    get_adduserlist, get_adduserlist_mh, get_dayattendance_mh
+    get_adduserlist, get_adduserlist_mh, get_dayattendance_mh,\
+    get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, set_exit_sw
+
 from sqlalchemy import create_engine
 
 from flask.logging import default_handler
@@ -339,7 +341,7 @@ def userlist_sw():
     db = get_conn()
     get_userdetail(db)
     # return 'f<h1>dd</h1>'
-    for dbuser in get_userdetail_mh(db):
+    for dbuser in get_userdetail_sw(db):
         user = {
             'profile': {'id': dbuser['id'],
                         'name': dbuser['name'],
@@ -357,7 +359,7 @@ def userlist_sw():
     # print(userlist)
     print(request.method)
     if request.method == 'POST':
-        df = pd.DataFrame(get_userdetail(db))
+        df = pd.DataFrame(get_userdetail_sw(db))
         csv_data = df.to_csv(index='false', encoding='utf-8')
         response = Response(csv_data, mimetype='text/csv')
         response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
@@ -486,7 +488,7 @@ def userinfo_sw():
         # db = init_connect_db()
         db = get_conn()
         userlist = []
-        for dbuser in get_userattendance_mh(db, selected_name):
+        for dbuser in get_userattendance_sw(db, selected_name):
             user = {
                 'profile': {'userid': dbuser['userid'],
                             'name': dbuser['name'],
@@ -498,7 +500,7 @@ def userinfo_sw():
             userlist.append(user)
         # print(user)
         userlist_info = []
-        for dbuser in get_userselectdetail_mh(db, selected_name):
+        for dbuser in get_userselectdetail_sw(db, selected_name):
             user_info = {
                 'info': {
                     'id': dbuser['id'],
@@ -634,7 +636,7 @@ def aftermodify_sw(username):
         # db = init_connect_db()
         db = get_conn()
         userlist = []
-        for dbuser in get_userattendance_mh(db, selected_name):
+        for dbuser in get_userattendance_sw(db, selected_name):
             user = {
                 'profile': {'userid': dbuser['userid'],
                             'name': dbuser['name'],
@@ -646,7 +648,7 @@ def aftermodify_sw(username):
             userlist.append(user)
         print(userlist)
         userlist_info = []
-        for dbuser in get_userselectdetail_mh(db, selected_name):
+        for dbuser in get_userselectdetail_sw(db, selected_name):
             user_info = {
                 'info': {
                     'id': dbuser['id'],
@@ -736,6 +738,38 @@ def modify_mh(username):
                                userlist_info=userlist_info)
 
 
+## [바른샘도서관] 수정하는 기능
+@application.route('/sw/userinfo/<username>', methods=['POST', 'GET'])
+def modify_sw(username):
+    user = {'name': '관리자'}
+    # db = init_connect_db()
+    db = get_conn()
+    userlist_info = []
+    for dbuser in get_userselectdetail_sw(db, username):
+        user_info = {
+            'info': {
+                'id': dbuser['id'],
+                'sex': dbuser['sex'],
+                'phone': dbuser['phone'],
+                'year': dbuser['year'],
+                'memo': dbuser['memo']
+            }
+        }
+        userlist_info.append(user_info)
+        # print(user_info)
+    if request.method == "POST":
+        # print('1 - request POST')
+        # db = init_connect_db()
+        year = request.form.get('year')
+        phone = request.form.get('phone')
+        memo = request.form.get('memo')
+        sex = request.form.get('sex')
+        selected_name = username
+        if set_modify_sw(db, selected_name, sex, year, phone, memo):
+            return redirect(url_for('aftermodify_sw', username=selected_name))
+        return render_template('update_sw.html', username=username, user=user, user_info=user_info,
+                               userlist_info=userlist_info)
+
 # @application.route('/modify')
 # def findmodify():
 #     return render_template('findmodify.html')
@@ -814,7 +848,7 @@ def daterange_sw():
         print(StartDate)
         print(EndDate)
         # db = init_connect_db()
-        df = pd.DataFrame(get_RangeAttendance_mh(db, StartDate, EndDate))
+        df = pd.DataFrame(get_RangeAttendance_sw(db, StartDate, EndDate))
         csv_data = df.to_csv(index='false', encoding='utf-8')
         response = Response(csv_data, mimetype='text/csv')
         response.headers.set("Content-Disposition", "attachment", filename="data.csv")
@@ -930,14 +964,14 @@ def inputdateform_sw():
         db = get_conn()
         userlist = []
         print(filterdate)
-        for dbuser in get_dayattendance_mh(db, filterdate):
+        for dbuser in get_dayattendance_sw(db, filterdate):
             user = {
                 'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
                             'exits': dbuser['exits'], 'used': dbuser['used']}
             }
             userlist.append(user)
 
-        print('mh_attendace' + str(userlist))
+        print('sw_attendace' + str(userlist))
         if len(userlist) == 0:
             return """<h2>해당날짜에는 기록이 없습니다.</h2>
             <script>
@@ -954,7 +988,7 @@ def inputdateform_sw():
         user = {'name': '관리자'}
         db = get_conn()
         userlist = []
-        for dbuser in get_dayattendance_mh(db, today):
+        for dbuser in get_dayattendance_sw(db, today):
             user = {
                 'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
                             'exits': dbuser['exits'], 'used': dbuser['used']}
@@ -1078,7 +1112,7 @@ def signup_sw():
 
         # db = init_connect_db()
         db = get_conn()
-        if set_signup_mh(db, id, rfid, name, sex, year, phone, memo):
+        if set_signup_sw(db, id, rfid, name, sex, year, phone, memo):
             return """<h2>새로운 회원을 등록했습니다.</h2><script>
             setTimeout(function(){
                 history.back()
@@ -1094,7 +1128,7 @@ def signup_sw():
     # db = init_connect_db()
     db = get_conn()
     userlist = []
-    for dbuser in get_adduserlist_mh(db):
+    for dbuser in get_adduserlist_sw(db):
         user = {
             'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
             'status': '입장중',

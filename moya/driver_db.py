@@ -34,10 +34,22 @@ sqlmapper = {
     "sql_8_admin2": """
             SELECT a.id, a.name , b.* FROM mh_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
             FROM mh_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
-            where a.name = %s"""
+            where a.name = %s""",
 
     # 수원바른샘도서
-
+    "sql_2_admin3": """SELECT a.id, a.name , b.* FROM sw_users a LEFT JOIN 
+            (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(date_format(entry_time,"%r")) AS entry, MAX(date_format(exit_time,"%r")) AS exits, max(used_time) AS used
+            FROM sw_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+            b ON a.id = b.userid 
+            where b.ent""",
+    "sql_3_admin3": "INSERT INTO sw_users(rfid_uid, `name`) VALUES",
+    "sql_5_admin3": "SELECT * FROM sw_users_detail",
+    "sql_6_admin3": "select sw_users.id, sw_users.name, sw_users.rfid_uid from moya.sw_users where not exists(select sw_users_detail.id from sw_users_detail where sw_users.id = sw_users_detail.id);",
+    "sql_7_admin3": "SELECT * FROM sw_users_detail where name = %s",
+    "sql_8_admin3": """
+            SELECT a.id, a.name , b.* FROM sw_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
+            FROM sw_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
+            where a.name = %s"""
     # 미정
     # "sql_1_admin1": "SELECT id, user_id, clock_in FROM attendance ORDER BY id DESC",
     # "sql_1_admin2": "SELECT id, user_id, clock_in FROM attendance ORDER BY id DESC",
@@ -128,6 +140,22 @@ def get_dayattendance_mh(db, filter_date):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
+def get_dayattendance_sw(db, filter_date):
+    try:
+        cursor = db.cursor()
+        cursor.execute(
+            f"""{sqlmapper["sql_2_admin3"]}='{filter_date}'"""
+        )
+        # cursor.execute(
+        #     f'SELECT userid, substr(entry_time, 1, 10), max(used_time) '
+        #     f'from stat_attentance '
+        #     f'WHERE substr(entry_time, 1, 10) = \'2020-08-21\' '
+        #     f'group by userid, substr(entry_time, 1, 10);')
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+
 def get_RangeAttendance(db, StartDate, EndDate):
     try:
         cursor = db.cursor()
@@ -149,6 +177,20 @@ def get_RangeAttendance_mh(db, StartDate, EndDate):
             f""" 
             SELECT a.id, a.name , b.* FROM mh_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(date_format(entry_time,"%r")) AS entry, MAX(date_format(exit_time,"%r")) AS exits, max(used_time) AS used
             FROM mh_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid 
+            where b.ent between '{StartDate}'AND '{EndDate}'"""
+        )
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+
+def get_RangeAttendance_sw(db, StartDate, EndDate):
+    try:
+        cursor = db.cursor()
+        cursor.execute(
+            f""" 
+            SELECT a.id, a.name , b.* FROM sw_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(date_format(entry_time,"%r")) AS entry, MAX(date_format(exit_time,"%r")) AS exits, max(used_time) AS used
+            FROM sw_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid 
             where b.ent between '{StartDate}'AND '{EndDate}'"""
         )
         return cursor.fetchall()
@@ -186,6 +228,21 @@ def get_userattendance_mh(db, selected_name):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
+def get_userattendance_sw(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"{sqlmapper['sql_8_admin3']}", [selected_name])
+        # cursor.execute(
+        #     f"""
+        #     SELECT a.id, a.name , b.* FROM mh_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
+        #     FROM mh_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
+        #     where a.name ='{selected_name}'"""
+        # )
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+
 def get_userinfo(db, userid, rfid_uid):
     try:
         cursor = db.cursor()
@@ -203,6 +260,17 @@ def get_userinfo_mh(db, userid, rfid_uid):
         # print("$$$$$$$$")
         # print(userid, rfid_uid)
         cursor.execute(f"SELECT name FROM mh_users WHERE id = {userid} and rfid_uid = {rfid_uid};")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+
+def get_userinfo_sw(db, userid, rfid_uid):
+    try:
+        cursor = db.cursor()
+        # print("$$$$$$$$")
+        # print(userid, rfid_uid)
+        cursor.execute(f"SELECT name FROM sw_users WHERE id = {userid} and rfid_uid = {rfid_uid};")
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
@@ -226,6 +294,15 @@ def is_rfid_mh(db, rfid_uid):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
+def is_rfid_sw(db, rfid_uid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"select count(*) as cnt from sw_users where rfid_uid = {rfid_uid};")
+        return cursor.fetchone()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+
 def get_rfid(db, rfid_uid):
     try:
         cursor = db.cursor()
@@ -241,6 +318,16 @@ def get_rfid_mh(db, rfid_uid):
         cursor = db.cursor()
         print("**************" + str(rfid_uid))
         cursor.execute(f"select id from mh_users where rfid_uid = {rfid_uid};")
+        return cursor.fetchone()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+
+def get_rfid_sw(db, rfid_uid):
+    try:
+        cursor = db.cursor()
+        print("**************" + str(rfid_uid))
+        cursor.execute(f"select id from sw_users where rfid_uid = {rfid_uid};")
         return cursor.fetchone()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
@@ -286,6 +373,21 @@ def get_adduserlist_mh(db):
         return 0
 
 
+def get_adduserlist_sw(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(
+            f"""{sqlmapper["sql_6_admin3"]}"""
+        )
+        # cursor.execute(
+        #     f"select mh_users.id, mh_users.name, mh_users.rfid_uid from moya.mh_users where not exists(select mh_users_detail.id from mh_users_detail where mh_users.id = mh_users_detail.id);")
+        # 카드등록시 미등록된 리스트만 나오도록 하기위함.
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pomysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+
 def get_userdetail(db):
     try:
         cursor = db.cursor()
@@ -308,6 +410,17 @@ def get_userdetail_mh(db):
         return 0
 
 
+def get_userdetail_sw(db):
+    try:
+        cursor = db.cursor()
+        # cursor.execute(f"SELECT * FROM mh_users_detail")
+        cursor.execute(f"{sqlmapper['sql_5_admin3']}")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+
 def get_userselectdetail(db, selected_name):
     try:
         cursor = db.cursor()
@@ -323,6 +436,17 @@ def get_userselectdetail_mh(db, selected_name):
     try:
         cursor = db.cursor()
         cursor.execute(f"{sqlmapper['sql_7_admin2']}", [selected_name])
+        # cursor.execute(f"SELECT * FROM mh_users_detail where name = '{selected_name}'; ")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+
+def get_userselectdetail_sw(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"{sqlmapper['sql_7_admin3']}", [selected_name])
         # cursor.execute(f"SELECT * FROM mh_users_detail where name = '{selected_name}'; ")
         return cursor.fetchall()
     except pymysql.Error as e:
@@ -353,6 +477,25 @@ def set_modify_mh(db, selected_name, sex, year, phone, memo):
         # cursor.execute(f"{sqlmapper['sql_9_admin2']}",({sex}, {year}, {phone}, {memo}, {selected_name}))
         cursor.execute(
             f"UPDATE mh_users_detail SET sex='{sex}', year={year}, phone={phone}, memo='{memo}' where name ='{selected_name}' ;")
+        print("1_1 - set_modify try")
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        # print("1_2 - set_modify exception")
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+    else:
+        db.commit()
+        db.close()
+        return 1
+
+
+def set_modify_sw(db, selected_name, sex, year, phone, memo):
+    try:
+        cursor = db.cursor()
+        # cursor.execute(f"{sqlmapper['sql_9_admin2']}",({sex}, {year}, {phone}, {memo}, {selected_name}))
+        cursor.execute(
+            f"UPDATE sw_users_detail SET sex='{sex}', year={year}, phone={phone}, memo='{memo}' where name ='{selected_name}' ;")
         print("1_1 - set_modify try")
     except pymysql.Error as e:
         db.rollback()
@@ -404,6 +547,25 @@ def set_signup_mh(db, id, rfid, name, sex, year, phone, memo):
         return 1
 
 
+def set_signup_sw(db, id, rfid, name, sex, year, phone, memo):
+    try:
+        cursor = db.cursor()
+        sql_1 = f"insert into sw_users_detail(id,rfid,`name`, sex, year, phone, memo) value ('{id}','{rfid}', '{name}','{sex}','{year}','{phone}','{memo}');"
+        cursor.execute(sql_1)
+        db.commit()
+        sql_2 = f"update sw_users set name='{name}' where rfid_uid ='{rfid}';"
+        cursor.execute(sql_2)
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+    else:
+        db.commit()
+        db.close()
+        return 1
+
+
 ## rfid 태깅기록
 def set_attendance(db, userid):
     try:
@@ -424,6 +586,21 @@ def set_attendance_mh(db, userid):
     try:
         cursor = db.cursor()
         cursor.execute(f"INSERT INTO mh_attendance(user_id) VALUES ({userid})")
+        print("db commit successfully")
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+    else:
+        db.commit()
+        db.close()
+        return 1
+
+
+def set_attendance_sw(db, userid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"INSERT INTO sw_attendance(user_id) VALUES ({userid})")
         print("db commit successfully")
     except pymysql.Error as e:
         db.rollback()
@@ -456,6 +633,22 @@ def set_exit_mh(db, userid):
     try:
         cursor = db.cursor()
         cursor.execute(f"INSERT INTO mh_exits(user_id) VALUES ({userid})")
+        print("db commit successfully")
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        raise
+    else:
+        db.commit()
+        db.close()
+        return 1
+
+
+def set_exit_sw(db, userid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"INSERT INTO sw_exits(user_id) VALUES ({userid})")
         print("db commit successfully")
     except pymysql.Error as e:
         db.rollback()
