@@ -1159,7 +1159,7 @@ def endpoint_rfid_read_exit():
                 userid = int(rst[2])
                 rfid_uid = rst[1]
                 name = get_userinfo_sw(db, userid, rfid_uid)
-                rst.append("DB TRUE" if set_exit(db, userid) else "DB FALSE")
+                rst.append("DB TRUE" if set_exit_sw(db, userid) else "DB FALSE")
                 if len(name) > 0:
                     rst.append(name[0])
                 else:
@@ -1189,7 +1189,7 @@ def endpoint_rfid_read_entry():
                 rfid_uid = rst[1]
                 # print("*****************2")
                 name = get_userinfo_sw(db, userid, rfid_uid)
-                rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
+                rst.append("DB TRUE" if set_attendance_sw(db, userid) else "DB FALSE")
 
                 # print("*****************3")
                 if len(name) > 0:
@@ -1216,12 +1216,12 @@ def endpoint_rfid_read():
             if rst[1] != None:
                 rfid_uid = rst[1]
 
-                if is_rfid(db, rfid_uid)['cnt'] == 0:
+                if is_rfid_sw(db, rfid_uid)['cnt'] == 0:
                     add_newcard(db, rfid_uid, '이름없음', get_conn())
                     time.sleep(1)
                     # DB에 접속해서 배정된 카드번호 표시
                 else:
-                    uid = get_rfid(db, rfid_uid)['id']
+                    uid = get_rfid_sw(db, rfid_uid)['id']
                     # 이미카드가 있는 경우
                     rfid_write(str(uid))
                     print("uid write %d", uid)
