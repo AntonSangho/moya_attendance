@@ -42,7 +42,7 @@ sqlmapper = {
             FROM sw_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
             b ON a.id = b.userid 
             where b.ent""",
-    "sql_3_admin3": "INSERT INTO sw_users(rfid_uid, `name`) VALUES",
+    "sql_3_admin4": "INSERT INTO sw_users(rfid_uid, `name`) VALUES",
     "sql_5_admin3": "SELECT * FROM sw_users_detail",
     "sql_6_admin3": "select sw_users.id, sw_users.name, sw_users.rfid_uid from moya.sw_users where not exists(select sw_users_detail.id from sw_users_detail where sw_users.id = sw_users_detail.id);",
     "sql_7_admin3": "SELECT * FROM sw_users_detail where name = %s",
