@@ -33,7 +33,7 @@
             line-height: 400px;
             min-width: 300px;
         }
-        #go_index {
+        #go_webapp {
             text-align: left;
             line-height: 400px;
             min-width: 200px;
@@ -59,7 +59,7 @@
     <div id="ver">
         <div><span>{{platform}}</span></div>
         <div id="hor">
-            <div id="go_index"></div>
+            <div id="go_webapp"></div>
                 <div id="container"> {{ msg if msg else '상호' }}</div>
             <div id="go_exits"></div>
         </div>
@@ -118,8 +118,8 @@
             );
         }
 
-        document.querySelector('#go_index').addEventListener('click', function(){
-            document.location.href = './';
+        document.querySelector('#go_webapp').addEventListener('click', function(){
+            document.location.href = './webapp';
             console.log('go_index');
         });
 
