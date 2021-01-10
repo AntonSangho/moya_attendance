@@ -1217,7 +1217,7 @@ def endpoint_rfid_read():
                 rfid_uid = rst[1]
 
                 if is_rfid_mh(db, rfid_uid)['cnt'] == 0:
-                    add_newcard(db, rfid_uid, '이름없음', 4)
+                    add_newcard(db, rfid_uid, '이름없음', 2)
                     time.sleep(1)
                     # DB에 접속해서 배정된 카드번호 표시
                 else:
