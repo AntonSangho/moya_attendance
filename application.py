@@ -1036,7 +1036,7 @@ def signup():
         ## 이상이 없으면 alert 창 뛰우기
         return f"<h2>{age}post 입니다{rfid} </h2>"
 
-    usert = {'name': '관리자'}
+    user = {'name': '관리자'}
     # db = init_connect_db()
     db = get_conn()
     userlist = []
@@ -1080,7 +1080,7 @@ def signup_mh():
         ## 이상이 없으면 alert 창 뛰우기
         return f"<h2>{age}post 입니다{rfid} </h2>"
 
-    usert = {'name': '관리자'}
+    user = {'name': '관리자'}
     # db = init_connect_db()
     db = get_conn()
     userlist = []
@@ -1124,7 +1124,7 @@ def signup_sw():
         ## 이상이 없으면 alert 창 뛰우기
         return f"<h2>{age}post 입니다{rfid} </h2>"
 
-    usert = {'name': '관리자'}
+    user = {'name': '관리자'}
     # db = init_connect_db()
     db = get_conn()
     userlist = []
