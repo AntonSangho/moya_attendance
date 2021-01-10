@@ -1215,8 +1215,9 @@ def endpoint_rfid_read():
             db = get_conn()
             if rst[1] != None:
                 rfid_uid = rst[1]
-
+                # rfid_uid가 user_mh테이블에 있는지 확인하는 함수
                 if is_rfid_sw(db, rfid_uid)['cnt'] == 0:
+                    # 새로운 카드 등록시 바른샘도서관은 4번의 db 번호로 강제정의
                     add_newcard(db, rfid_uid, '이름없음', 4)
                     time.sleep(1)
                     # DB에 접속해서 배정된 카드번호 표시
