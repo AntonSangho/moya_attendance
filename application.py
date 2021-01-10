@@ -119,7 +119,7 @@ def login():
 @application.route('/webapp')
 def index():
     # print(application.env)
-    return render_template('webapp.html', platform="")
+    return render_template('webapp.html', platform="제천기적의도서관")
 
 
 # YouTube embedded page
