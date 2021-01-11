@@ -87,7 +87,7 @@
                             }, 1000);
                         } else {
                             document.querySelector('#container').textContent = '등록된 사용자가 아닙니다.';
-                            setTimeout(function(){history.back()}, 3000); //문제 발생시 바로 전페이지로 이동하는 스크립트
+                            setTimeout(function(){history.back()}, 1000); //문제 발생시 바로 전페이지로 이동하는 스크립트
                         }
                     } else if (usercardjson.ps[1] == 'rfid_card_reading....') {
                         console.log('rfid_card_reading....');
