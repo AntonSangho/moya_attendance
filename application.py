@@ -322,7 +322,7 @@ def userlist_mh():
     # print(userlist)
     print(request.method)
     if request.method == 'POST':
-        df = pd.DataFrame(get_userdetail(db))
+        df = pd.DataFrame(get_userdetail_mh(db))
         csv_data = df.to_csv(index='false', encoding='utf-8')
         response = Response(csv_data, mimetype='text/csv')
         response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
