@@ -20,8 +20,10 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     set_signup, set_signup_mh, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, \
     get_RangeAttendance_mh, get_userdetail, get_userdetail_mh, \
     get_userattendance, get_userattendance_mh, set_modify, set_modify_mh, get_userselectdetail, get_userselectdetail_mh, \
-    get_adduserlist, get_adduserlist_mh, get_dayattendance_mh,\
-    get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, set_exit_sw
+    get_adduserlist, get_adduserlist_mh, get_dayattendance_mh, \
+    get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, \
+    get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, \
+    set_exit_sw
 
 from sqlalchemy import create_engine
 
@@ -527,6 +529,8 @@ def userinfo_sw():
 
     else:
         return f"<h1>not selected</h1>"
+
+
 # @application.route('/userinfo/userinfo/<username>', methods=['POST', 'GET'])
 # def fixed_url(username):
 #     return redirect('/userinfo/'+username)
@@ -769,6 +773,7 @@ def modify_sw(username):
             return redirect(url_for('aftermodify_sw', username=selected_name))
         return render_template('update_sw.html', username=username, user=user, user_info=user_info,
                                userlist_info=userlist_info)
+
 
 # @application.route('/modify')
 # def findmodify():
