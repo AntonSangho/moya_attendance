@@ -16,7 +16,7 @@
         }
 
         #hor {
-            grid-template-columns: 1fr 200px 1fr;
+            grid-template-columns: 1fr 400px 1fr;
             {#border: 1px solid red;#}
         }
         #hor div {
@@ -109,7 +109,7 @@
                 }).catch(
                 function (error) {
                     console.log('Error:', error);
-                    document.querySelector('#container').textContent = '관리자에게 연락하세요!!!'
+                    document.querySelector('#container').textContent = '기기에 문제가 발생했습니다.'
                     setTimeout(function () {
                         console.log('/.entry')
                         fetchs(url);
