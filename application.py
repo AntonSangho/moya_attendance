@@ -1201,6 +1201,7 @@ def endpoint_rfid_read_entry():
                     rst.append(name[0])
                 else:
                     rst.append('누구예요?')
+                buzzer_call()
     except Exception as e:
         print("error", e)
         return abort(500)
@@ -1224,6 +1225,7 @@ def endpoint_rfid_read():
                 if is_rfid(db, rfid_uid)['cnt'] == 0:
                     add_newcard(db, rfid_uid, '이름없음', 1)
                     time.sleep(1)
+                    buzzer_call()
                     # DB에 접속해서 배정된 카드번호 표시
                 else:
                     uid = get_rfid(db, rfid_uid)['id']
@@ -1231,7 +1233,7 @@ def endpoint_rfid_read():
                     rfid_write(str(uid))
                     print("uid write %d", uid)
                     rfid_uid = 00000
-
+                    buzzer_call()
     except Exception as e:
         print("error", e)
         return abort(500)
