@@ -85,9 +85,11 @@ def login():
                 res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
                 return res
 
-            # lib2password
+            # lib2password (old)
+            # maha1
             if (hashlib.sha256(
-                    pp.encode()).hexdigest().upper() == "ac4624660c6bd995ae624f978cd85865e3e6aa40db3a95bbf119780f03080671".upper()):
+                    # pp.encode()).hexdigest().upper() == "ac4624660c6bd995ae624f978cd85865e3e6aa40db3a95bbf119780f03080671".upper()):
+                    pp.encode()).hexdigest().upper() == "8a98bb5d7e02abd26c6d006c3532b95045caa9da2493be2d028f41158b03039b".upper()):
                 session['reliquum'] = "active"
                 db = init_connect_db(2);
 
