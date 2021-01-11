@@ -16,5 +16,6 @@ document.querySelector('#container').textContent = usercardjson.ps[4].name + " �
 {% block script %}
  <script>
      url = './api/v1.0/exits';
+     setTimeout(function(){history.back()}, 30000); //시간경과시 다시 전 페이지로 돌아오는 코드
  </script>
 {% endblock %}
