@@ -110,6 +110,7 @@
                 function (error) {
                     console.log('Error:', error);
                     document.querySelector('#container').textContent = '기기에 문제가 발생했습니다.'
+                    setTimeout(function(){history.back()}, 3000);
                     setTimeout(function () {
                         console.log('/.entry')
                         fetchs(url);
