@@ -77,19 +77,18 @@ def login():
     else:
         pp = request.form['pp']
         try:
+            # 제천기적의도서관
             if (hashlib.sha256(
-                    pp.encode()).hexdigest().upper() == 'B6E01168DC7579E745D41638CBDA0D9EAEA5EE9E8DADD1DB250AFCAD9D6B29D2'):
+                    pp.encode()).hexdigest().upper() == '65A921A74FADDA61C033E9B90283894B653BF3F0FED485049687FF6C5FD39EBE'):
                 session['reliquum'] = "active"
                 db = init_connect_db(1);
                 res = make_response(redirect('./inputdateform'))
                 res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
                 return res
 
-            # lib2password (old)
-            # maha1
+            # 진주마하도서관
             if (hashlib.sha256(
-                    # pp.encode()).hexdigest().upper() == "ac4624660c6bd995ae624f978cd85865e3e6aa40db3a95bbf119780f03080671".upper()):
-                    pp.encode()).hexdigest().upper() == "8a98bb5d7e02abd26c6d006c3532b95045caa9da2493be2d028f41158b03039b".upper()):
+                    pp.encode()).hexdigest().upper() == "0416A29D9BA8952301228BF1A897503E61E2521F37D09D45B17665E83F784863".upper()):
                 session['reliquum'] = "active"
                 db = init_connect_db(2);
 
@@ -97,18 +96,18 @@ def login():
                 res.set_cookie('conn', '2', max_age=60 * 60 * 24 * 365 * 2)
                 return res
 
-            # adminmoya
+            # 관리자
             if (hashlib.sha256(
-                    pp.encode()).hexdigest().upper() == '203D45443356D2BB30B4A2D6C0119F18A8B54E9E686D6D17FF636D85112E8351'):
+                    pp.encode()).hexdigest().upper() == '97C7B081D26B1E4A15FF368B6813D24DB8A763182C3AC24F2174AF5B97C6BF45'):
                 session['reliquum'] = "active"
                 db = init_connect_db(3);
                 res = make_response(redirect('./adminmoya'))
                 res.set_cookie('conn', '3', max_age=60 * 60 * 24 * 365 * 2)
                 return res
 
-            # suwon1
+            # 수원바른샘도서관
             if (hashlib.sha256(
-                    pp.encode()).hexdigest().upper() == 'AB42590B4070E9B6C79B1E650C464FBCC7834E1BA7871F0B2E935B28F58A6856'):
+                    pp.encode()).hexdigest().upper() == 'F3B6885AA2C89A851FD64DA15F2CC121CA00BBB563C1229D6F4F0F79C532D923'):
                 session['reliquum'] = "active"
                 db = init_connect_db(4);
                 res = make_response(redirect('./sw/inputdateform'))
