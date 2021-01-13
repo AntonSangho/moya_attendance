@@ -1160,7 +1160,12 @@ def endpoint_rfid_read_exit():
             # db = init_connect_db()
             db = get_conn()
             if rst[2] != None:
-                userid = int(rst[2])
+                # 공백을 확인해서 0으로 변경
+                userid = str(rst[2]).replace(' ', '') + "0"
+                if len(userid) == 49:
+                    userid = 0
+                else:
+                    userid = rst[2]
                 rfid_uid = rst[1]
                 name = get_userinfo(db, userid, rfid_uid)
                 rst.append("DB TRUE" if set_exit(db, userid) else "DB FALSE")
@@ -1188,10 +1193,13 @@ def endpoint_rfid_read_entry():
             # db = init_connect_db()
             db = get_conn()
             if rst[2] != None:
-                # print("*****************1")
-                userid = int(rst[2])
+                # 공백을 확인해서 0으로 변경
+                userid = str(rst[2]).replace(' ', '') + "0"
+                if len(userid) == 49:
+                    userid = 0
+                else:
+                    userid = rst[2]
                 rfid_uid = rst[1]
-                # print("*****************2")
                 name = get_userinfo(db, userid, rfid_uid)
                 rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
 

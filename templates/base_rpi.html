@@ -79,25 +79,25 @@
             })
                 .then(function (usercardjson) {
                     if (usercardjson.ps[1] != null) {
-                        // 입퇴장시 카드가 등록되어있을 경우 (entry.html, exit.html로 이동)
                         if (usercardjson.ps[4].name) {
                             {% block textContent %}
                             {% endblock %}
                             setTimeout(function name(params) {
                                 window.location.href = './webapp';
                             }, 1000);
-                        } else {
-                            // 입퇴장시 카드가 등록 안되어있을 경우
-                            document.querySelector('#container').textContent = '등록된 사용자가 아닙니다.';
-                            setTimeout(function(){history.back()}, 1000); //문제 발생시 바로 전페이지로 이동하는 스크립트
                         }
+                    else {
+                        // 입퇴장시 카드가 등록 안되어있을 경우
+                        document.querySelector('#container').textContent = '등록된 사용자가 아닙니다.';
+                        setTimeout(function(){history.back()}, 1000); //문제 발생시 바로 전페이지로 이동하는 스크립트
+                    }
                     } else if (usercardjson.ps[1] == 'rfid_card_reading....') {
                         console.log('rfid_card_reading....');
 
                     } else if (typeof (usercardjson.ps) == "number") {
                         // 카드등록시 이미 등록된 카드일 경우
                         if(usercardjson.ps === 0)
-                            document.querySelector('#container').textContent = "이미 등록된 " + usercardjson.uid + "번 카드입니다."
+                            document.querySelector('#container').textContent = usercardjson.uid + "번 카드로 등록됬습니다."
                         else {
                             // 카드등록시 새로운 카드일경우 (newcrd.html로 이동)
                             {% block textContentNewcard %}

@@ -5,6 +5,7 @@ import hashlib
 import time
 import pandas as pd
 import datetime
+from pprint import pprint
 from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for, Response, make_response
 from flask_wtf import Form
 from flask_wtf import FlaskForm
@@ -20,8 +21,10 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     set_signup, set_signup_mh, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, \
     get_RangeAttendance_mh, get_userdetail, get_userdetail_mh, \
     get_userattendance, get_userattendance_mh, set_modify, set_modify_mh, get_userselectdetail, get_userselectdetail_mh, \
-    get_adduserlist, get_adduserlist_mh, get_dayattendance_mh,\
-    get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, set_exit_sw
+    get_adduserlist, get_adduserlist_mh, get_dayattendance_mh, \
+    get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, \
+    get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, \
+    set_exit_sw
 
 from sqlalchemy import create_engine
 
@@ -527,6 +530,8 @@ def userinfo_sw():
 
     else:
         return f"<h1>not selected</h1>"
+
+
 # @application.route('/userinfo/userinfo/<username>', methods=['POST', 'GET'])
 # def fixed_url(username):
 #     return redirect('/userinfo/'+username)
@@ -769,6 +774,7 @@ def modify_sw(username):
             return redirect(url_for('aftermodify_sw', username=selected_name))
         return render_template('update_sw.html', username=username, user=user, user_info=user_info,
                                userlist_info=userlist_info)
+
 
 # @application.route('/modify')
 # def findmodify():
@@ -1156,7 +1162,12 @@ def endpoint_rfid_read_exit():
             # db = init_connect_db()
             db = get_conn()
             if rst[2] != None:
-                userid = int(rst[2])
+                # 공백을 확인해서 0으로 변경
+                userid = str(rst[2]).replace(' ', '') + "0"
+                if len(userid) == 49:
+                    userid = 0
+                else:
+                    userid = rst[2]
                 rfid_uid = rst[1]
                 name = get_userinfo_sw(db, userid, rfid_uid)
                 rst.append("DB TRUE" if set_exit_sw(db, userid) else "DB FALSE")
@@ -1177,21 +1188,20 @@ def endpoint_rfid_read_exit():
 # def endpoint_rfid_read():
 def endpoint_rfid_read_entry():
     try:
-        # print("rpi buzz test")
-
         rst = rfid_read()
         if rst[0] != "not support this platform.":
             # db = init_connect_db()
             db = get_conn()
             if rst[2] != None:
-                # print("*****************1")
-                userid = int(rst[2])
+                # 공백을 확인해서 0으로 변경
+                userid = str(rst[2]).replace(' ', '') + "0"
+                if len(userid) == 49:
+                    userid = 0
+                else:
+                    userid = rst[2]
                 rfid_uid = rst[1]
-                # print("*****************2")
                 name = get_userinfo_sw(db, userid, rfid_uid)
                 rst.append("DB TRUE" if set_attendance_sw(db, userid) else "DB FALSE")
-
-                # print("*****************3")
                 if len(name) > 0:
                     rst.append(name[0])
                 else:
