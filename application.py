@@ -569,7 +569,6 @@ def aftermodify(username):
                 }
             }
             userlist_info.append(user_info)
-        # print(user_info)
         print(selected_name)
         if len(userlist_info) == 0:
             return """<h2>해당사용자는 아직 개인정보가 없습니다.</h2>
@@ -617,7 +616,6 @@ def aftermodify_mh(username):
                 }
             }
             userlist_info.append(user_info)
-        print(user_info)
         print(selected_name)
         if len(userlist_info) == 0:
             return """<h2>해당사용자는 아직 개인정보가 없습니다.</h2>
@@ -665,7 +663,6 @@ def aftermodify_sw(username):
                 }
             }
             userlist_info.append(user_info)
-        print(user_info)
         print(selected_name)
         if len(userlist_info) == 0:
             return """<h2>해당사용자는 아직 개인정보가 없습니다.</h2>
