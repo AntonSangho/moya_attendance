@@ -1,6 +1,10 @@
 [Unit]
-Description=flask application
+Description=maha moya flask application
+After=multi-user.target
+
 [Service]
+Type=idle
 ExecStart=/usr/bin/python3 /home/pi/moya_attendance/application_mh.py
+
 [Install]
 WantedBy=multi-user.target
