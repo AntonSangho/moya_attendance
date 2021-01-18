@@ -1,0 +1,13 @@
+[Unit]
+Description=moya card indication sound
+Before=systemd-user-sessions.service
+
+[Service]
+TimeoutStartSec=0
+
+ExecStart=/usr/bin/omxplayer
+Type=simple
+User=pi
+
+[Install]
+WantedBy=multi-user.target

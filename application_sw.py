@@ -1201,7 +1201,7 @@ def endpoint_rfid_read_entry():
                     userid = rst[2]
                 rfid_uid = rst[1]
                 name = get_userinfo_sw(db, userid, rfid_uid)
-                rst.append("DB TRUE" if set_attendance_sw(db, userid) else "DB FALSE")
+                rst.append("db true" if set_attendance_sw(db, userid) else "db false")
                 if len(name) > 0:
                     rst.append(name[0])
                 else:
