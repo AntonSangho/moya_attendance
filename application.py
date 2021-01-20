@@ -1027,6 +1027,7 @@ def signup():
         ## 데이타베이스 저장하는 코드
 
         # db = init_connect_db()
+        db = get_conn()
         if set_signup(db, id, rfid, name, sex, year, phone, memo):
             return """<h2>새로운 회원을 등록했습니다.</h2><script>
             setTimeout(function(){
