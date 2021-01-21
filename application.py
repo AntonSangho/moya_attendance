@@ -384,6 +384,7 @@ def userinfo():
         selected_name = request.form['name']
         user = {'name': '관리자'}
         # db = init_connect_db()
+        db = get_conn()
         userlist = []
         for dbuser in get_userattendance(db, selected_name):
             user = {
