@@ -114,9 +114,9 @@ def login():
                 res.set_cookie('conn', '4', max_age=60 * 60 * 24 * 365 * 2)
                 return res
 
-            # 개발용  
+            # 개발용 : moyatest
             if (hashlib.sha256(
-                    pp.encode()).hexdigest().upper() == '97C7B081D26B1E4A15FF368B6813D24DB8A763182C3AC24F2174AF5B97C6BF45'):
+                    pp.encode()).hexdigest().upper() == 'fce5456d8f30fdc0940346c271a04ba301f345a99cbada3a615b65c11f532908'):
                 session['reliquum'] = "active"
                 db = init_connect_db(5);
                 res = make_response(redirect('./test/inputdateform'))
@@ -1013,7 +1013,52 @@ def inputdateform_sw():
         return render_template('todaytable_sw.html', user=user, userlist=userlist, title='도서관현황판', platform="",
                                form=form)
 
+# [개발용] 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
+@application.route('/test/inputdateform', methods=['GET', 'POST'])
+def inputdateform_test():
+    form = DateForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            filterdate = form.dt.data.strftime('%Y-%m-%d')
+        else:
+            return redirect('/sw/inputdateform')
+        user = {'name': '관리자'}
+        db = get_conn()
+        userlist = []
+        print(filterdate)
+        for dbuser in get_dayattendance_sw(db, filterdate):
+            user = {
+                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                            'exits': dbuser['exits'], 'used': dbuser['used']}
+            }
+            userlist.append(user)
 
+        print('sw_attendace' + str(userlist))
+        if len(userlist) == 0:
+            return """<h2>해당날짜에는 기록이 없습니다.</h2>
+            <script>
+            setTimeout(function(){
+                history.back()
+            }, 3000);
+            </script>"""
+
+        return render_template('daylist_test.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
+        # return '''<h1>{}</h1>'''.format(filterdate)
+    else:
+        today = datetime.date.today()
+        print(today)
+        user = {'name': '관리자'}
+        db = get_conn()
+        userlist = []
+        for dbuser in get_dayattendance_test(db, today):
+            user = {
+                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                            'exits': dbuser['exits'], 'used': dbuser['used']}
+            }
+            userlist.append(user)
+            print(user)
+        return render_template('todaytable_test.html', user=user, userlist=userlist, title='도서관현황판', platform="",
+                               form=form)
 # 관리자 로그아웃시 index로 이동하는 페이지
 @application.route('/logout')
 def logout():
