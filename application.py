@@ -116,7 +116,7 @@ def login():
 
             # 개발용  
             if (hashlib.sha256(
-                    pp.encode()).hexdigest().upper() == '97C7B081D26B1E4A15FF368B6813D24DB8A763182C3AC24F2174AF5B97C6BF45''):
+                    pp.encode()).hexdigest().upper() == '97C7B081D26B1E4A15FF368B6813D24DB8A763182C3AC24F2174AF5B97C6BF45'):
                 session['reliquum'] = "active"
                 db = init_connect_db(5);
                 res = make_response(redirect('./test/inputdateform'))
