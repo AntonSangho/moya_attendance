@@ -113,6 +113,15 @@ def login():
                 res = make_response(redirect('./sw/inputdateform'))
                 res.set_cookie('conn', '4', max_age=60 * 60 * 24 * 365 * 2)
                 return res
+
+            # 개발용  
+            if (hashlib.sha256(
+                    pp.encode()).hexdigest().upper() == '97C7B081D26B1E4A15FF368B6813D24DB8A763182C3AC24F2174AF5B97C6BF45''):
+                session['reliquum'] = "active"
+                db = init_connect_db(5);
+                res = make_response(redirect('./test/inputdateform'))
+                res.set_cookie('conn', '5', max_age=60 * 60 * 24 * 365 * 2)
+                return res
             else:
                 return render_template('login_error.html')
         except:
