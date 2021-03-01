@@ -1021,7 +1021,7 @@ def inputdateform_test():
         if form.validate_on_submit():
             filterdate = form.dt.data.strftime('%Y-%m-%d')
         else:
-            return redirect('/sw/inputdateform')
+            return redirect('/test/inputdateform')
         user = {'name': '관리자'}
         db = get_conn()
         userlist = []
@@ -1033,7 +1033,7 @@ def inputdateform_test():
             }
             userlist.append(user)
 
-        print('sw_attendace' + str(userlist))
+        print('test_attendace' + str(userlist))
         if len(userlist) == 0:
             return """<h2>해당날짜에는 기록이 없습니다.</h2>
             <script>

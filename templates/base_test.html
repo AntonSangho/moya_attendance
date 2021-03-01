@@ -1,0 +1,90 @@
+<html>
+  <head>
+    {% if title %}
+    <title>{{ title }} - User List</title>
+    {% endif %}
+    <link rel="stylesheet" type="text/css" href="/static/semantic/semantic.css">
+    <script
+          src="https://code.jquery.com/jquery-3.1.1.min.js"
+          integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+          crossorigin="anonymous"></script>
+    <script src="/static/semantic/semantic.js"></script>
+{#    DataPicker example#}
+    <meta charset="utf-8">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<script>
+	$(function() {
+		$( ".dtpick" ).datepicker();
+	});
+	</script>
+{#    DatePicker Example#}
+    <style>
+      span.entry {
+        color: green;
+      }
+      span.exit {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+<!--    <span>로그인 : {{ user.name }}</span> <a href="./logout">나가기</a>-->
+    <div class="ui secondary menu">
+        <h3 class="header item">개발용</h3>
+        <a class="item" href="/test/inputdateform">오늘의 현황</a>
+        <a class="item" href="/test/signup">작은손등록</a>
+        <a class="item" href="/test/userlist">회원명부</a>
+        <a class="item" href="/test/daterange">자료받기</a>
+
+        <div class="right menu">
+            <div class="item">
+                <div class="ui icon input">
+            <form action="/test/userinfo" method="POST">
+                <input type="search" name="name" placeholder="작은손검색">
+                <input type="submit" value="검색"></input>
+            </form>
+                </div>
+            </div>
+        </div>
+            <a class="ui item" href="/">로그아웃</a>
+    </div>
+
+
+{#    <h1 id="clock" style="color: gray;">00:00</h1>#}
+    <hr />
+    {% block content %}{% endblock %}
+    <script>
+      var clockTarget = document.getElementById("clock");
+
+      function clock() {
+        var date = new Date();
+        var month = date.getMonth();
+        var clockDate = date.getDate();
+        var day = date.getDay();
+        var week = ["일", "월", "화", "수", "목", "금", "토"];
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var seconds = date.getSeconds();
+
+        clockTarget.innerText =
+          `${month + 1}월 ${clockDate}일 ${week[day]}요일 ` +
+          `${hours < 10 ? `0${hours}` : hours}:${
+            minutes < 10 ? `0${minutes}` : minutes
+          }:${seconds < 10 ? `0${seconds}` : seconds}`;
+
+        //20초에 한번씩 리플리쉬
+        //if (seconds % 20 == 0) window.location.href = "./userlist";
+      }
+
+      function init() {
+        clock();
+        setInterval(clock, 1000);
+      }
+
+      init();
+    </script>
+  </body>
+</html>
+
