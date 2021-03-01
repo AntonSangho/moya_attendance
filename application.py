@@ -216,14 +216,16 @@ def newcard():
 
 def get_conn():
     conn = request.cookies.get('conn')
-    if conn == "1":
-        return init_connect_db(1)
+    if conn == "1": 
+        return init_connect_db(1) #제천기적의도서관 
     elif conn == "2":
-        return init_connect_db(2)
+        return init_connect_db(2) #진주마하도서관  
     elif conn == "3":
-        return init_connect_db(3)
+        return init_connect_db(3) #관리자계정페이지
+    elif conn == "4":
+        return init_connect_db(4) #수원바른샘도서관 
     else:
-        return init_connect_db(4)
+        return init_connect_db(5) #개발용 
 
 
 # 총괄 관리자 페이지
