@@ -91,16 +91,20 @@ def login():
                     pp.encode()).hexdigest().upper() == "0416A29D9BA8952301228BF1A897503E61E2521F37D09D45B17665E83F784863".upper()):
                 session['reliquum'] = "active"
                 db = init_connect_db(2);
-
                 res = make_response(redirect('./mh/inputdateform'))
                 res.set_cookie('conn', '2', max_age=60 * 60 * 24 * 365 * 2)
                 return res
 
             # 관리자
-            if (hashlib.sha256(
-                    pp.encode()).hexdigest().upper() == '97C7B081D26B1E4A15FF368B6813D24DB8A763182C3AC24F2174AF5B97C6BF45'):
+            if (hashlib.sha256(pp.encode()).hexdigest().upper() == '97C7B081D26B1E4A15FF368B6813D24DB8A763182C3AC24F2174AF5B97C6BF45'):
                 session['reliquum'] = "active"
+                print("#########")
+                print(pp)
+                print("#########")
                 db = init_connect_db(3);
+                print("$$$$$$")
+                print(db)
+                print("$$$$$$")
                 res = make_response(redirect('./adminmoya'))
                 res.set_cookie('conn', '3', max_age=60 * 60 * 24 * 365 * 2)
                 return res
@@ -115,9 +119,11 @@ def login():
                 return res
 
             # 개발용 : moyatest
-            if (hashlib.sha256(
-                    pp.encode()).hexdigest().upper() == 'fce5456d8f30fdc0940346c271a04ba301f345a99cbada3a615b65c11f532908'):
+            if (hashlib.sha256(pp.encode()).hexdigest().upper() == 'FCE5456D8F30FDC0940346C271A04BA301F345A99CBADA3A615B65C11F532908'):
                 session['reliquum'] = "active"
+                print("#########")
+                print(pp)
+                print("#########")
                 db = init_connect_db(5);
                 res = make_response(redirect('./test/inputdateform'))
                 res.set_cookie('conn', '5', max_age=60 * 60 * 24 * 365 * 2)
@@ -234,6 +240,7 @@ def get_conn():
     elif conn == "4":
         return init_connect_db(4) #수원바른샘도서관 
     else:
+    #elif conn == "5":
         return init_connect_db(5) #개발용 
 
 
@@ -1050,7 +1057,7 @@ def inputdateform_test():
         user = {'name': '관리자'}
         db = get_conn()
         userlist = []
-        for dbuser in get_dayattendance_test(db, today):
+        for dbuser in get_dayattendance_sw(db, today):
             user = {
                 'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
                             'exits': dbuser['exits'], 'used': dbuser['used']}
