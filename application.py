@@ -877,6 +877,23 @@ def daterange_sw():
         return response
     return render_template('daterange_sw.html', user=user, title='관리자', form=form)
 
+# [개발용] 자료받기 원하는 구간을 정하기
+@application.route('/test/daterange', methods=['GET', 'POST'])
+def daterange_test():
+    user = {'name': '관리자'}
+    form = DateForm()
+    if request.method == 'POST':
+        StartDate = form.dStart.data.strftime('%Y-%m-%d')
+        EndDate = form.dEnd.data.strftime('%Y-%m-%d')
+        print(StartDate)
+        print(EndDate)
+        # db = init_connect_db()
+        df = pd.DataFrame(get_RangeAttendance_test(db, StartDate, EndDate))
+        csv_data = df.to_csv(index='false', encoding='utf-8')
+        response = Response(csv_data, mimetype='text/csv')
+        response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+        return response
+    return render_template('daterange_test.html', user=user, title='관리자', form=form)
 
 # 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/inputdateform', methods=['GET', 'POST'])
