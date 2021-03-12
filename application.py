@@ -692,6 +692,51 @@ def aftermodify_sw(username):
         return render_template('afteruserinfo_sw.html', title='검색', user=user, userlist=userlist, user_info=user_info,
                                userlist_info=userlist_info)
 
+## [개발용 ] 사용자이름 선택시 정보 확인
+@application.route('/test/view/<username>', methods=['POST', 'GET'])
+def aftermodify_test(username):
+    # print('270#########' + username)
+    if request.method == 'GET':
+        selected_name = username
+        # print(selected_name)
+
+        user = {'name': '관리자'}
+        # db = init_connect_db()
+        db = get_conn()
+        userlist = []
+        for dbuser in get_userattendance_test(db, selected_name):
+            user = {
+                'profile': {'userid': dbuser['userid'],
+                            'name': dbuser['name'],
+                            'entry': dbuser['entry'],
+                            'exits': dbuser['exits'],
+                            'used': dbuser['used']
+                            }
+            }
+            userlist.append(user)
+        print(userlist)
+        userlist_info = []
+        for dbuser in get_userselectdetail_test(db, selected_name):
+            user_info = {
+                'info': {
+                    'id': dbuser['id'],
+                    'sex': dbuser['sex'],
+                    'phone': dbuser['phone'],
+                    'year': dbuser['year'],
+                    'memo': dbuser['memo']
+                }
+            }
+            userlist_info.append(user_info)
+        print(selected_name)
+        if len(userlist_info) == 0:
+            return """<h2>해당사용자는 아직 개인정보가 없습니다.</h2>
+                        <script>
+                        setTimeout(function(){
+                            history.back()
+                        }, 3000);
+                        </script>"""
+        return render_template('afteruserinfo_test.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+                               userlist_info=userlist_info)
 
 ## 수정하는 기능
 @application.route('/userinfo/<username>', methods=['POST', 'GET'])
