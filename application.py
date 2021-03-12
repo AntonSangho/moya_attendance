@@ -1205,6 +1205,49 @@ def signup_sw():
         userlist.append(user)
     return render_template('signup_sw.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
 
+# [개발용] 회원 신규 등록 페이지
+@application.route('/test/signup', methods=['POST', 'GET'])
+def signup_test():
+    if request.method == 'POST':
+
+        idrfid = request.form['idrfid']
+        id = idrfid.split("^")[0]
+        rfid = idrfid.split("^")[1]
+        name = request.form['name']
+        year = request.form['year']
+        sex = request.form['sex']
+        phone = request.form['phone']
+        memo = request.form['memo']
+
+        ## 데이타베이스 저장하는 코드
+
+        # db = init_connect_db()
+        db = get_conn()
+        if set_signup_test(db, id, rfid, name, sex, year, phone, memo):
+            return """<h2>새로운 회원을 등록했습니다.</h2><script>
+            setTimeout(function(){
+                history.back()
+            }, 3000);
+            </script>"""
+        else:
+            return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
+
+        ## 이상이 없으면 alert 창 뛰우기
+        return f"<h2>{age}post 입니다{rfid} </h2>"
+
+    user = {'name': '관리자'}
+    # db = init_connect_db()
+    db = get_conn()
+    userlist = []
+    for dbuser in get_adduserlist_test(db):
+        user = {
+            'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+            'status': '입장중',
+            'is': True
+        }
+        userlist.append(user)
+    return render_template('signup_test.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
+
 
 # 퇴장시 RFID카드를 인식하는 페이지
 @application.route('/exits')
