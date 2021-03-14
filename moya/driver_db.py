@@ -327,6 +327,15 @@ def is_rfid_sw(db, rfid_uid):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
+def is_rfid_test(db, rfid_uid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"select count(*) as cnt from dev_users where rfid_uid = {rfid_uid};")
+        return cursor.fetchone()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+
 def get_rfid(db, rfid_uid):
     try:
         cursor = db.cursor()
@@ -356,6 +365,15 @@ def get_rfid_sw(db, rfid_uid):
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
+
+def get_rfid_test(db, rfid_uid):
+    try:
+        cursor = db.cursor()
+        print("**************" + str(rfid_uid))
+        cursor.execute(f"select id from dev_users where rfid_uid = {rfid_uid};")
+        return cursor.fetchone()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 # def get_userlist(db):
 #     try:
