@@ -24,7 +24,7 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, \
     get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, \
     set_exit_sw, \
-    get_dayattendance_test, get_userdetail_test, set_signup_test, get_adduserlist_test
+    get_dayattendance_test, get_userdetail_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test
 
 from sqlalchemy import create_engine
 
@@ -591,6 +591,57 @@ def userinfo_sw():
     else:
         return f"<h1>not selected</h1>"
 
+# [개발용] 사용자를 확인하는 페이지
+@application.route('/test/userinfo', methods=['GET', 'POST'])
+def userinfo_test():
+    if request.method == 'GET':
+        abort(403, '잘못된 접근입니다.')
+    # print("######" + str(request.form))
+    if request.method == 'POST':
+        selected_name = request.form['name']
+        user = {'name': '관리자'}
+        # db = init_connect_db()
+        db = get_conn()
+        userlist = []
+        for dbuser in get_userattendance_test(db, selected_name):
+            user = {
+                'profile': {'userid': dbuser['userid'],
+                            'name': dbuser['name'],
+                            'entry': dbuser['entry'],
+                            'exits': dbuser['exits'],
+                            'used': dbuser['used']
+                            }
+            }
+            userlist.append(user)
+        # print(user)
+        userlist_info = []
+        for dbuser in get_userselectdetail_test(db, selected_name):
+            user_info = {
+                'info': {
+                    'id': dbuser['id'],
+                    'sex': dbuser['sex'],
+                    'phone': dbuser['phone'],
+                    'year': dbuser['year'],
+                    'memo': dbuser['memo']
+                }
+            }
+            userlist_info.append(user_info)
+        # print(user_info)
+        # print('****' + selected_name)
+        # print(userlist)
+        # print(userlist_info)
+        if len(userlist_info) == 0:
+            return """<h2>해당사용자는 기록이 없습니다.</h2>
+                        <script>
+                        setTimeout(function(){
+                            history.back()
+                        }, 3000);
+                        </script>"""
+        return render_template('userinfo_test.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+                               userlist_info=userlist_info)
+
+    else:
+        return f"<h1>not selected</h1>"
 
 # @application.route('/userinfo/userinfo/<username>', methods=['POST', 'GET'])
 # def fixed_url(username):

@@ -58,7 +58,12 @@ sqlmapper = {
             b ON a.id = b.userid 
             where b.ent""",
     "sql_5_admin4": "SELECT * FROM test_users_detail",
-    "sql_6_admin4": "select test_users.id, test_users.name, test_users.rfid_uid from moya.test_users where not exists(select test_users_detail.id from test_users_detail where test_users.id = test_users_detail.id);"
+    "sql_6_admin4": "select test_users.id, test_users.name, test_users.rfid_uid from moya.test_users where not exists(select test_users_detail.id from test_users_detail where test_users.id = test_users_detail.id);",
+    "sql_7_admin4": "SELECT * FROM dev_users_detail where name = %s",
+    "sql_8_admin4": """
+            SELECT a.id, a.name , b.* FROM dev_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
+            FROM dev_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
+            where a.name = %s"""
             
 
     # 미정
@@ -268,6 +273,19 @@ def get_userattendance_sw(db, selected_name):
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
+def get_userattendance_test(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"{sqlmapper['sql_8_admin4']}", [selected_name])
+        # cursor.execute(
+        #     f"""
+        #     SELECT a.id, a.name , b.* FROM mh_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
+        #     FROM mh_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
+        #     where a.name ='{selected_name}'"""
+        # )
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 def get_userinfo(db, userid, rfid_uid):
     try:
@@ -520,6 +538,15 @@ def get_userselectdetail_sw(db, selected_name):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0
 
+def get_userselectdetail_test(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"{sqlmapper['sql_7_admin4']}", [selected_name])
+        # cursor.execute(f"SELECT * FROM mh_users_detail where name = '{selected_name}'; ")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
 
 def set_modify(db, selected_name, sex, year, phone, memo):
     try:
