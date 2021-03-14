@@ -57,7 +57,8 @@ sqlmapper = {
             FROM dev_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
             b ON a.id = b.userid 
             where b.ent""",
-    "sql_5_admin4": "SELECT * FROM test_users_detail"
+    "sql_5_admin4": "SELECT * FROM test_users_detail",
+    "sql_6_admin4": "select test_users.id, test_users.name, test_users.rfid_uid from moya.test_users where not exists(select test_users_detail.id from test_users_detail where test_users.id = test_users_detail.id);"
             
 
     # 미정
@@ -430,6 +431,20 @@ def get_adduserlist_sw(db):
         print("db error pomysql %d: %s" % (e.args[0], e.args[1]))
         return 0
 
+def get_adduserlist_test(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(
+            f"""{sqlmapper["sql_6_admin4"]}"""
+        )
+        # cursor.execute(
+        #     f"select mh_users.id, mh_users.name, mh_users.rfid_uid from moya.mh_users where not exists(select mh_users_detail.id from mh_users_detail where mh_users.id = mh_users_detail.id);")
+        # 카드등록시 미등록된 리스트만 나오도록 하기위함.
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pomysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
 
 def get_userdetail(db):
     try:
@@ -617,6 +632,23 @@ def set_signup_sw(db, id, rfid, name, sex, year, phone, memo):
         db.close()
         return 1
 
+def set_signup_test(db, id, rfid, name, sex, year, phone, memo):
+    try:
+        cursor = db.cursor()
+        sql_1 = f"insert into dev_users_detail(id,rfid,`name`, sex, year, phone, memo) value ('{id}','{rfid}', '{name}','{sex}','{year}','{phone}','{memo}');"
+        cursor.execute(sql_1)
+        db.commit()
+        sql_2 = f"update dev_users set name='{name}' where rfid_uid ='{rfid}';"
+        cursor.execute(sql_2)
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+    else:
+        db.commit()
+        db.close()
+        return 1
 
 ## rfid 태깅기록
 def set_attendance(db, userid):
