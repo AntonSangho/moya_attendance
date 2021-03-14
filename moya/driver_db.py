@@ -320,6 +320,17 @@ def get_userinfo_sw(db, userid, rfid_uid):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 
+def get_userinfo_test(db, userid, rfid_uid):
+    try:
+        cursor = db.cursor()
+        # print("$$$$$$$$")
+        # print(userid, rfid_uid)
+        cursor.execute(f"SELECT name FROM test_users WHERE id = {userid} and rfid_uid = {rfid_uid};")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+
 def is_rfid(db, rfid_uid):
     try:
         cursor = db.cursor()
@@ -771,6 +782,20 @@ def set_exit_sw(db, userid):
         db.close()
         return 1
 
+def set_exit_test(db, userid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"INSERT INTO test_exits(user_id) VALUES ({userid})")
+        print("db commit successfully")
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        raise
+    else:
+        db.commit()
+        db.close()
+        return 1
 
 ## rfid 카드등록
 def add_newcard(db, rfid_uid, name, conn):
