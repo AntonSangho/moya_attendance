@@ -24,7 +24,7 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, \
     get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, \
     set_exit_sw, \
-    get_dayattendance_test
+    get_dayattendance_test, get_userdetail_test
 
 from sqlalchemy import create_engine
 
@@ -391,6 +391,46 @@ def userlist_sw():
 
     else:
         return redirect(url_for('sw/auth'))
+    
+# [개발용] 현재 사용자를 확인하는 페이지
+@application.route('/test/userlist', methods=['GET', 'POST'])
+def userlist_test():
+    # print(application.env)
+    user = {'name': '관리자'}
+    userlist = []
+    db = get_conn()
+    get_userdetail(db)
+    # return 'f<h1>dd</h1>'
+    for dbuser in get_userdetail_test(db):
+        user = {
+            'profile': {'id': dbuser['id'],
+                        'name': dbuser['name'],
+                        'rfid': dbuser['rfid'],
+                        'sex': dbuser['sex'],
+                        'phone': dbuser['phone'],
+                        'year': dbuser['year'],
+                        'memo': dbuser['memo']
+                        },
+            'status': '입장중',
+            'is': True
+        }
+        userlist.append(user)
+
+    # print(userlist)
+    print(request.method)
+    if request.method == 'POST':
+        df = pd.DataFrame(get_userdetail_test(db))
+        csv_data = df.to_csv(index='false', encoding='utf-8')
+        response = Response(csv_data, mimetype='text/csv')
+        response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
+        return response
+    if 'reliquum' in session:
+        return render_template('userlist_test.html', title='도서관현황판', user=user, userlist=userlist)
+
+    else:
+        return redirect(url_for('test/auth'))
+
+
 
 
 # 사용자를 확인하는 페이지
