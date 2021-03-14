@@ -49,7 +49,16 @@ sqlmapper = {
     "sql_8_admin3": """
             SELECT a.id, a.name , b.* FROM sw_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
             FROM sw_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
-            where a.name = %s"""
+            where a.name = %s""",
+    
+    # 개발용
+    "sql_2_admin4": """SELECT a.id, a.name , b.* FROM dev_users a LEFT JOIN 
+            (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(date_format(entry_time,"%r")) AS entry, MAX(date_format(exit_time,"%r")) AS exits, max(used_time) AS used
+            FROM dev_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+            b ON a.id = b.userid 
+            where b.ent"""
+            
+
     # 미정
     # "sql_1_admin1": "SELECT id, user_id, clock_in FROM attendance ORDER BY id DESC",
     # "sql_1_admin2": "SELECT id, user_id, clock_in FROM attendance ORDER BY id DESC",
@@ -145,6 +154,21 @@ def get_dayattendance_sw(db, filter_date):
         cursor = db.cursor()
         cursor.execute(
             f"""{sqlmapper["sql_2_admin3"]}='{filter_date}'"""
+        )
+        # cursor.execute(
+        #     f'SELECT userid, substr(entry_time, 1, 10), max(used_time) '
+        #     f'from stat_attentance '
+        #     f'WHERE substr(entry_time, 1, 10) = \'2020-08-21\' '
+        #     f'group by userid, substr(entry_time, 1, 10);')
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+def get_dayattendance_test(db, filter_date):
+    try:
+        cursor = db.cursor()
+        cursor.execute(
+            f"""{sqlmapper["sql_2_admin4"]}='{filter_date}'"""
         )
         # cursor.execute(
         #     f'SELECT userid, substr(entry_time, 1, 10), max(used_time) '

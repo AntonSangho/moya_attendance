@@ -23,7 +23,8 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     get_adduserlist, get_adduserlist_mh, get_dayattendance_mh, \
     get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, \
     get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, \
-    set_exit_sw
+    set_exit_sw, \
+    get_dayattendance_test
 
 from sqlalchemy import create_engine
 
@@ -1095,7 +1096,7 @@ def inputdateform_test():
         db = get_conn()
         userlist = []
         print(filterdate)
-        for dbuser in get_dayattendance_sw(db, filterdate):
+        for dbuser in get_dayattendance_test(db, filterdate):
             user = {
                 'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
                             'exits': dbuser['exits'], 'used': dbuser['used']}
@@ -1119,7 +1120,7 @@ def inputdateform_test():
         user = {'name': '관리자'}
         db = get_conn()
         userlist = []
-        for dbuser in get_dayattendance_sw(db, today):
+        for dbuser in get_dayattendance_test(db, today):
             user = {
                 'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
                             'exits': dbuser['exits'], 'used': dbuser['used']}
