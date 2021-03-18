@@ -972,7 +972,7 @@ def daterange():
         # db = init_connect_db()
         df = pd.DataFrame(get_RangeAttendance(db, StartDate, EndDate))
         output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
         df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
         response = Response(
             output.getvalue(),
@@ -998,8 +998,16 @@ def daterange_mh():
         print(EndDate)
         # db = init_connect_db()
         df = pd.DataFrame(get_RangeAttendance_mh(db, StartDate, EndDate))
-        csv_data = df.to_csv(index='false', encoding='utf-8')
-        response = Response(csv_data, mimetype='text/csv')
+        output = StringIO()
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+        response = Response(
+            output.getvalue(),
+            mimetype="text/csv",
+            content_type='application/octet-strem',
+        )
+        # csv_data = df.to_csv(index='false', encoding='utf-8')
+        # response = Response(csv_data, mimetype='text/csv')
         response.headers.set("Content-Disposition", "attachment", filename="data.csv")
         return response
     return render_template('daterange_mh.html', user=user, title='관리자', form=form)
