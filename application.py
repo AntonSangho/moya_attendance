@@ -24,7 +24,7 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, \
     get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, \
     set_exit_sw, \
-    get_dayattendance_test, get_userdetail_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_dayattendance_test
+    get_dayattendance_test, get_userdetail_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test
 
 from sqlalchemy import create_engine
 
@@ -33,6 +33,7 @@ from flask.logging import default_handler
 import logging
 from logging.handlers import RotatingFileHandler
 from logging import Formatter
+from io import StringIO
 
 db = init_connect_db(2)
 
@@ -970,8 +971,16 @@ def daterange():
         print(EndDate)
         # db = init_connect_db()
         df = pd.DataFrame(get_RangeAttendance(db, StartDate, EndDate))
-        csv_data = df.to_csv(index='false', encoding='utf-8')
-        response = Response(csv_data, mimetype='text/csv')
+        output = StringIO()
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+        response = Response(
+            output.getvalue(),
+            mimetype="text/csv",
+            content_type='application/octet-strem',
+        )
+        # csv_data = df.to_csv(index='false', encoding='utf-8-sig')
+        # response = Response(csv_data, mimetype='text/csv')
         response.headers.set("Content-Disposition", "attachment", filename="data.csv")
         return response
     return render_template('/daterange.html', user=user, title='관리자', form=form)
