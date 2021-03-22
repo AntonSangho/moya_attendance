@@ -1002,6 +1002,7 @@ def daterange():
         print(StartDate)
         print(EndDate)
         # db = init_connect_db()
+        db = get_conn()
         df = pd.DataFrame(get_RangeAttendance(db, StartDate, EndDate))
         output = StringIO()
         output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
@@ -1029,6 +1030,7 @@ def daterange_mh():
         print(StartDate)
         print(EndDate)
         # db = init_connect_db()
+        db = get_conn()
         df = pd.DataFrame(get_RangeAttendance_mh(db, StartDate, EndDate))
         output = StringIO()
         output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
@@ -1056,6 +1058,7 @@ def daterange_sw():
         print(StartDate)
         print(EndDate)
         # db = init_connect_db()
+        db = get_conn()
         df = pd.DataFrame(get_RangeAttendance_sw(db, StartDate, EndDate))
         output = StringIO()
         output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
@@ -1082,6 +1085,7 @@ def daterange_test():
         print(StartDate)
         print(EndDate)
         # db = init_connect_db()
+        db = get_conn()
         df = pd.DataFrame(get_RangeAttendance_test(db, StartDate, EndDate))
         output = StringIO()
         output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
