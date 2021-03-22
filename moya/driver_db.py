@@ -810,7 +810,7 @@ def set_exit_sw(db, userid):
 def set_exit_test(db, userid):
     try:
         cursor = db.cursor()
-        cursor.execute(f"INSERT INTO test_exits(user_id) VALUES ({userid})")
+        cursor.execute(f"INSERT INTO dev_exits(user_id) VALUES ({userid})")
         print("db commit successfully")
     except pymysql.Error as e:
         db.rollback()
