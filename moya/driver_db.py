@@ -577,7 +577,7 @@ def set_modify(db, selected_name, sex, year, phone, memo):
         cursor = db.cursor()
         # cursor.execute(f"{sqlmapper['sql_9_admin1']}", ([sex], [year], [phone], [memo], [selected_name]))
         cursor.execute(
-            f"UPDATE users_detail SET sex='{sex}', year={year}, phone={phone}, memo='{memo}' where name ='{selected_name}' ;")
+            f"UPDATE users_detail SET sex='{sex}', year={year}, phone='{phone}', memo='{memo}' where name ='{selected_name}' ;")
     except pymysql.Error as e:
         db.rollback()
         db.close()
@@ -594,7 +594,7 @@ def set_modify_mh(db, selected_name, sex, year, phone, memo):
         cursor = db.cursor()
         # cursor.execute(f"{sqlmapper['sql_9_admin2']}",({sex}, {year}, {phone}, {memo}, {selected_name}))
         cursor.execute(
-            f"UPDATE mh_users_detail SET sex='{sex}', year={year}, phone={phone}, memo='{memo}' where name ='{selected_name}' ;")
+            f"UPDATE mh_users_detail SET sex='{sex}', year={year}, phone='{phone}', memo='{memo}' where name ='{selected_name}' ;")
         print("1_1 - set_modify try")
     except pymysql.Error as e:
         db.rollback()
@@ -613,7 +613,7 @@ def set_modify_sw(db, selected_name, sex, year, phone, memo):
         cursor = db.cursor()
         # cursor.execute(f"{sqlmapper['sql_9_admin2']}",({sex}, {year}, {phone}, {memo}, {selected_name}))
         cursor.execute(
-            f"UPDATE sw_users_detail SET sex='{sex}', year={year}, phone={phone}, memo='{memo}' where name ='{selected_name}' ;")
+            f"UPDATE sw_users_detail SET sex='{sex}', year={year}, phone='{phone}', memo='{memo}' where name ='{selected_name}' ;")
         print("1_1 - set_modify try")
     except pymysql.Error as e:
         db.rollback()
