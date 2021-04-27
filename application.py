@@ -24,7 +24,7 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, \
     get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, \
     set_exit_sw, \
-    get_dayattendance_test, get_userdetail_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test
+    get_dayattendance_test, get_userdetail_test,set_modify_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test
 
 from sqlalchemy import create_engine
 
@@ -962,6 +962,37 @@ def modify_sw(username):
         return render_template('update_sw.html', username=username, user=user, user_info=user_info,
                                userlist_info=userlist_info)
 
+## [개발용] 수정하는 기능
+@application.route('/test/userinfo/<username>', methods=['POST', 'GET'])
+def modify_test(username):
+    user = {'name': '관리자'}
+    # db = init_connect_db()
+    db = get_conn()
+    userlist_info = []
+    for dbuser in get_userselectdetail_test(db, username):
+        user_info = {
+            'info': {
+                'id': dbuser['id'],
+                'sex': dbuser['sex'],
+                'phone': dbuser['phone'],
+                'year': dbuser['year'],
+                'memo': dbuser['memo']
+            }
+        }
+        userlist_info.append(user_info)
+        # print(user_info)
+    if request.method == "POST":
+        # print('1 - request POST')
+        # db = init_connect_db()
+        year = request.form.get('year')
+        phone = request.form.get('phone')
+        memo = request.form.get('memo')
+        sex = request.form.get('sex')
+        selected_name = username
+        if set_modify_test(db, selected_name, sex, year, phone, memo):
+            return redirect(url_for('aftermodify_test', username=selected_name))
+        return render_template('update_test.html', username=username, user=user, user_info=user_info,
+                               userlist_info=userlist_info)
 
 # @application.route('/modify')
 # def findmodify():
