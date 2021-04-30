@@ -8,6 +8,10 @@
             <div class="ui padded segment form">
                 <h1 class="ui header"> {{ username }} </h1>
                 <div class="field">
+                    <label>이름</label>
+                    <input type="textbox" name="name" value="{{ user_info.info.name }}">
+                </div>
+                <div class="field">
                     <label>성별</label>
                     <input type="textbox" name="sex" value="{{ user_info.info.sex }}">
                 </div>

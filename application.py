@@ -824,8 +824,6 @@ def aftermodify_test(username):
     # print('270#########' + username)
     if request.method == 'GET':
         selected_name = username
-        # print(selected_name)
-
         user = {'name': '관리자'}
         # db = init_connect_db()
         db = get_conn()
@@ -973,6 +971,7 @@ def modify_test(username):
         user_info = {
             'info': {
                 'id': dbuser['id'],
+                'name': dbuser['name'], 
                 'sex': dbuser['sex'],
                 'phone': dbuser['phone'],
                 'year': dbuser['year'],
@@ -980,17 +979,15 @@ def modify_test(username):
             }
         }
         userlist_info.append(user_info)
-        # print(user_info)
     if request.method == "POST":
-        # print('1 - request POST')
-        # db = init_connect_db()
+        modifyname = request.form.get('name')
         year = request.form.get('year')
         phone = request.form.get('phone')
         memo = request.form.get('memo')
         sex = request.form.get('sex')
         selected_name = username
-        if set_modify_test(db, selected_name, sex, year, phone, memo):
-            return redirect(url_for('aftermodify_test', username=selected_name))
+        if set_modify_test(db, selected_name, modifyname, sex, year, phone, memo):
+            return redirect(url_for('aftermodify_test', username=modifyname))
         return render_template('update_test.html', username=username, user=user, user_info=user_info,
                                userlist_info=userlist_info)
 
