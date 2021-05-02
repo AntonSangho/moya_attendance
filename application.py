@@ -24,7 +24,7 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, \
     get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, \
     set_exit_sw, \
-    get_dayattendance_test, get_userdetail_test,set_modify_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test
+    get_dayattendance_test, get_userdetail_test, set_modify_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test
 
 from sqlalchemy import create_engine
 
@@ -986,39 +986,11 @@ def modify_test(username):
         memo = request.form.get('memo')
         sex = request.form.get('sex')
         selected_name = username
+        #수정시 usersdetail과 users 둘다 수정하는 코드
         if set_modify_test(db, selected_name, modifyname, sex, year, phone, memo):
             return redirect(url_for('aftermodify_test', username=modifyname))
         return render_template('update_test.html', username=username, user=user, user_info=user_info,
-                               userlist_info=userlist_info)
-
-# @application.route('/modify')
-# def findmodify():
-#     return render_template('findmodify.html')
-
-
-# # 엑셀파일을 다운로드하는 페이지
-# @application.route('/download', methods=['GET', 'POST'])
-# def download():
-#     form = DateForm()
-#     if request.method == 'POST':
-#         year = request.form['year']
-#         month = request.form['month']
-#         day = request.form['day']
-#         filterdate = year + '-' + month + '-' + day
-#         print(filterdate)
-#         if form.validate_on_submit():
-#             filterdate = form.dt.data.strftime('%Y-%m-%d')
-#         user = {'name': '관리자'}
-#         #db = init_connect_db()
-#
-#         df = pd.DataFrame(get_dayattendance(db, filterdate))
-#         csv_data = df.to_csv(index='false', encoding='utf-8')
-#         response = Response(csv_data, mimetype='text/csv')
-#         response.headers.set("Content-Disposition", "attachment", filename="data.csv")
-#         return response
-#     else:
-#         return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
-
+                               userlist_info=userlist_info) 
 
 # 자료받기 원하는 구간을 정하기
 @application.route('/daterange', methods=['GET', 'POST'])
