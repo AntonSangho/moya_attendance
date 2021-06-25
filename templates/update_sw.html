@@ -8,6 +8,13 @@
             <div class="ui padded segment form">
                 <h1 class="ui header"> {{ username }} </h1>
                 <div class="field">
+                    <label>이름</label>
+                    <input type="textbox" name="name" value="{{ user_info.info.name }}">
+                    <div style="color: red; font-size: 0.2em;" >
+                    주의: 이름이 중복되지 않도록 수정해주세요
+                    </div>
+                </div>
+                <div class="field">
                     <label>성별</label>
                     <input type="textbox" name="sex" value="{{ user_info.info.sex }}">
                 </div>
@@ -24,6 +31,7 @@
                         <label>메모 </label>
                         <textarea value="memo" name="memo" placeholder="메모" >{{ user_info.info.memo }}</textarea>
                         <input type="submit" value="저장">
+                        <input type="button" value="취소" onClick="history.back();">
                     </div>
                 </div>
             </div>

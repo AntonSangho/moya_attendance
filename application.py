@@ -927,8 +927,7 @@ def modify_mh(username):
         return render_template('update_mh.html', username=username, user=user, user_info=user_info,
                                userlist_info=userlist_info)
 
-
-## [바른샘도서관] 수정하는 기능
+## [수원바른샘] 수정하는 기능
 @application.route('/sw/userinfo/<username>', methods=['POST', 'GET'])
 def modify_sw(username):
     user = {'name': '관리자'}
@@ -939,6 +938,7 @@ def modify_sw(username):
         user_info = {
             'info': {
                 'id': dbuser['id'],
+                'name': dbuser['name'], 
                 'sex': dbuser['sex'],
                 'phone': dbuser['phone'],
                 'year': dbuser['year'],
@@ -946,20 +946,18 @@ def modify_sw(username):
             }
         }
         userlist_info.append(user_info)
-        # print(user_info)
     if request.method == "POST":
-        # print('1 - request POST')
-        # db = init_connect_db()
+        modifyname = request.form.get('name')
         year = request.form.get('year')
         phone = request.form.get('phone')
         memo = request.form.get('memo')
         sex = request.form.get('sex')
         selected_name = username
-        if set_modify_sw(db, selected_name, sex, year, phone, memo):
-            return redirect(url_for('aftermodify_sw', username=selected_name))
+        #수정시 usersdetail과 users 둘다 수정하는 코드
+        if set_modify_sw(db, selected_name, modifyname, sex, year, phone, memo):
+            return redirect(url_for('aftermodify_sw', username=modifyname))
         return render_template('update_sw.html', username=username, user=user, user_info=user_info,
-                               userlist_info=userlist_info)
-
+                               userlist_info=userlist_info) 
 ## [개발용] 수정하는 기능
 @application.route('/test/userinfo/<username>', methods=['POST', 'GET'])
 def modify_test(username):
