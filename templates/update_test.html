@@ -10,7 +10,9 @@
                 <div class="field">
                     <label>이름</label>
                     <input type="textbox" name="name" value="{{ user_info.info.name }}">
-                    <label>* 기존의 이름 중복등록시 마지막으로 수정된것이 적용됩니다.</label>
+                    <div style="color: red; font-size: 0.2em;" >
+                    주의: 이름이 중복되지 않도록 수정해주세요
+                    </div>
                 </div>
                 <div class="field">
                     <label>성별</label>
