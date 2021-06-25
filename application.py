@@ -862,38 +862,6 @@ def aftermodify_test(username):
         return render_template('afteruserinfo_test.html', title='검색', user=user, userlist=userlist, user_info=user_info,
                                userlist_info=userlist_info)
 
-# ## 수정하는 기능
-# @application.route('/userinfo/<username>', methods=['POST', 'GET'])
-# def modify(username):
-#     user = {'name': '관리자'}
-#     # db = init_connect_db()
-#     db = get_conn()
-#     userlist_info = []
-#     for dbuser in get_userselectdetail(db, username):
-#         user_info = {
-#             'info': {
-#                 'id': dbuser['id'],
-#                 'sex': dbuser['sex'],
-#                 'phone': dbuser['phone'],
-#                 'year': dbuser['year'],
-#                 'memo': dbuser['memo']
-#             }
-#         }
-#         userlist_info.append(user_info)
-#         # print(user_info)
-#     if request.method == "POST":
-#         # print('1 - request POST')
-#         # db = init_connect_db()
-#         year = request.form.get('year')
-#         phone = request.form.get('phone')
-#         memo = request.form.get('memo')
-#         sex = request.form.get('sex')
-#         selected_name = username
-#         if set_modify(db, selected_name, sex, year, phone, memo):
-#             return redirect(url_for('aftermodify', username=selected_name))
-#         return render_template('update.html', username=username, user=user, user_info=user_info,
-#                                userlist_info=userlist_info)
-
 ## [제천기적의도서관] 수정하는 기능
 @application.route('/userinfo/<username>', methods=['POST', 'GET'])
 def modify(username):

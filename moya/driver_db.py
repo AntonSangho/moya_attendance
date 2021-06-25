@@ -581,22 +581,6 @@ def get_username_test(db):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0
 
-# def set_modify(db, selected_name, sex, year, phone, memo):
-#     try:
-#         cursor = db.cursor()
-#         # cursor.execute(f"{sqlmapper['sql_9_admin1']}", ([sex], [year], [phone], [memo], [selected_name]))
-#         cursor.execute(
-#             f"UPDATE users_detail SET sex='{sex}', year={year}, phone='{phone}', memo='{memo}' where name ='{selected_name}' ;")
-#     except pymysql.Error as e:
-#         db.rollback()
-#         db.close()
-#         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
-#         return 0
-#     else:
-#         db.commit()
-#         db.close()
-#         return 1
-
 ## [제천기적의도서관]이름, 성별, 년도, 전화번호, 메모를 수정하는 기능 
 def set_modify(db, selected_name, modifyname, sex, year, phone, memo):
     try:
