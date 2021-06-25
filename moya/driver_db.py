@@ -598,31 +598,12 @@ def set_modify(db, selected_name, sex, year, phone, memo):
         return 1
 
 
-def set_modify_mh(db, selected_name, sex, year, phone, memo):
-    try:
-        cursor = db.cursor()
-        # cursor.execute(f"{sqlmapper['sql_9_admin2']}",({sex}, {year}, {phone}, {memo}, {selected_name}))
-        cursor.execute(
-            f"UPDATE mh_users_detail SET sex='{sex}', year={year}, phone='{phone}', memo='{memo}' where name ='{selected_name}' ;")
-        print("1_1 - set_modify try")
-    except pymysql.Error as e:
-        db.rollback()
-        db.close()
-        # print("1_2 - set_modify exception")
-        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
-        return 0
-    else:
-        db.commit()
-        db.close()
-        return 1
-
-
-# def set_modify_sw(db, selected_name, modifyname, sex, year, phone, memo):
+# def set_modify_mh(db, selected_name, sex, year, phone, memo):
 #     try:
 #         cursor = db.cursor()
 #         # cursor.execute(f"{sqlmapper['sql_9_admin2']}",({sex}, {year}, {phone}, {memo}, {selected_name}))
 #         cursor.execute(
-#             f"UPDATE sw_users_detail SET sex='{sex}', year={year}, phone='{phone}', memo='{memo}' where name ='{selected_name}' ;")
+#             f"UPDATE mh_users_detail SET sex='{sex}', year={year}, phone='{phone}', memo='{memo}' where name ='{selected_name}' ;")
 #         print("1_1 - set_modify try")
 #     except pymysql.Error as e:
 #         db.rollback()
@@ -634,6 +615,24 @@ def set_modify_mh(db, selected_name, sex, year, phone, memo):
 #         db.commit()
 #         db.close()
 #         return 1
+## [마하도서관]이름, 성별, 년도, 전화번호, 메모를 수정하는 기능 
+def set_modify_mh(db, selected_name, modifyname, sex, year, phone, memo):
+    try:
+        cursor = db.cursor()
+        sql_4 = f"UPDATE mh_users_detail SET name='{modifyname}', sex='{sex}', year={year}, phone='{phone}', memo='{memo}' where name ='{selected_name}' ;"
+        cursor.execute(sql_4)
+        db.commit()
+        sql_5 = f"UPDATE mh_users SET name='{modifyname}' where name ='{selected_name}' ;" 
+        cursor.execute(sql_5)
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+    else:
+        db.commit()
+        db.close()
+        return 1
 
 ## [수원바름샘]이름, 성별, 년도, 전화번호, 메모를 수정하는 기능 
 def set_modify_sw(db, selected_name, modifyname, sex, year, phone, memo):
