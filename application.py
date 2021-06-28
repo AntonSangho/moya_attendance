@@ -163,7 +163,7 @@ def entry():
         # print(application.env)
         # global blocking
         # blocking = False
-        return render_template('entry.html', msg="카드를 올려 놓으세요!", platform="입장")
+        return render_template('entry.html', msg="카드를 원에 대주세요", platform="입장")
     except Exception as e:
         return str(e)
 
@@ -174,7 +174,7 @@ def newcard():
         # print(application.env)
         # global blocking
         # blocking = False
-        return render_template('newcard.html', msg="카드를 올려 놓으세요!", platform="카드등록")
+        return render_template('newcard.html', msg="카드를 원에 대주세요", platform="카드등록")
     except Exception as e:
         return str(e)
 
@@ -1473,7 +1473,7 @@ def signup_test():
 @application.route('/exits')
 def exis():
     print(application.env)
-    return render_template('exits.html', msg="카드를 올려 놓으세요!", platform="퇴장")
+    return render_template('exits.html', msg="카드를 원에 대주세요", platform="퇴장")
 
 
 # 퇴장시 RFID카드와 DB 대조작업
