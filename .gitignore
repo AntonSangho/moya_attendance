@@ -1,6 +1,7 @@
 .moya
 .venv
-.moyavenv
+#모야 환경에 따른 python 3.7.3 버전
+moyavenv
 .env.sh
 log/
 # Byte-compiled / optimized / DLL files
