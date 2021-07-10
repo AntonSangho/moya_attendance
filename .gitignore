@@ -1,7 +1,7 @@
 .moya
 .venv
 #모야 환경에 따른 python 가상환경 
-.moyavenv
+moyavenv/
 .env.sh
 log/
 # Byte-compiled / optimized / DLL files
