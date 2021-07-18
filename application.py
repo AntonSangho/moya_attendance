@@ -708,6 +708,7 @@ def userinfo_bp():
                         </script>"""
         return render_template('userinfo_bp.html', title='검색', user=user, userlist=userlist, user_info=user_info,
                                userlist_info=userlist_info)
+
     else:
         return f"<h1>not selected</h1>"
 
