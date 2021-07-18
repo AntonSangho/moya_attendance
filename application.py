@@ -1068,6 +1068,39 @@ def modify_test(username):
         return render_template('update_test.html', username=username, user=user, user_info=user_info,
                                userlist_info=userlist_info) 
 
+## [반포도서관] 수정하는 기능
+@application.route('/bp/userinfo/<username>', methods=['POST', 'GET'])
+def modify_bp(username):
+    user = {'name': '관리자'}
+    # db = init_connect_db()
+    db = get_conn()
+    userlist_info = []
+    for dbuser in get_userselectdetail_bp(db, username):
+        user_info = {
+            'info': {
+                'id': dbuser['id'],
+                'name': dbuser['name'], 
+                'sex': dbuser['sex'],
+                'phone': dbuser['phone'],
+                'year': dbuser['year'],
+                'memo': dbuser['memo']
+            }
+        }
+        userlist_info.append(user_info)
+    if request.method == "POST":
+        modifyname = request.form.get('name')
+        year = request.form.get('year')
+        phone = request.form.get('phone')
+        memo = request.form.get('memo')
+        sex = request.form.get('sex')
+        selected_name = username
+        #수정시 usersdetail과 users 둘다 수정하는 코드
+        if set_modify_bp(db, selected_name, modifyname, sex, year, phone, memo):
+            return redirect(url_for('aftermodify_bp', username=modifyname))
+        return render_template('update_bp.html', username=username, user=user, user_info=user_info,
+                               userlist_info=userlist_info) 
+
+
 # 자료받기 원하는 구간을 정하기
 @application.route('/daterange', methods=['GET', 'POST'])
 def daterange():
