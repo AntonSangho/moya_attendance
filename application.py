@@ -413,7 +413,7 @@ def userlist_bp():
     db = get_conn()
     get_userdetail(db)
     # return 'f<h1>dd</h1>'
-    for dbuser in get_userdetail_test(db):
+    for dbuser in get_userdetail_bp(db):
         user = {
             'profile': {'id': dbuser['id'],
                         'name': dbuser['name'],
@@ -431,7 +431,7 @@ def userlist_bp():
     # print(userlist)
     # print(request.method)
     if request.method == 'POST':
-        df = pd.DataFrame(get_userdetail_test(db))
+        df = pd.DataFrame(get_userdetail_bp(db))
         output = StringIO()
         output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
         df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
