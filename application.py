@@ -241,9 +241,10 @@ def get_conn():
         return init_connect_db(3) #관리자계정페이지
     elif conn == "4":
         return init_connect_db(4) #수원바른샘도서관 
-    else:
-    #elif conn == "5":
+    elif conn == "5":
         return init_connect_db(5) #개발용 
+    else:
+        return init_connect_db(6) #반포도서관
 
 
 # 총괄 관리자 페이지
