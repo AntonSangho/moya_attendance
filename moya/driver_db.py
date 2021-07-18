@@ -64,7 +64,7 @@ sqlmapper = {
     "sql_8_admin4": """
             SELECT a.id, a.name , b.* FROM dev_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
             FROM dev_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
-            where a.name = %s"""
+            where a.name = %s""",
             
 
     # 미정
