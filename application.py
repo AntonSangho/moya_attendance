@@ -123,12 +123,17 @@ def login():
             # 개발용 : moyatest
             if (hashlib.sha256(pp.encode()).hexdigest().upper() == 'FCE5456D8F30FDC0940346C271A04BA301F345A99CBADA3A615B65C11F532908'):
                 session['reliquum'] = "active"
-                print("#########")
-                print(pp)
-                print("#########")
                 db = init_connect_db(5);
                 res = make_response(redirect('./test/inputdateform'))
                 res.set_cookie('conn', '5', max_age=60 * 60 * 24 * 365 * 2)
+                return res
+            
+            # 반포도서관: banpomoya 
+            if (hashlib.sha256(pp.encode()).hexdigest().upper() == 'CDC9A45EDD7164E9E13218ADC08885CEB1C450D5F6C8DDEC63260C5DE9E21710'):
+                session['reliquum'] = "active"
+                db = init_connect_db(6);
+                res = make_response(redirect('./bp/inputdateform'))
+                res.set_cookie('conn', '6', max_age=60 * 60 * 24 * 365 * 2)
                 return res
             else:
                 return render_template('login_error.html')
