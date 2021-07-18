@@ -403,7 +403,51 @@ def userlist_test():
     else:
         return redirect(url_for('test/auth'))
 
+# [반포도서관] 현재 사용자를 확인하는 페이지
+@application.route('/bp/userlist', methods=['GET', 'POST'])
+def userlist_bp():
+    # print(application.env)
+    user = {'name': '관리자'}
+    userlist = []
+    db = get_conn()
+    get_userdetail(db)
+    # return 'f<h1>dd</h1>'
+    for dbuser in get_userdetail_test(db):
+        user = {
+            'profile': {'id': dbuser['id'],
+                        'name': dbuser['name'],
+                        'rfid': dbuser['rfid'],
+                        'sex': dbuser['sex'],
+                        'phone': dbuser['phone'],
+                        'year': dbuser['year'],
+                        'memo': dbuser['memo']
+                        },
+            'status': '입장중',
+            'is': True
+        }
+        userlist.append(user)
 
+    # print(userlist)
+    # print(request.method)
+    if request.method == 'POST':
+        df = pd.DataFrame(get_userdetail_test(db))
+        output = StringIO()
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+        response = Response(
+            output.getvalue(),
+            mimetype="text/csv",
+            content_type='application/octet-strem',
+        )
+        #csv_data = df.to_csv(index='false', encoding='utf-8')
+        #response = Response(csv_data, mimetype='text/csv')
+        response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
+        return response
+    if 'reliquum' in session:
+        return render_template('userlist_bp.html', title='도서관현황판', user=user, userlist=userlist)
+
+    else:
+        return redirect(url_for('bp/auth'))
 
 
 # 사용자를 확인하는 페이지
