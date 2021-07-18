@@ -24,7 +24,8 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, \
     get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, \
     set_exit_sw, \
-    get_dayattendance_test, get_userdetail_test, set_modify_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test
+    get_dayattendance_test, get_userdetail_test, set_modify_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test, \
+    get_dayattendance_bp, get_RangeAttendance_bp, get_userattendance_bp, get_userinfo_bp, get_rfid_bp, get_adduserlist_bp, get_userdetail_bp, get_userselectdetail_bp, set_modify_bp, set_signup_bp, set_attendance_bp, set_exit_bp
 
 from sqlalchemy import create_engine
 
