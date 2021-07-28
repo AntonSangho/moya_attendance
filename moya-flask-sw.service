@@ -1,12 +1,13 @@
 [Unit]
-Description=suwon moya flask application
+Description=jechon flask application
 After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=/usr/bin/python3 /home/pi/moya_attendance/application_sw.py
+ExecStart=/home/pi/moya_attendance/moyavenv/bin/python3 /home/pi/moya_attendance/application_sw.py
 WorkingDirectory=/home/pi/moya_attendance
 User=root
 
 [Install]
 WantedBy=multi-user.target
+
