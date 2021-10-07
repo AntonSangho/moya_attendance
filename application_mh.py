@@ -162,59 +162,6 @@ def newcard():
     except Exception as e:
         return str(e)
 
-
-# # 관리자 로그인 창
-# @application.route('/auth', methods=['POST', 'GET'])
-# def auth():
-#     try:
-#         print(application.env)
-#         if request.method == "POST":
-#             pp = request.form['pp']
-#
-#             if (hashlib.sha256(
-#                     pp.encode()).hexdigest().upper() == 'B6E01168DC7579E745D41638CBDA0D9EAEA5EE9E8DADD1DB250AFCAD9D6B29D2'):
-#                 session['reliquum'] = "active"
-#                 db = init_connect_db(1);
-#                 res = make_response(redirect('./admin'))
-#                 res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
-#                 return res
-#
-#             # lib2password
-#             if (hashlib.sha256(
-#                     pp.encode()).hexdigest().upper() == "ac4624660c6bd995ae624f978cd85865e3e6aa40db3a95bbf119780f03080671".upper()):
-#                 session['reliquum'] = "active"
-#                 db = init_connect_db(2);
-#
-#                 res = make_response(redirect('./mh/admin'))
-#                 res.set_cookie('conn', '2', max_age=60 * 60 * 24 * 365 * 2)
-#                 return res
-#
-#             # adminmoya
-#             if (hashlib.sha256(
-#                     pp.encode()).hexdigest().upper() == '203D45443356D2BB30B4A2D6C0119F18A8B54E9E686D6D17FF636D85112E8351'):
-#                 session['reliquum'] = "active"
-#                 db = init_connect_db(3);
-#                 res = make_response(redirect('./adminmoya'))
-#                 res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
-#                 return res
-#
-#
-#             return f"""<h1> 비밀번호가 잘못되었습니다. : {pp}</h1>
-#                     <form method='post' action='./auth'>
-#                     <input type='password' value='' name='pp' placehold='비밀번호 입력해주세요' />
-#                     <input type='submit' value='login' />
-#                     </form>
-#                     """
-#         else:
-#             return """<h1> 관리자 비밀번호를 입력해주세요</h1>
-#                     <form method='post' action='./auth'>
-#                     <input type='password' value='' name='pp' placehold='비밀번호 입력해주세요' />
-#                     <input type='submit' value='login' />
-#                     </form>"""
-#     except Exception as e:
-#         return str(e)
-
-
 def get_conn():
     conn = request.cookies.get('conn')
     if conn == "1":
