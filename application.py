@@ -136,6 +136,25 @@ def login():
                 res = make_response(redirect('./bp/inputdateform'))
                 res.set_cookie('conn', '6', max_age=60 * 60 * 24 * 365 * 2)
                 return res
+             
+            # 세종시립도서관: sejong 
+            if (hashlib.sha256(pp.encode()).hexdigest().upper() == '3972C29350A5FBD7B9BFE767B52EF88492A7332B542CCA643DF5463A53B4AB05'):
+                session['reliquum'] = "active"
+                db = init_connect_db(7);
+                res = make_response(redirect('./sj/inputdateform'))
+                res.set_cookie('conn', '7', max_age=60 * 60 * 24 * 365 * 2)
+                return res
+               
+            """ 
+            # 도서관추가
+            # 도서관이름: 도서관영어이름 
+            if (hashlib.sha256(pp.encode()).hexdigest().upper() == 'CDC9A45EDD7164E9E13218ADC08885CEB1C450D5F6C8DDEC63260C5DE9E21710'):
+                session['reliquum'] = "active"
+                db = init_connect_db(마지막숫자);
+                res = make_response(redirect('./알파벳약자/inputdateform'))
+                res.set_cookie('conn', '마지막숫자', max_age=60 * 60 * 24 * 365 * 2)
+                return res
+            """
             else:
                 return render_template('login_error.html')
         except:
@@ -195,8 +214,15 @@ def get_conn():
         return init_connect_db(4) #수원바른샘도서관 
     elif conn == "5":
         return init_connect_db(5) #개발용 
-    else:
+    else conn == "6":
         return init_connect_db(6) #반포도서관
+    else: 
+        return init_connect_db(7) #세종시립도서관
+    """ 
+    ##도서관추가 
+    else:
+        return init_connect_db(마지막숫자) #도서관이름 
+    """
 
 
 # 총괄 관리자 페이지
