@@ -144,7 +144,8 @@ def login():
                 res = make_response(redirect('./sj/inputdateform'))
                 res.set_cookie('conn', '7', max_age=60 * 60 * 24 * 365 * 2)
                 return res
-               
+            else:
+                return render_template('login_error.html')   
             """ 
             # 도서관추가
             # 도서관이름: 도서관영어이름 
@@ -154,9 +155,9 @@ def login():
                 res = make_response(redirect('./알파벳약자/inputdateform'))
                 res.set_cookie('conn', '마지막숫자', max_age=60 * 60 * 24 * 365 * 2)
                 return res
-            """
-            else:
+            else: 
                 return render_template('login_error.html')
+            """
         except:
             return render_template('login.html')
 
