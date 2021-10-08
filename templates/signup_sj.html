@@ -1,0 +1,73 @@
+{% extends "base_sj.html" %}
+{% block content %}
+
+<form action="/sj/signup" method="post" onsubmit="validateForm()">
+    <div class="ui grid">
+        <div class="one wide column"></div>
+        <div class="six wide column">
+<div class="ui padded segment form">
+    <h1 class="ui header">신규 회원 등록</h1>
+<!--    <div class="fields">-->
+        <div class="field">
+            <div class="six wide field">
+                <label>RFID</label>
+                <select name="idrfid" id="idrfid">
+                    {% for user in userlist %}
+                        <option value="{{ user.profile.id }}^{{ user.profile.rfid }}"> {{ user.profile.id }} - {{ user.profile.name }} </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="field">
+            <label>이름</label>
+            <input type="textbox" name="name" id="name">
+        </div>
+        <div class="field">
+            <div class="three wide field">
+                <label>성별</label>
+                <select name="sex">
+                    <option value="남자">남자</option>
+                    <option value="여자">여자</option>
+                    <option value="미정">미정</option>
+                </select>
+            </div>
+        </div>
+        <div class="field">
+            <label>출생년도</label>
+            <input type="textbox"  name="year" placeholder="4자리로 기입하세요">
+        </div>
+        <div class="field">
+            <label>보호자 연락처</label>
+            <input type="textbox"  name="phone" placeholder="- 없이 입력">
+        </div>
+        <div class="field">
+            <div class="six wide field">
+            <label>메모 </label>
+            <textarea value="memo" name="memo" placeholder="메모"></textarea>
+            <input type="submit" value="저장">
+            <input type="button" value="취소" onClick="history.back();">
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+<!--</div>-->
+</form>
+    <script>
+      function validateForm()
+      {
+          //debugger;
+          if (document.querySelector("#name").value == "") {
+              alert("이름값은 필수 입니다. 입력해주세에요");
+              return false;
+          }
+
+          if (document.querySelector("#rfid").value == "") {
+              alert("rfid값은 필수 입니다. 입력해주세에요");
+              document.querySelector("#rfid").focus();
+              return false;
+          }
+      }
+    </script>
+{% endblock %}
+
