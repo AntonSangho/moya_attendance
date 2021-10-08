@@ -778,6 +778,50 @@ def userinfo_bp():
     else:
         return f"<h1>not selected</h1>"
 
+# [세종시립도서관] 사용자를 확인하는 페이지
+@application.route('/sj/userinfo', methods=['GET', 'POST'])
+def userinfo_sj():
+    if request.method == 'GET':
+        abort(403, '잘못된 접근입니다.')
+    if request.method == 'POST':
+        selected_name = request.form['name']
+        user = {'name': '관리자'}
+        db = get_conn()
+        userlist = []
+        for dbuser in get_userattendance_sj(db, selected_name):
+            user = {
+                'profile': {'userid': dbuser['userid'],
+                            'name': dbuser['name'],
+                            'entry': dbuser['entry'],
+                            'exits': dbuser['exits'],
+                            'used': dbuser['used']
+                            }
+            }
+            userlist.append(user)
+        userlist_info = []
+        for dbuser in get_userselectdetail_sj(db, selected_name):
+            user_info = {
+                'info': {
+                    'id': dbuser['id'],
+                    'sex': dbuser['sex'],
+                    'phone': dbuser['phone'],
+                    'year': dbuser['year'],
+                    'memo': dbuser['memo']
+                }
+            }
+            userlist_info.append(user_info)
+        if len(userlist_info) == 0:
+            return """<h2>해당사용자는 기록이 없습니다.</h2>
+                        <script>
+                        setTimeout(function(){
+                            history.back()
+                        }, 3000);
+                        </script>"""
+        return render_template('userinfo_sj.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+                               userlist_info=userlist_info)
+    else:
+        return f"<h1>not selected</h1>"
+
 # @application.route('/userinfo/userinfo/<username>', methods=['POST', 'GET'])
 # def fixed_url(username):
 #     return redirect('/userinfo/'+username)

@@ -1,0 +1,50 @@
+{% extends "base_sj.html" %}
+{% block content %}
+<div class="ui padded segments">
+    <div class="ui segment">
+        <div class="ui two column very relaxed grid">
+    <div class="column">
+        <h2>개인정보</h2>
+        <h3> {{ user.profile.name }}</h3>
+        <p> 카드번호 : {{ user_info.info.id }}</p>
+        <p> 보호자 연락처 : {{ user_info.info.phone }}</p>
+        <p> 생년월일 : {{ user_info.info.year }}</p>
+        <p> 성별 : {{ user_info.info.sex }}</p>
+        <form action="/sj/userinfo/{{user.profile.name}}" method="POST">
+        <input type="submit" value="개인정보 수정하기">
+        </form>
+    </div>
+            <div class="column">
+                <p> 메모 : {{ user_info.info.memo}}</p>
+            </div>
+        </div>
+        <div class="ui vertical divider">
+            메모
+        </div>
+    </div >
+
+    <div class="ui padded segment">
+        <h2>입출입 기록</h2>
+        <table class="ui celled table">
+        <thead>
+        <tr>
+            <th>RFID No.</th>
+            <th>출입한 시간</th>
+            <th>퇴장한 시간</th>
+            <th>작업한 시간(분)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in userlist %}
+        <tr>
+        <td data-label="RFID No.">{{ user.profile.userid }}</td>
+        <td data-label="Entry time">{{ user.profile.entry }}</td>
+        <td data-label="Exit time">{{ user.profile.exits }}</td>
+        <td data-label="Working time(min)">{{ user.profile.used }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
