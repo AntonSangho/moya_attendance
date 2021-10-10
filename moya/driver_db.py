@@ -232,6 +232,16 @@ def get_dayattendance_bp(db, filter_date):
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
+def get_dayattendance_sj(db, filter_date):
+    try:
+        cursor = db.cursor()
+        cursor.execute(
+            f"""{sqlmapper["sql_2_admin6"]}='{filter_date}'"""
+        )
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
 def get_RangeAttendance(db, StartDate, EndDate):
     try:
         cursor = db.cursor()
@@ -293,6 +303,19 @@ def get_RangeAttendance_bp(db, StartDate, EndDate):
             f""" 
             SELECT a.id, a.name , b.* FROM bp_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(date_format(entry_time,"%r")) AS entry, MAX(date_format(exit_time,"%r")) AS exits, max(used_time) AS used
             FROM bp_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid 
+            where b.ent between '{StartDate}'AND '{EndDate}'"""
+        )
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+def get_RangeAttendance_sj(db, StartDate, EndDate):
+    try:
+        cursor = db.cursor()
+        cursor.execute(
+            f""" 
+            SELECT a.id, a.name , b.* FROM sj_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(date_format(entry_time,"%r")) AS entry, MAX(date_format(exit_time,"%r")) AS exits, max(used_time) AS used
+            FROM sj_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid 
             where b.ent between '{StartDate}'AND '{EndDate}'"""
         )
         return cursor.fetchall()
@@ -372,6 +395,13 @@ def get_userattendance_bp(db, selected_name):
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
+def get_userattendance_sj(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"{sqlmapper['sql_8_admin6']}", [selected_name])
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
 def get_userinfo(db, userid, rfid_uid):
     try:
@@ -426,6 +456,14 @@ def get_userinfo_bp(db, userid, rfid_uid):
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
 
+def get_userinfo_sj(db, userid, rfid_uid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"SELECT name FROM sj_users WHERE id = {userid} and rfid_uid = {rfid_uid};")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
 
 def is_rfid(db, rfid_uid):
     try:
@@ -467,6 +505,14 @@ def is_rfid_bp(db, rfid_uid):
     try:
         cursor = db.cursor()
         cursor.execute(f"select count(*) as cnt from bp_users where rfid_uid = {rfid_uid};")
+        return cursor.fetchone()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+def is_rfid_sj(db, rfid_uid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"select count(*) as cnt from sj_users where rfid_uid = {rfid_uid};")
         return cursor.fetchone()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
@@ -516,6 +562,14 @@ def get_rfid_bp(db, rfid_uid):
         cursor = db.cursor()
         # print("**************" + str(rfid_uid))
         cursor.execute(f"select id from bp_users where rfid_uid = {rfid_uid};")
+        return cursor.fetchone()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+
+def get_rfid_sj(db, rfid_uid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"select id from sj_users where rfid_uid = {rfid_uid};")
         return cursor.fetchone()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
@@ -603,6 +657,17 @@ def get_adduserlist_bp(db):
         print("db error pomysql %d: %s" % (e.args[0], e.args[1]))
         return 0
 
+def get_adduserlist_sj(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(
+            f"""{sqlmapper["sql_6_admin6"]}"""
+        )
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pomysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
 
 def get_userdetail(db):
     try:
@@ -651,6 +716,15 @@ def get_userdetail_bp(db):
         cursor = db.cursor()
         # cursor.execute(f"SELECT * FROM mh_users_detail")
         cursor.execute(f"{sqlmapper['sql_5_admin5']}")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+def get_userdetail_sj(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"{sqlmapper['sql_5_admin6']}")
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
@@ -708,6 +782,17 @@ def get_userselectdetail_bp(db, selected_name):
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0
+
+def get_userselectdetail_sj(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"{sqlmapper['sql_7_admin6']}", [selected_name])
+        # cursor.execute(f"SELECT * FROM mh_users_detail where name = '{selected_name}'; ")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
 
 # 테스트코드로 보임
 def get_username_test(db):
@@ -814,6 +899,25 @@ def set_modify_bp(db, selected_name, modifyname, sex, year, phone, memo):
         db.close()
         return 1
 
+## [세종시립도서관]이름, 성별, 년도, 전화번호, 메모를 수정하는 기능 
+def set_modify_sj(db, selected_name, modifyname, sex, year, phone, memo):
+    try:
+        cursor = db.cursor()
+        sql_4 = f"UPDATE sj_users_detail SET name='{modifyname}', sex='{sex}', year={year}, phone='{phone}', memo='{memo}' where name ='{selected_name}' ;"
+        cursor.execute(sql_4)
+        db.commit()
+        sql_5 = f"UPDATE sj_users SET name='{modifyname}' where name ='{selected_name}' ;" 
+        cursor.execute(sql_5)
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+    else:
+        db.commit()
+        db.close()
+        return 1
+
 
 def set_signup(db, id, rfid, name, sex, year, phone, memo):
     try:
@@ -907,6 +1011,25 @@ def set_signup_bp(db, id, rfid, name, sex, year, phone, memo):
         db.close()
         return 1
 
+def set_signup_sj(db, id, rfid, name, sex, year, phone, memo):
+    try:
+        cursor = db.cursor()
+        sql_1 = f"insert into sj_users_detail(id,rfid,`name`, sex, year, phone, memo) value ('{id}','{rfid}', '{name}','{sex}','{year}','{phone}','{memo}');"
+        cursor.execute(sql_1)
+        db.commit()
+        sql_2 = f"update sj_users set name='{name}' where rfid_uid ='{rfid}';"
+        cursor.execute(sql_2)
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+    else:
+        db.commit()
+        db.close()
+        return 1
+
+
 ## rfid 태깅기록
 def set_attendance(db, userid):
     try:
@@ -979,6 +1102,21 @@ def set_attendance_bp(db, userid):
         db.commit()
         db.close()
         return 1
+
+def set_attendance_sj(db, userid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"INSERT INTO sj_attendance(user_id) VALUES ({userid})")
+        print("db commit successfully")
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+    else:
+        db.commit()
+        db.close()
+        return 1
+
 
 ## rfid 태깅기록
 def set_exit(db, userid):
@@ -1057,6 +1195,22 @@ def set_exit_bp(db, userid):
         db.commit()
         db.close()
         return 1
+
+def set_exit_sj(db, userid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"INSERT INTO sj_exits(user_id) VALUES ({userid})")
+        print("db commit successfully")
+    except pymysql.Error as e:
+        db.rollback()
+        db.close()
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        raise
+    else:
+        db.commit()
+        db.close()
+        return 1
+
 
 ## rfid 카드등록
 def add_newcard(db, rfid_uid, name, conn):
