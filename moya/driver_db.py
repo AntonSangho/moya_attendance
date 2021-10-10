@@ -86,6 +86,21 @@ sqlmapper = {
             SELECT a.id, a.name , b.* FROM bp_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
             FROM bp_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
             where a.name = %s"""
+    
+    # 세종시립도서관 
+    "sql_2_admin6": """SELECT a.id, a.name , b.* FROM sj_users a LEFT JOIN 
+            (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(date_format(entry_time,"%r")) AS entry, MAX(date_format(exit_time,"%r")) AS exits, max(used_time) AS used
+            FROM sj_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+            b ON a.id = b.userid 
+            where b.ent""",
+    "sql_3_admin7": "INSERT INTO sj_users(rfid_uid, `name`) VALUES",
+    "sql_5_admin6": "SELECT * FROM sj_users_detail",
+    "sql_6_admin6": "select sj_users.id, sj_users.name, sj_users.rfid_uid from moya.sj_users where not exists(select sj_users_detail.id from sj_users_detail where sj_users.id = sj_users_detail.id);",
+    "sql_7_admin6": "SELECT * FROM sj_users_detail where name = %s",
+    "sql_8_admin6": """
+            SELECT a.id, a.name , b.* FROM sj_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
+            FROM sj_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
+            where a.name = %s"""
 }
 
 
