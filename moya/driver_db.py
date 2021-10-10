@@ -85,7 +85,7 @@ sqlmapper = {
     "sql_8_admin5": """
             SELECT a.id, a.name , b.* FROM bp_users a LEFT JOIN (SELECT substr(entry_time, 1, 10) AS ent, userid, MAX(entry_time) AS entry, MAX(exit_time) AS exits, max(used_time) AS used
             FROM bp_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) b ON a.id = b.userid
-            where a.name = %s"""
+            where a.name = %s""",
     
     # 세종시립도서관 
     "sql_2_admin6": """SELECT a.id, a.name , b.* FROM sj_users a LEFT JOIN 
