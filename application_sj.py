@@ -124,7 +124,7 @@ def login():
 @application.route('/webapp')
 def index():
     # print(application.env)
-    return render_template('webapp.html', platform="반포도서관")
+    return render_template('webapp.html', platform="세종시립도서관")
 
 
 # YouTube embedded page
