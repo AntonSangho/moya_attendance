@@ -1137,8 +1137,8 @@ def endpoint_rfid_read():
                 rfid_uid = rst[1]
                 # rfid_uid가 user_mh테이블에 있는지 확인하는 함수
                 if is_rfid_sj(db, rfid_uid)['cnt'] == 0:
-                    # 새로운 카드 등록시 반포도서관은 6번의 db 번호로 강제정의
-                    add_newcard(db, rfid_uid, '이름없음', 6)
+                    # 새로운 카드 등록시 세종시립도서관은 7번의 db 번호로 강제정의
+                    add_newcard(db, rfid_uid, '이름없음', 7)
                     time.sleep(1)
                     buzzer_call()
                     # DB에 접속해서 배정된 카드번호 표시
