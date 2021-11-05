@@ -1,0 +1,3 @@
+[submodule "MFRC522-python"]
+	path = MFRC522-python
+	url = ./MFRC522-python/
