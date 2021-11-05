@@ -13,6 +13,7 @@
 | RFID-RC522 | 1ea |
 | RFID card  | 600ea |
 
+
 ###  pin 연결 
 
 |  Raspberry pi  | RFID  |  
@@ -27,26 +28,122 @@
 
 
 ### 실행
-`python application_**.py`
+```bash 
+python application_**.py
+```
 
 ## 설치안내
 1. 라즈베리파이 imge 준비 : Raspbian 32-bit Desktop ver (2021-05-07)
-2. 라즈베리파이 ssh, spi enable 
-3. 원격 다운로드 `git clone https://github.com/AntonSangho/moya_attendance.git`
-4. virtualenv 설치 `pip3 install virtualenv`
-5. .bashrc 맨 마지막 줄에 path 넣기 `export PATH="$PATH":/home/pi/.local/bin`
-6. .bashrc를 적용해주기 `source ~/.bashrc`
-7. moyavenv 만들기기 `virtualenv moyavenv`
-8. moyavenv 실행시키기 `source ./moyavenv/bin/activate`
-9. requirement 설치하기 `pip install -r requirement.txt`
-10. numpy issue 해결을 위해 libatlas-base-dev 설치하기 `sudo apt-get install libatlas-base-dev`
-11. mfrc522 library 설치하기
-	1. 원격저장소에서 받아오기 `git clone https://github.com/pimylifeup/MFRC522-python.git`
-	2. `cd MFRC522-python`
-	3. `python setup.py install `
+2. ssh, spi enable 
+3. moya_attendance  
+```bash
+git clone https://github.com/AntonSangho/moya_attendance.git 	#원격 다운로드 
+pip3 install virtualenv 										#virtualenv 설치
+export PATH="$PATH":/home/pi/.local/bin 						#.bashrc맨 마지막 줄에 path 넣기
+source ~/.bashrc												# .bashrc를 적용해주기
+virtualenv moyavenv 											#moyavenv 만들기기
+source ./moyavenv/bin/activate 									#moyavenv 실행시키기
+pip install -r requirement.txt 									#requirement 설치하기
+sudo apt-get install libatlas-base-dev #numpy issue 해결을 위해 libatlas-base-dev 설치하기
+```
+4. mfrc522 library 
+```bash
+cd moya_attendance
+git clone https://github.com/pimylifeup/MFRC522-python.git
+cd MFRC522-python
+python setup.py install
+cd ..
+git submodule add ./MFRC522-python
+```
+5. VNC Cloud
+```bash
+sudo apt update
+sudo apt install realvnc-vnc-server realvnc-vnc-viewer
+```
+```doc
+Enabling VNC Server graphically
+* On your Raspberry Pi, boot into the graphical desktop.
+* Select Menu > Preferences > Raspberry Pi Configuration > Interfaces.
+* Ensure VNC is Enabled.
+```
+6. Systemctl - flask service
+```bash
+sudo cp moya-flask-xx.service /lib/systemd/system/moya-flask-xx.service
+sudo chmod 644 /lib/systemd/system/moya-flask-xx.service #권한설정 변경
+sudo systemctl daemon-reload #변경한것 적용하기
+sudo systemctl enable moya-flask-xx.service #활성화 시키기
+sudo systemctl enable moya-flask-xx.service #재부팅후에도 실행되도록 하기
+```
+7. Systemctl - kiosk
 
+```bash
+#불필요한 소프트웨어 제거
+sudo apt-get purge wolfram-engine scratch scratch2 nuscratch sonic-pi idle3 -y
+sudo apt-get purge smartsim java-common minecraft-pi libreoffice* -y
+sudo apt-get clean
+sudo apt-get autoremove -y
+```
+```bash
+#업데이트하기
+sudo apt-get update
+sudo apt-get upgrade
+```
+```bash
+#xdotool설치
+sudo apt-get install xdotool unclutter sed
+```
+```doc
+#부팅시 자동로그인
+sudo raspi-config
+Boot Option 
+Desktop 
+Desktop Autologin
+`````
+```bash
+#부팅시 자동실행하도록하기
+sudo cp kiosk.service /lib/systemd/system/kiosk.service
+sudo systemctl daemon-reload
+```
 
+```doc
+#명령어
+-활성화 : sudo systemctl enable kiosk.service   
+-시작하기: sudo systemctl start kiosk.service 
+-상태확인 : sudo systemctl status kiosk.service 
+-중지하기: sudo systemctl stop kiosk.service
+-비활성화: sudo systemctl disable kiosk.service
+```
 
+8. xterminal
+```bash
+sudo vim /etc/xdg/lxsession/LXDE-pi/autostart
+#파일의 밑에다가 아래 라인 추가
+@lxterminal --geometry=80x55
+```
+
+9. Disable power warning 
+```bash
+sudo vim /boot/config.txt
+#아래 내용 추가 
+avoid_warnings=2
+```
+
+10. 한글깨짐 해결
+```doc
+raspi-config 
+set-locale : korean 
+charactor Set :UTF-8 
+```
+
+11. Crontab
+```bash
+#crontab 설정 열기
+sudo crontab -e
+#Editer를 vim으로 한 후에 맨 마지막 줄 가기
+: $
+#자정에 재부팅되록 설정
+0 0 * * * /sbin/shutdown -r now
+```
 ## 파일 정보 및 목록 
 - 실행파일
 - 사운드파일
@@ -63,4 +160,8 @@ sanghoemail@gmail.com
 ## 문제 발생 해결첵 
 
 ## 업데이트 정보 
+
+## 참고
+[키오스크모드](https://pimylifeup.com/raspberry-pi-kiosk/)
+[부팅스크립트만들기](https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/)
 
