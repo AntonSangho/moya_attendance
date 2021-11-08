@@ -26,7 +26,7 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     set_exit_sw, \
     get_dayattendance_test, get_userdetail_test, set_modify_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test, get_workingtime_test,\
     get_dayattendance_bp, get_RangeAttendance_bp, get_userattendance_bp, get_userinfo_bp, get_rfid_bp, get_adduserlist_bp, get_userdetail_bp, get_userselectdetail_bp, set_modify_bp, set_signup_bp, set_attendance_bp, set_exit_bp, \
-    get_dayattendance_sj, get_RangeAttendance_sj, get_userattendance_sj, get_userinfo_sj, get_rfid_sj, get_adduserlist_sj, get_userdetail_sj, get_userselectdetail_sj, set_modify_sj, set_signup_sj, set_attendance_sj, set_exit_sj
+    get_dayattendance_sj, get_RangeAttendance_sj, get_userattendance_sj, get_userinfo_sj, get_rfid_sj, get_adduserlist_sj, get_userdetail_sj, get_userselectdetail_sj, set_modify_sj, set_signup_sj, set_attendance_sj, set_exit_sj, get_workingtime_sj
 from sqlalchemy import create_engine
 
 from flask.logging import default_handler
@@ -984,7 +984,6 @@ def aftermodify_test(username):
                             }
             }
             userlist.append(user)
-        print(userlist)
         userlist_info = []
         for dbuser in get_userselectdetail_test(db, selected_name):
             user_info = {
@@ -997,7 +996,6 @@ def aftermodify_test(username):
                 }
             }
             userlist_info.append(user_info)
-        print(selected_name)
         userworking = []
         for dbuser in get_workingtime_test(db, selected_name):
             user_time = {
@@ -1096,6 +1094,19 @@ def aftermodify_sj(username):
                 }
             }
             userlist_info.append(user_info)
+        userworking = []
+        for dbuser in get_workingtime_sj(db, selected_name):
+            user_time = {
+                'time': {
+                    'id': dbuser['id'],
+                    'name': dbuser['name'],
+                    'userid': dbuser['userid'],
+                    'used': dbuser['used'], 
+                    'visit': dbuser['visit'],
+                    'total': dbuser['total']
+                }
+            }
+            userworking.append(user_time)
         if len(userlist_info) == 0:
             return """<h2>해당사용자는 아직 개인정보가 없습니다.</h2>
                         <script>
