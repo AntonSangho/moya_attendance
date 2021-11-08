@@ -131,7 +131,7 @@ def login():
                 res.set_cookie('conn', '6', max_age=60 * 60 * 24 * 365 * 2)
                 return res
              
-            # 세종시립도서관: sejong 
+            # 세종시립도서관: sejongmoya 
             if (hashlib.sha256(pp.encode()).hexdigest().upper() == '3972C29350A5FBD7B9BFE767B52EF88492A7332B542CCA643DF5463A53B4AB05'):
                 session['reliquum'] = "active"
                 db = init_connect_db(7);
