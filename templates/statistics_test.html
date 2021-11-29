@@ -1,0 +1,48 @@
+{% extends "base_test.html" %}
+{% block content %}
+<!-- [개발용] 통계 입력  -->
+<div class="ui padded segments">
+<div class="ui padded segment">
+ <h1 class="ui header" >통계 </h1>
+    <h3 class ="ui headaer"> 날짜를 선택하세요 </h3>
+ <form action="/test/statistics" method="post">
+    <p>{{ form.dStart.label }}{{ form.dStart() }}</p>
+    <p>{{ form.dEnd.label }}{{ form.dEnd() }}</p>
+    <div class="field">
+        <button  type="submit" >적용하기</button>
+    </div>
+ </form>
+ </div>
+</div>
+<!-- [개발용] 통계표시  -->
+    <div class="ui padded segments">
+        <div class="ui padded segment">
+    <div class="ui statistics">
+        <div class="statistic">
+          <div class="value">
+            22
+          </div>
+          <div class="label">
+            Faves
+          </div>
+        </div>
+        <div class="statistic">
+          <div class="value">
+            31,200
+          </div>
+          <div class="label">
+            Views
+          </div>
+        </div>
+        <div class="statistic">
+          <div class="value">
+            22
+          </div>
+          <div class="label">
+            Members
+          </div>
+        </div>
+      </div> 
+    </div>
+    </div>
+{% endblock %}

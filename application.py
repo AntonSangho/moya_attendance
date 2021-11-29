@@ -2111,6 +2111,29 @@ def endpoint_rfid_read():
         return abort(500)
     return jsonify({'ps': rfid_uid, 'uid': uid})
 
+#[개발용] 통계페이지
+@application.route("/test/statistics")
+def statistics_test():
+    user = {'name': '관리자'}
+    form = DateForm()
+    if request.method == 'POST':
+        StartDate = form.dStart.data.strftime('%Y-%m-%d')
+        EndDate = form.dEnd.data.strftime('%Y-%m-%d')
+        db = get_conn()
+        df = pd.DataFrame(get_RangeAttendance_test(db, StartDate, EndDate))
+        output = StringIO()
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+        response = Response(
+            output.getvalue(),
+            mimetype="text/csv",
+            content_type='application/octet-strem',
+        )
+        #csv_data = df.to_csv(index='false', encoding='utf-8')
+        #response = Response(csv_data, mimetype='text/csv')
+        response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+        return response
+    return render_template('statistics_test.html', user=user, title='관리자', form=form)
 
 def file_log(e):
     log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])
