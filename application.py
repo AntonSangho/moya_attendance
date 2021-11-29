@@ -2116,11 +2116,12 @@ def endpoint_rfid_read():
 def statistics_test():
     user = {'name': '관리자'}
     form = DateForm()
+ 
     if request.method == 'POST':
         StartDate = form.dStart.data.strftime('%Y-%m-%d')
         EndDate = form.dEnd.data.strftime('%Y-%m-%d')
         db = get_conn()
-        df = pd.DataFrame(get_RangeAttendance_test(db, StartDate, EndDate))
+        df = pd.DataFrame(get_MonthWorkingtime_test(db, StartDate, EndDate))
         output = StringIO()
         output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
         df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 

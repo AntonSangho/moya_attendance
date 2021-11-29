@@ -814,6 +814,16 @@ def get_workingtime_test(db, selected_name):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0 
 
+# [개발] 통계로 방문횟수 가져오는 기능
+def get_MonthWorkingtime_test(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"SELECT a.id, a.name , b.* FROM dev_users a LEFT JOIN (SELECT userid, max(used_time) AS used, count(*) as visit, sum(used_time) as total FROM dev_stat_attendance GROUP BY userid) b ON a.id = b.userid where name = '{selected_name}'; ")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
 # [세종] 방문 횟수와 작업시간 가져오는 기능
 def get_workingtime_sj(db, selected_name):
     try:

@@ -4,13 +4,12 @@
 <div class="ui padded segments">
 <div class="ui padded segment">
  <h1 class="ui header" >통계 </h1>
-    <h3 class ="ui headaer"> 날짜를 선택하세요 </h3>
+    <h3 class ="ui headaer"> 통계내고자하는 월을 선택하세요 </h3>
  <form action="/test/statistics" method="post">
-    <p>{{ form.dStart.label }}{{ form.dStart() }}</p>
-    <p>{{ form.dEnd.label }}{{ form.dEnd() }}</p>
-    <div class="field">
-        <button  type="submit" >적용하기</button>
-    </div>
+    <div class="ui calendar" id="month_year_calendar">
+          <input type="month" id="start" name="start" min="2021-01" value="2021-01">
+          <button type="submit">선택</button>
+      </div>
  </form>
  </div>
 </div>
@@ -23,7 +22,7 @@
             22
           </div>
           <div class="label">
-            Faves
+              방문한 작은손 
           </div>
         </div>
         <div class="statistic">
@@ -31,7 +30,7 @@
             31,200
           </div>
           <div class="label">
-            Views
+              지금까지 방문한 작은손 
           </div>
         </div>
         <div class="statistic">
@@ -39,7 +38,7 @@
             22
           </div>
           <div class="label">
-            Members
+              회원수
           </div>
         </div>
       </div> 
