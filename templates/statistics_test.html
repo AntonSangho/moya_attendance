@@ -1,7 +1,7 @@
 {% extends "base_test.html" %}
 {% block content %}
 <!-- [개발용] 통계 입력  -->
-<div class="ui padded segments">
+<!-- <div class="ui padded segments">
 <div class="ui padded segment">
  <h1 class="ui header" >통계 </h1>
     <h3 class ="ui headaer"> 통계내고자하는 월을 선택하세요 </h3>
@@ -12,36 +12,140 @@
       </div>
  </form>
  </div>
-</div>
+</div> -->
 <!-- [개발용] 통계표시  -->
     <div class="ui padded segments">
-        <div class="ui padded segment">
-    <div class="ui statistics">
-        <div class="statistic">
-          <div class="value">
-            {{ statistics.info.total_visit}}
+      <div class="ui padded segment">
+        <div class="lable">
+          <h1>방문자</h1> 
+        </div>
+        <div class="ui statistics">
+          <div class="statistic">
+            <div class="value">
+              {{ statistics.info.total_visit}}
+            </div>
+            <div class="label">
+              오픈이후  
+            </div>
           </div>
-          <div class="label">
-              방문한 작은손 
+          <div class="statistic">
+            <div class="value">
+              {{ statistics.info.total_work}}
+            </div>
+            <div class="label">
+              최근 한달 
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="value">
+              22
+            </div>
+            <div class="label">
+              최근 한주 
+            </div>
+          </div>
+        </div> 
+      </div>
+      <div class="ui padded segment">
+        <div class="lable">
+          <h1>작업시간</h1> 
+        </div>
+        <div class="ui statistics">
+          <div class="statistic">
+            <div class="value">
+              {{ statistics.info.total_visit}}
+            </div>
+            <div class="label">
+              오픈 이후 
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="value">
+              {{ statistics.info.total_work}}
+            </div>
+            <div class="label">
+              최근 한달 
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="value">
+              22 
+            </div>
+            <div class="label">
+              최근 한주 
+            </div>
+          </div>
+        </div> 
+      </div>
+      <div class="ui padded segment">
+        <div class="lable">
+          <h1>회원</h1> 
+        </div>
+        <div class="ui statistics">
+          <div class="statistic">
+            <div class="value">
+              {{ statistics.info.total_visit}}
+            </div>
+            <div class="label">
+              총 회원수 
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="value">
+              {{ statistics.info.total_work}}
+            </div>
+            <div class="label">
+              신규회원 
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="value">
+              22 
+            </div>
+            <div class="label">
+              여아 
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="value">
+              22 
+            </div>
+            <div class="label">
+              남아 
+            </div>
           </div>
         </div>
-        <div class="statistic">
-          <div class="value">
-            {{ statistics.info.total_work}}
+        </div>
+      <div class="ui padded segment">
+        <div class="lable">
+          <h1>작은손</h1> 
+        </div>
+        <div class="ui statistics">
+          <div class="statistic">
+            <div class="value">
+              {{ statistics.info.total_visit}}
+            </div>
+            <div class="label">
+              자주오는 작은손 
+            </div>
           </div>
-          <div class="label">
-              총 작업시간 
+          <div class="statistic">
+            <div class="value">
+              {{ statistics.info.total_work}}
+            </div>
+            <div class="label">
+              작업시간이 많은 작은손 
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="value">
+              22 
+            </div>
+            <div class="label">
+              미정 
+            </div>
           </div>
         </div>
-        <div class="statistic">
-          <div class="value">
-            22
-          </div>
-          <div class="label">
-              회원수
-          </div>
-        </div>
-      </div> 
-    </div>
+      </div>
     </div>
 {% endblock %}
