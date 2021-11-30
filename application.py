@@ -24,7 +24,7 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, \
     get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, \
     set_exit_sw, \
-    get_dayattendance_test, get_userdetail_test, set_modify_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test, get_workingtime_test,\
+    get_dayattendance_test, get_userdetail_test, set_modify_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test, get_workingtime_test, get_statistics_test,\
     get_dayattendance_bp, get_RangeAttendance_bp, get_userattendance_bp, get_userinfo_bp, get_rfid_bp, get_adduserlist_bp, get_userdetail_bp, get_userselectdetail_bp, set_modify_bp, set_signup_bp, set_attendance_bp, set_exit_bp, \
     get_dayattendance_sj, get_RangeAttendance_sj, get_userattendance_sj, get_userinfo_sj, get_rfid_sj, get_adduserlist_sj, get_userdetail_sj, get_userselectdetail_sj, set_modify_sj, set_signup_sj, set_attendance_sj, set_exit_sj, get_workingtime_sj
 from sqlalchemy import create_engine
@@ -2116,25 +2116,18 @@ def endpoint_rfid_read():
 def statistics_test():
     user = {'name': '관리자'}
     form = DateForm()
- 
-    if request.method == 'POST':
-        StartDate = form.dStart.data.strftime('%Y-%m-%d')
-        EndDate = form.dEnd.data.strftime('%Y-%m-%d')
-        db = get_conn()
-        df = pd.DataFrame(get_MonthWorkingtime_test(db, StartDate, EndDate))
-        output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
-        response = Response(
-            output.getvalue(),
-            mimetype="text/csv",
-            content_type='application/octet-strem',
-        )
-        #csv_data = df.to_csv(index='false', encoding='utf-8')
-        #response = Response(csv_data, mimetype='text/csv')
-        response.headers.set("Content-Disposition", "attachment", filename="data.csv")
-        return response
-    return render_template('statistics_test.html', user=user, title='관리자', form=form)
+    db = get_conn()
+    statistics_info= []
+    for dbuser in get_statistics_test(db):
+        statistics = {
+            'info': {
+                'total_visit':dbuser['total_visit'],
+                'total_work':dbuser['total_work']
+            }
+        }
+        statistics_info.append(statistics)
+    print(statistics_info)
+    return render_template('statistics_test.html', user=user, title='관리자', form=form, statistics_info=statistics_info, statistics=statistics )
 
 def file_log(e):
     log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])
