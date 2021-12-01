@@ -24,7 +24,7 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, \
     get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, \
     set_exit_sw, \
-    get_dayattendance_test, get_userdetail_test, set_modify_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test, get_workingtime_test, get_statistics_test,\
+    get_dayattendance_test, get_userdetail_test, set_modify_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test, get_workingtime_test, get_TotalVisit_test, get_WeekendVisit_test,get_WeekVisit_test,get_LastMonthVisit_test,get_LastWeekVisit_test,get_NewMember_test,get_Member_test,get_ComeOften_test,\
     get_dayattendance_bp, get_RangeAttendance_bp, get_userattendance_bp, get_userinfo_bp, get_rfid_bp, get_adduserlist_bp, get_userdetail_bp, get_userselectdetail_bp, set_modify_bp, set_signup_bp, set_attendance_bp, set_exit_bp, \
     get_dayattendance_sj, get_RangeAttendance_sj, get_userattendance_sj, get_userinfo_sj, get_rfid_sj, get_adduserlist_sj, get_userdetail_sj, get_userselectdetail_sj, set_modify_sj, set_signup_sj, set_attendance_sj, set_exit_sj, get_workingtime_sj
 from sqlalchemy import create_engine
@@ -2117,17 +2117,102 @@ def statistics_test():
     user = {'name': '관리자'}
     form = DateForm()
     db = get_conn()
-    statistics_info= []
-    for dbuser in get_statistics_test(db):
-        statistics = {
+    TotalVisit_info= []
+    for dbuser in get_TotalVisit_test(db):
+        TotalVisit = {
             'info': {
                 'total_visit':dbuser['total_visit'],
-                'total_work':dbuser['total_work']
+                'total_time':dbuser['total_time']
             }
         }
-        statistics_info.append(statistics)
-    print(statistics_info)
-    return render_template('statistics_test.html', user=user, title='관리자', form=form, statistics_info=statistics_info, statistics=statistics )
+        TotalVisit_info.append(TotalVisit)
+    WeekendVisit_info= []
+    for dbuser in get_WeekendVisit_test(db):
+        WeekendVisit = {
+            'info': {
+                'weekend_visit':dbuser['weekend_visit']
+            }
+        }
+        WeekendVisit_info.append(WeekendVisit)
+    WeekVisit_info= []
+    for dbuser in get_WeekVisit_test(db):
+        WeekVisit = {
+            'info': {
+                'week_visit':dbuser['week_visit']
+            }
+        }
+        WeekVisit_info.append(WeekVisit)
+    LastMonthVisit_info= []
+    for dbuser in get_LastMonthVisit_test(db):
+        LastMonthVisit = {
+            'info': {
+                'last_month_visit':dbuser['last_month_visit'],
+                'last_month_time':dbuser['last_month_time']
+            }
+        }
+        LastMonthVisit_info.append(LastMonthVisit)
+    LastWeekVisit_info= []
+    for dbuser in get_LastWeekVisit_test(db):
+        LastWeekVisit = {
+            'info': {
+                'last_week_visit':dbuser['last_week_visit'],
+                'last_week_time':dbuser['last_week_time']
+            }
+        }
+        LastWeekVisit_info.append(LastWeekVisit)
+    NewMember_info= []
+    for dbuser in get_NewMember_test(db):
+        NewMember = {
+            'info': {
+                'new_member':dbuser['new_member']
+            }
+        }
+        NewMember_info.append(NewMember)
+    Member_info= []
+    for dbuser in get_Member_test(db):
+        Member = {
+            'info': {
+                'boy':dbuser['boy'],
+                'girl':dbuser['girl'],
+                'seven':dbuser['seven'],
+                'eight':dbuser['eight'],
+                'nine':dbuser['nine'],
+                'ten':dbuser['ten'],
+                'eleven':dbuser['eleven'],
+                'twelve':dbuser['twelve']
+            }
+        }
+        Member_info.append(Member)
+    ComeOften_info= []
+    for dbuser in get_ComeOften_test(db):
+        ComeOften = {
+            'info': {
+                'come_often':dbuser['come_often'],
+                'times':dbuser['times']
+            }
+        }
+        ComeOften_info.append(ComeOften)
+    return render_template('statistics_test.html', 
+                            user=user, 
+                            title='관리자', 
+                            form=form, 
+                            TotalVisit_info=TotalVisit_info, 
+                            TotalVisit=TotalVisit, 
+                            WeekendVisit_info=WeekendVisit_info, 
+                            WeekendVisit=WeekendVisit,
+                            WeekVisit_info=WeekVisit_info, 
+                            WeekVisit=WeekVisit,
+                            LastMonthVisit_info=LastMonthVisit_info, 
+                            LastMonthVisit=LastMonthVisit,
+                            LastWeekVisit_info=LastWeekVisit_info, 
+                            LastWeekVisit=LastWeekVisit,
+                            NewMember_info=NewMember_info, 
+                            NewMember=NewMember,
+                            Member_info=Member_info, 
+                            Member=Member,
+                            ComeOften_info=ComeOften_info,
+                            ComeOften=ComeOften
+                            )
 
 def file_log(e):
     log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])
