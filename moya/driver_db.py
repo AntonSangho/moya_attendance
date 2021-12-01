@@ -940,13 +940,14 @@ def get_Member_test(db):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0 
 
-# [개발] 자주오는 작은손  
+# [개발] 최근 한달간 자주오는 작은손  
 def get_ComeOften_test(db):
     try:
         cursor = db.cursor()
         cursor.execute(f"""
         SELECT  name as 'come_often', 
-                count(*) as 'times' FROM dev_users a LEFT JOIN 
+                count(*) as 'times' 
+                FROM dev_users a LEFT JOIN 
                 (SELECT substr(entry_time, 1, 10) AS ent, 
                 userid, 
                 MAX(date_format(entry_time,"%r")) AS entry, 
@@ -966,6 +967,32 @@ def get_ComeOften_test(db):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0 
 
+# [개발] 최근 한달간 작업시간이 많은 작은손  
+def get_Workload_test(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  name as 'workload', 
+                sum(used) as 'used_time' 
+                FROM dev_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM dev_stat_attendance GROUP BY userid, 
+                substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
+                userid ASC ) 
+            b ON a.id = b.userid 
+            where month(b.ent) = month(current_date) 
+            group by name 
+            order by sum(used) desc 
+            limit 3;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
 # [세종] 방문 횟수와 작업시간 가져오는 기능
 def get_workingtime_sj(db, selected_name):
     try:

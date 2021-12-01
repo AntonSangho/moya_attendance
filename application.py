@@ -24,7 +24,7 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, \
     get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, \
     set_exit_sw, \
-    get_dayattendance_test, get_userdetail_test, set_modify_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test, get_workingtime_test, get_TotalVisit_test, get_WeekendVisit_test,get_WeekVisit_test,get_LastMonthVisit_test,get_LastWeekVisit_test,get_NewMember_test,get_Member_test,get_ComeOften_test,\
+    get_dayattendance_test, get_userdetail_test, set_modify_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test, get_workingtime_test, get_TotalVisit_test, get_WeekendVisit_test,get_WeekVisit_test,get_LastMonthVisit_test,get_LastWeekVisit_test,get_NewMember_test,get_Member_test, get_ComeOften_test, get_Workload_test,\
     get_dayattendance_bp, get_RangeAttendance_bp, get_userattendance_bp, get_userinfo_bp, get_rfid_bp, get_adduserlist_bp, get_userdetail_bp, get_userselectdetail_bp, set_modify_bp, set_signup_bp, set_attendance_bp, set_exit_bp, \
     get_dayattendance_sj, get_RangeAttendance_sj, get_userattendance_sj, get_userinfo_sj, get_rfid_sj, get_adduserlist_sj, get_userdetail_sj, get_userselectdetail_sj, set_modify_sj, set_signup_sj, set_attendance_sj, set_exit_sj, get_workingtime_sj
 from sqlalchemy import create_engine
@@ -2192,6 +2192,15 @@ def statistics_test():
             }
         }
         ComeOften_info.append(ComeOften)
+    Workload_info= []
+    for dbuser in get_Workload_test(db):
+        Workload = {
+            'info': {
+                'workload':dbuser['workload'],
+                'used_time':dbuser['used_time']
+            }
+        }
+        Workload_info.append(Workload)
     return render_template('statistics_test.html', 
                             user=user, 
                             title='관리자', 
@@ -2211,8 +2220,10 @@ def statistics_test():
                             Member_info=Member_info, 
                             Member=Member,
                             ComeOften_info=ComeOften_info,
-                            ComeOften=ComeOften
-                            )
+                            ComeOften=ComeOften,
+                            Workload_info=Workload_info,
+                            Workload=Workload)
+                    
 
 def file_log(e):
     log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])
