@@ -1,0 +1,187 @@
+{% extends "base_test.html" %}
+{% block content %}
+<div class="ui padded segments">
+  <div class="ui padded segment">
+    <div class="lable">
+      <h2>방문자</h2> 
+    </div>
+    <div class="ui statistics">
+      <div class="statistic">
+        <div class="value">
+              {% for often in often_info %}
+                {{ often.info.name }},{{ often.info.times }}
+              {% endfor %}
+        </div>
+        <div class="label">
+          오픈이후  
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          최근 한달 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          최근 한주 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          오픈이후 주말방문자 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          오픈이후 평일방문자 
+        </div>
+      </div>
+    </div> 
+  </div>
+  <div class="ui padded segment">
+    <div class="lable">
+      <h2>작업시간</h2> 
+    </div>
+    <div class="ui statistics">
+      <div class="statistic">
+        <div class="value">
+          240340
+        </div>
+        <div class="label">
+          오픈 이후 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          430
+        </div>
+        <div class="label">
+          최근 한달 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          122
+        </div>
+        <div class="label">
+          최근 한주 
+        </div>
+      </div>
+    </div> 
+  </div>
+  <div class="ui padded segment">
+    <div class="lable">
+      <h2>회원</h2> 
+    </div>
+    <div class="ui statistics">
+      <div class="statistic">
+        <div class="value">
+          121
+        </div>
+        <div class="label">
+          총 회원수 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          이번달 신규회원 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          여아 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          남아 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          7세 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          8세 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          9세 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          10세 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          11세 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          12세 
+        </div>
+      </div>
+    </div>
+    </div>
+  <div class="ui padded segment">
+    <div class="lable">
+      <h2>작은손</h2> 
+    </div>
+    <div class="ui statistics">
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          자주오는 작은손 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          작업시간이 많은 작은손 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          <!-- 미정  -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

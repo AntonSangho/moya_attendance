@@ -878,7 +878,7 @@ def get_LastMonthVisit_test(db):
                 max(used_time) AS used
                 FROM dev_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
                 b ON a.id = b.userid 
-            where month(b.ent) = month(current_date);
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m');
         """)
         return cursor.fetchall()
     except pymysql.Error as e:
@@ -899,7 +899,7 @@ def get_LastWeekVisit_test(db):
                 max(used_time) AS used
                 FROM dev_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
                 b ON a.id = b.userid 
-            where week(b.ent) = week(current_date);
+            where date_format(b.ent, '%Y%m%j') = date_format(current_date, '%Y%m%j');
         """)
         return cursor.fetchall()
     except pymysql.Error as e:
@@ -912,7 +912,7 @@ def get_NewMember_test(db):
         cursor = db.cursor()
         cursor.execute(f"""
         select count(created) as 'new_member' from `dev_users_detail` 
-        where month(created) = month(current_date);
+        where date_format(created, '%Y%m') = date_format(current_date, '%Y%m');
         """)
         return cursor.fetchall()
     except pymysql.Error as e:
@@ -945,7 +945,7 @@ def get_ComeOften_test(db):
     try:
         cursor = db.cursor()
         cursor.execute(f"""
-        SELECT  name as 'come_often', 
+        SELECT  name as 'name', 
                 count(*) as 'times' 
                 FROM dev_users a LEFT JOIN 
                 (SELECT substr(entry_time, 1, 10) AS ent, 
@@ -957,7 +957,7 @@ def get_ComeOften_test(db):
                 substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
                 userid ASC ) 
             b ON a.id = b.userid 
-            where month(b.ent) = month(current_date) 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
             group by name 
             order by count(*) desc 
             limit 3;
@@ -984,7 +984,7 @@ def get_Workload_test(db):
                 substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
                 userid ASC ) 
             b ON a.id = b.userid 
-            where month(b.ent) = month(current_date) 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
             group by name 
             order by sum(used) desc 
             limit 3;

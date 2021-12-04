@@ -24,7 +24,8 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, \
     get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, \
     set_exit_sw, \
-    get_dayattendance_test, get_userdetail_test, set_modify_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test, get_workingtime_test, get_TotalVisit_test, get_WeekendVisit_test,get_WeekVisit_test,get_LastMonthVisit_test,get_LastWeekVisit_test,get_NewMember_test,get_Member_test, get_ComeOften_test, get_Workload_test,\
+    get_dayattendance_test, get_userdetail_test, set_modify_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test, get_workingtime_test, \
+    get_TotalVisit_test, get_WeekendVisit_test,get_WeekVisit_test,get_LastMonthVisit_test,get_LastWeekVisit_test,get_NewMember_test,get_Member_test, get_ComeOften_test, get_Workload_test,\
     get_dayattendance_bp, get_RangeAttendance_bp, get_userattendance_bp, get_userinfo_bp, get_rfid_bp, get_adduserlist_bp, get_userdetail_bp, get_userselectdetail_bp, set_modify_bp, set_signup_bp, set_attendance_bp, set_exit_bp, \
     get_dayattendance_sj, get_RangeAttendance_sj, get_userattendance_sj, get_userinfo_sj, get_rfid_sj, get_adduserlist_sj, get_userdetail_sj, get_userselectdetail_sj, set_modify_sj, set_signup_sj, set_attendance_sj, set_exit_sj, get_workingtime_sj
 from sqlalchemy import create_engine
@@ -2110,7 +2111,7 @@ def endpoint_rfid_read():
         print("error", e)
         return abort(500)
     return jsonify({'ps': rfid_uid, 'uid': uid})
-
+    
 #[개발용] 통계페이지
 @application.route("/test/statistics")
 def statistics_test():
@@ -2183,15 +2184,25 @@ def statistics_test():
             }
         }
         Member_info.append(Member)
-    ComeOften_info= []
+    often_info= []
     for dbuser in get_ComeOften_test(db):
-        ComeOften = {
+        often = {
             'info': {
-                'come_often':dbuser['come_often'],
+                'name':dbuser['name'],
                 'times':dbuser['times']
             }
         }
-        ComeOften_info.append(ComeOften)
+        often_info.append(often)
+        print(often)
+    # ComeOften_info= []
+    # for dbuser in get_ComeOften_test(db):
+    #     ComeOften = {
+    #         'info': {
+    #             'come_often':dbuser['come_often'],
+    #             'times':dbuser['times']
+    #         }
+    #     }
+    #     ComeOften_info.append(ComeOften)
     Workload_info= []
     for dbuser in get_Workload_test(db):
         Workload = {
@@ -2217,13 +2228,9 @@ def statistics_test():
                             LastWeekVisit=LastWeekVisit,
                             NewMember_info=NewMember_info, 
                             NewMember=NewMember,
-                            Member_info=Member_info, 
-                            Member=Member,
-                            ComeOften_info=ComeOften_info,
-                            ComeOften=ComeOften,
                             Workload_info=Workload_info,
                             Workload=Workload)
-                    
+                            
 
 def file_log(e):
     log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])
