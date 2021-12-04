@@ -2184,16 +2184,16 @@ def statistics_test():
             }
         }
         Member_info.append(Member)
-    often_info= []
-    for dbuser in get_ComeOften_test(db):
-        often = {
-            'info': {
-                'name':dbuser['name'],
-                'times':dbuser['times']
-            }
-        }
-        often_info.append(often)
-        print(often)
+    # often_info= []
+    # for dbuser in get_ComeOften_test(db):
+    #     often = {
+    #         'info': {
+    #             'name':dbuser['name'],
+    #             'times':dbuser['times']
+    #         }
+    #     }
+    #     often_info.append(often)
+    #     print(often)
     # ComeOften_info= []
     # for dbuser in get_ComeOften_test(db):
     #     ComeOften = {
@@ -2203,15 +2203,15 @@ def statistics_test():
     #         }
     #     }
     #     ComeOften_info.append(ComeOften)
-    Workload_info= []
-    for dbuser in get_Workload_test(db):
-        Workload = {
-            'info': {
-                'workload':dbuser['workload'],
-                'used_time':dbuser['used_time']
-            }
-        }
-        Workload_info.append(Workload)
+    # Workload_info= []
+    # for dbuser in get_Workload_test(db):
+    #     Workload = {
+    #         'info': {
+    #             'workload':dbuser['workload'],
+    #             'used_time':dbuser['used_time']
+    #         }
+    #     }
+    #     Workload_info.append(Workload)
     return render_template('statistics_test.html', 
                             user=user, 
                             title='관리자', 
@@ -2228,9 +2228,8 @@ def statistics_test():
                             LastWeekVisit=LastWeekVisit,
                             NewMember_info=NewMember_info, 
                             NewMember=NewMember,
-                            Workload_info=Workload_info,
-                            Workload=Workload)
-                            
+                            Member_info=Member_info,
+                            Member=Member) 
 
 def file_log(e):
     log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])
