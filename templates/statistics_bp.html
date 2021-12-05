@@ -1,0 +1,220 @@
+{% extends "base_bp.html" %}
+{% block content %}
+<div class="ui padded segments">
+  <div class="ui padded segment">
+    <div class="lable">
+      <h2>방문자</h2> 
+    </div>
+    <div class="ui statistics">
+      <div class="statistic">
+        <div class="value">
+          {{ TotalVisit.info.frequency }}
+        </div>
+        <div class="label">
+          오픈이후  
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {% if LastMonthVisit.info.frequency == 0 %}
+            0
+          {% else %}
+           {{ LastMonthVisit.info.frequency }} 
+          {% endif %}
+        </div>
+        <div class="label">
+          이번 달 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {% if LastWeekVisit.info.frequency == none %}
+            0
+          {% else %}
+           {{ LastWeekVisit.info.frequency }} 
+          {% endif %} 
+        </div>
+        <div class="label">
+          이번 주 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {{ WeekendVisit.info.frequency }} 
+        </div>
+        <div class="label">
+          오픈이후 주말방문자 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {{ WeekVisit.info.frequency }} 
+        </div>
+        <div class="label">
+          오픈이후 평일방문자 
+        </div>
+      </div>
+    </div> 
+  </div>
+  <div class="ui padded segment">
+    <div class="lable">
+      <h2>작업시간(분)</h2> 
+    </div>
+    <div class="ui statistics">
+      <div class="statistic">
+        <div class="value">
+          {{ TotalVisit.info.time }}
+        </div>
+        <div class="label">
+          오픈 이후 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {% if LastMonthVisit.info.time == none %}
+            0
+          {% else %}
+           {{ LastMonthVisit.info.time }} 
+          {% endif %}
+        </div>
+        <div class="label">
+          이번 달 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {% if LastWeekVisit.info.time == none %}
+            0
+          {% else %}
+           {{ LastWeekVisit.info.time }} 
+          {% endif %} 
+        </div>
+        <div class="label">
+          이번 주 
+        </div>
+      </div>
+    </div> 
+  </div>
+  <div class="ui padded segment">
+    <div class="lable">
+      <h2>회원</h2> 
+    </div>
+    <div class="ui statistics">
+      <div class="statistic">
+        <div class="value">
+          {{ Member.info.total_member }}
+        </div>
+        <div class="label">
+          총 회원수 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {{ NewMember.info.new_member}} 
+        </div>
+        <div class="label">
+          이번달 신규회원 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {{ Member.info.girl}} 
+        </div>
+        <div class="label">
+          여아 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {{ Member.info.boy}} 
+        </div>
+        <div class="label">
+          남아 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {{ Member.info.seven}} 
+        </div>
+        <div class="label">
+          7세 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {{ Member.info.eight}} 
+        </div>
+        <div class="label">
+          8세 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {{ Member.info.nine}} 
+        </div>
+        <div class="label">
+          9세 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {{ Member.info.ten}} 
+        </div>
+        <div class="label">
+          10세 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {{ Member.info.eleven}} 
+        </div>
+        <div class="label">
+          11세 
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {{ Member.info.twelve}} 
+        </div>
+        <div class="label">
+          12세 
+        </div>
+      </div>
+    </div>
+    </div>
+  <div class="ui padded segment">
+    <div class="lable">
+      <h2>작은손(횟수)</h2> 
+    </div>
+    <div class="ui statistics">
+      <div class="statistic">
+        <div class="value">
+          {% for often in often_info %}
+            {{ often.info.name }}({{ often.info.frequency }})
+          {% endfor %}
+        </div>
+        <div class="label">
+          한달간 자주온   
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          {% for Workload in Workload_info %}
+            {{ Workload.info.name }}({{ Workload.info.time }})
+          {% endfor %}
+        </div>
+        <div class="label">
+          한달간 작업을 많이한  
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+        </div>
+        <div class="label">
+          <!-- 미정  -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
