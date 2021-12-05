@@ -2189,7 +2189,7 @@ def statistics_test():
         often = {
             'info': {
                 'name':dbuser['name'],
-                'times':dbuser['times']
+                'frquency':dbuser['frequency']
             }
         }
         often_info.append(often)
@@ -2197,28 +2197,27 @@ def statistics_test():
         often = {
             'info':{
                 'name':'없음',
-                'times':'없음'
+                'frequency':'0'
             }
         }
-    #     print(often)
-    # ComeOften_info= []
-    # for dbuser in get_ComeOften_test(db):
-    #     ComeOften = {
-    #         'info': {
-    #             'come_often':dbuser['come_often'],
-    #             'times':dbuser['times']
-    #         }
-    #     }
-    #     ComeOften_info.append(ComeOften)
-    # Workload_info= []
-    # for dbuser in get_Workload_test(db):
-    #     Workload = {
-    #         'info': {
-    #             'workload':dbuser['workload'],
-    #             'used_time':dbuser['used_time']
-    #         }
-    #     }
-    #     Workload_info.append(Workload)
+        often_info.append(often)
+    Workload_info= []
+    for dbuser in get_Workload_test(db):
+        Workload = {
+            'info': {
+                'name':dbuser['name'],
+                'used_time':dbuser['used_time']
+            }
+        }
+        Workload_info.append(Workload)
+    if len(Workload_info) == 0:
+        Workload = {
+            'info':{
+                'name':'없음',
+                'used_time':'0'
+            }
+        }
+        Workload_info.append(Workload)
     return render_template('statistics_test.html', 
                             user=user, 
                             title='관리자', 
@@ -2238,7 +2237,9 @@ def statistics_test():
                             Member_info=Member_info,
                             Member=Member,
                             often_info=often_info,
-                            often=often) 
+                            often=often,
+                            Workload_info=Workload_info,
+                            Workload=Workload) 
 
 def file_log(e):
     log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])

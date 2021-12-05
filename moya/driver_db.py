@@ -946,7 +946,7 @@ def get_ComeOften_test(db):
         cursor = db.cursor()
         cursor.execute(f"""
         SELECT  name as 'name', 
-                count(*) as 'times' 
+                count(*) as 'frequency' 
                 FROM dev_users a LEFT JOIN 
                 (SELECT substr(entry_time, 1, 10) AS ent, 
                 userid, 
@@ -972,7 +972,7 @@ def get_Workload_test(db):
     try:
         cursor = db.cursor()
         cursor.execute(f"""
-        SELECT  name as 'workload', 
+        SELECT  name as 'name', 
                 sum(used) as 'used_time' 
                 FROM dev_users a LEFT JOIN 
                 (SELECT substr(entry_time, 1, 10) AS ent, 

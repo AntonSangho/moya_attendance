@@ -173,7 +173,9 @@
     <div class="ui statistics">
       <div class="statistic">
         <div class="value">
-          {{ often.info.name }}
+          {% for often in often_info %}
+            {{ often.info.name }}({{ often.info.frequency }}회)
+          {% endfor %}
         </div>
         <div class="label">
           자주오는 작은손 
@@ -181,6 +183,9 @@
       </div>
       <div class="statistic">
         <div class="value">
+          {% for Workload in Workload_info %}
+            {{ Workload.info.name }}({{ Workload.info.used_time }}분)
+          {% endfor %}
         </div>
         <div class="label">
           작업시간이 많은 작은손 
