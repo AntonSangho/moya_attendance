@@ -30,6 +30,7 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     get_TotalVisit_sj, get_WeekendVisit_sj,get_WeekVisit_sj,get_LastMonthVisit_sj,get_LastWeekVisit_sj,get_NewMember_sj,get_Member_sj, get_ComeOften_sj, get_Workload_sj,\
     get_TotalVisit_bp, get_WeekendVisit_bp,get_WeekVisit_bp,get_LastMonthVisit_bp,get_LastWeekVisit_bp,get_NewMember_bp,get_Member_bp, get_ComeOften_bp, get_Workload_bp,\
     get_TotalVisit_sw, get_WeekendVisit_sw,get_WeekVisit_sw,get_LastMonthVisit_sw,get_LastWeekVisit_sw,get_NewMember_sw,get_Member_sw, get_ComeOften_sw, get_Workload_sw,\
+    get_TotalVisit_mh, get_WeekendVisit_mh,get_WeekVisit_mh,get_LastMonthVisit_mh,get_LastWeekVisit_mh,get_NewMember_mh,get_Member_mh, get_ComeOften_mh, get_Workload_mh,\
     get_dayattendance_bp, get_RangeAttendance_bp, get_userattendance_bp, get_userinfo_bp, get_rfid_bp, get_adduserlist_bp, get_userdetail_bp, get_userselectdetail_bp, set_modify_bp, set_signup_bp, set_attendance_bp, set_exit_bp, \
     get_dayattendance_sj, get_RangeAttendance_sj, get_userattendance_sj, get_userinfo_sj, get_rfid_sj, get_adduserlist_sj, get_userdetail_sj, get_userselectdetail_sj, set_modify_sj, set_signup_sj, set_attendance_sj, set_exit_sj, get_workingtime_sj
 from sqlalchemy import create_engine
@@ -2622,6 +2623,138 @@ def statistics_sw():
         }
         Workload_info.append(Workload)
     return render_template('statistics_sw.html', 
+                            user=user, 
+                            title='관리자', 
+                            form=form, 
+                            TotalVisit_info=TotalVisit_info, 
+                            TotalVisit=TotalVisit, 
+                            WeekendVisit_info=WeekendVisit_info, 
+                            WeekendVisit=WeekendVisit,
+                            WeekVisit_info=WeekVisit_info, 
+                            WeekVisit=WeekVisit,
+                            LastMonthVisit_info=LastMonthVisit_info, 
+                            LastMonthVisit=LastMonthVisit,
+                            LastWeekVisit_info=LastWeekVisit_info, 
+                            LastWeekVisit=LastWeekVisit,
+                            NewMember_info=NewMember_info, 
+                            NewMember=NewMember,
+                            Member_info=Member_info,
+                            Member=Member,
+                            often_info=often_info,
+                            often=often,
+                            Workload_info=Workload_info,
+                            Workload=Workload)
+
+#[마하도서관] 통계페이지
+@application.route("/mh/statistics")
+def statistics_mh():
+    user = {'name': '관리자'}
+    form = DateForm()
+    db = get_conn()
+    TotalVisit_info= []
+    for dbuser in get_TotalVisit_mh(db):
+        TotalVisit = {
+            'info': {
+                'frequency':dbuser['frequency'],
+                'time':dbuser['time']
+            }
+        }
+        TotalVisit_info.append(TotalVisit)
+    WeekendVisit_info= []
+    for dbuser in get_WeekendVisit_mh(db):
+        WeekendVisit = {
+            'info': {
+                'frequency':dbuser['frequency']
+            }
+        }
+        WeekendVisit_info.append(WeekendVisit)
+    WeekVisit_info= []
+    for dbuser in get_WeekVisit_mh(db):
+        WeekVisit = {
+            'info': {
+                'frequency':dbuser['frequency']
+            }
+        }
+        WeekVisit_info.append(WeekVisit)
+    LastMonthVisit_info= []
+    for dbuser in get_LastMonthVisit_mh(db):
+        LastMonthVisit = {
+            'info': {
+                'frequency':dbuser['frequency'],
+                'time':dbuser['time']
+            }
+        }
+        LastMonthVisit_info.append(LastMonthVisit)
+    LastWeekVisit_info= []
+    for dbuser in get_LastWeekVisit_mh(db):
+        LastWeekVisit = {
+            'info': {
+                'frequency':dbuser['frequency'],
+                'time':dbuser['time']
+            }
+        }
+        LastWeekVisit_info.append(LastWeekVisit)
+    NewMember_info= []
+    for dbuser in get_NewMember_mh(db):
+        NewMember = {
+            'info': {
+                'new_member':dbuser['new_member']
+            }
+        }
+        NewMember_info.append(NewMember)
+    Member_info= []
+    for dbuser in get_Member_mh(db):
+        Member = {
+            'info': {
+                'total_member':dbuser['total_member'],
+                'boy':dbuser['boy'],
+                'girl':dbuser['girl'],
+                'seven':dbuser['seven'],
+                'eight':dbuser['eight'],
+                'nine':dbuser['nine'],
+                'ten':dbuser['ten'],
+                'eleven':dbuser['eleven'],
+                'twelve':dbuser['twelve']
+            }
+        }
+        Member_info.append(Member)
+    often_info= []
+    for dbuser in get_ComeOften_mh(db):
+        often = {
+            'info': {
+                'name':dbuser['name'],
+                'frequency':dbuser['frequency']
+            }
+        }
+        often_info.append(often)
+    ##한달간 방문객이 없을 경우
+    if len(often_info) == 0:
+        often = {
+            'info':{
+                'name':'없음',
+                'frequency':'0'
+            }
+        }
+        often_info.append(often)
+    Workload_info= []
+    for dbuser in get_Workload_mh(db):
+        Workload = {
+            'info': {
+                'name':dbuser['name'],
+                'time':dbuser['time']
+            }
+        }
+        Workload_info.append(Workload)
+    ##한달간 작업시간이 없을 경우
+    if len(Workload_info) == 0:
+        Workload = {
+            'info':{
+                'name':'없음',
+                'time':'0'
+            }
+        }
+        Workload_info.append(Workload)
+    return render_template('statistics_mh.html', 
                             user=user, 
                             title='관리자', 
                             form=form, 
