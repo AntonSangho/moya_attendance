@@ -2184,15 +2184,22 @@ def statistics_test():
             }
         }
         Member_info.append(Member)
-    # often_info= []
-    # for dbuser in get_ComeOften_test(db):
-    #     often = {
-    #         'info': {
-    #             'name':dbuser['name'],
-    #             'times':dbuser['times']
-    #         }
-    #     }
-    #     often_info.append(often)
+    often_info= []
+    for dbuser in get_ComeOften_test(db):
+        often = {
+            'info': {
+                'name':dbuser['name'],
+                'times':dbuser['times']
+            }
+        }
+        often_info.append(often)
+    if len(often_info) == 0:
+        often = {
+            'info':{
+                'name':'없음',
+                'times':'없음'
+            }
+        }
     #     print(often)
     # ComeOften_info= []
     # for dbuser in get_ComeOften_test(db):
@@ -2229,7 +2236,9 @@ def statistics_test():
                             NewMember_info=NewMember_info, 
                             NewMember=NewMember,
                             Member_info=Member_info,
-                            Member=Member) 
+                            Member=Member,
+                            often_info=often_info,
+                            often=often) 
 
 def file_log(e):
     log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])

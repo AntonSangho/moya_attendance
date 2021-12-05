@@ -957,7 +957,7 @@ def get_ComeOften_test(db):
                 substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
                 userid ASC ) 
             b ON a.id = b.userid 
-            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
+            where date_format(b.ent, '%Y%m') = 202111 
             group by name 
             order by count(*) desc 
             limit 3;
