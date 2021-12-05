@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from ctypes import sizeof
 import os
 import shutil
 import hashlib
@@ -26,6 +27,7 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     set_exit_sw, \
     get_dayattendance_test, get_userdetail_test, set_modify_test, set_signup_test, get_adduserlist_test, get_userattendance_test,get_userselectdetail_test, get_RangeAttendance_test, get_workingtime_test, \
     get_TotalVisit_test, get_WeekendVisit_test,get_WeekVisit_test,get_LastMonthVisit_test,get_LastWeekVisit_test,get_NewMember_test,get_Member_test, get_ComeOften_test, get_Workload_test,\
+    get_TotalVisit_sj, get_WeekendVisit_sj,get_WeekVisit_sj,get_LastMonthVisit_sj,get_LastWeekVisit_sj,get_NewMember_sj,get_Member_sj, get_ComeOften_sj, get_Workload_sj,\
     get_dayattendance_bp, get_RangeAttendance_bp, get_userattendance_bp, get_userinfo_bp, get_rfid_bp, get_adduserlist_bp, get_userdetail_bp, get_userselectdetail_bp, set_modify_bp, set_signup_bp, set_attendance_bp, set_exit_bp, \
     get_dayattendance_sj, get_RangeAttendance_sj, get_userattendance_sj, get_userinfo_sj, get_rfid_sj, get_adduserlist_sj, get_userdetail_sj, get_userselectdetail_sj, set_modify_sj, set_signup_sj, set_attendance_sj, set_exit_sj, get_workingtime_sj
 from sqlalchemy import create_engine
@@ -34,7 +36,7 @@ from flask.logging import default_handler
 
 import logging
 from logging.handlers import RotatingFileHandler
-from logging import Formatter
+from logging import Formatter, logThreads
 from io import StringIO
 
 db = init_connect_db(2)
@@ -2152,14 +2154,6 @@ def statistics_test():
             }
         }
         LastMonthVisit_info.append(LastMonthVisit)
-    ##한달간 방문객이 없을 경우
-    if len(LastMonthVisit_info) == 1: 
-        LastMonthVisit = {
-            'info': {
-                'frequency':'0',
-                'time':'0'
-            }
-        }
     LastWeekVisit_info= []
     for dbuser in get_LastWeekVisit_test(db):
         LastWeekVisit = {
@@ -2169,14 +2163,6 @@ def statistics_test():
             }
         }
         LastWeekVisit_info.append(LastWeekVisit)
-    ##일주일간 방문객이 없을 경우
-    if len(LastWeekVisit_info) == 1: 
-        LastWeekVisit = {
-            'info': {
-                'frequency':'0',
-                'time':'0'
-            }
-        }
     NewMember_info= []
     for dbuser in get_NewMember_test(db):
         NewMember = {
@@ -2206,7 +2192,7 @@ def statistics_test():
         often = {
             'info': {
                 'name':dbuser['name'],
-                'frquency':dbuser['frequency']
+                'frequency':dbuser['frequency']
             }
         }
         often_info.append(often)
@@ -2259,6 +2245,140 @@ def statistics_test():
                             often=often,
                             Workload_info=Workload_info,
                             Workload=Workload) 
+
+#[세종시립도서관] 통계페이지
+@application.route("/sj/statistics")
+def statistics_sj():
+    user = {'name': '관리자'}
+    form = DateForm()
+    db = get_conn()
+    TotalVisit_info= []
+    for dbuser in get_TotalVisit_sj(db):
+        TotalVisit = {
+            'info': {
+                'frequency':dbuser['frequency'],
+                'time':dbuser['time']
+            }
+        }
+        TotalVisit_info.append(TotalVisit)
+    WeekendVisit_info= []
+    for dbuser in get_WeekendVisit_sj(db):
+        WeekendVisit = {
+            'info': {
+                'frequency':dbuser['frequency']
+            }
+        }
+        WeekendVisit_info.append(WeekendVisit)
+    WeekVisit_info= []
+    for dbuser in get_WeekVisit_sj(db):
+        WeekVisit = {
+            'info': {
+                'frequency':dbuser['frequency']
+            }
+        }
+        WeekVisit_info.append(WeekVisit)
+    LastMonthVisit_info= []
+    for dbuser in get_LastMonthVisit_sj(db):
+        LastMonthVisit = {
+            'info': {
+                'frequency':dbuser['frequency'],
+                'time':dbuser['time']
+            }
+        }
+        LastMonthVisit_info.append(LastMonthVisit)
+    LastWeekVisit_info= []
+    for dbuser in get_LastWeekVisit_sj(db):
+        LastWeekVisit = {
+            'info': {
+                'frequency':dbuser['frequency'],
+                'time':dbuser['time']
+            }
+        }
+        LastWeekVisit_info.append(LastWeekVisit)
+    NewMember_info= []
+    for dbuser in get_NewMember_sj(db):
+        NewMember = {
+            'info': {
+                'new_member':dbuser['new_member']
+            }
+        }
+        NewMember_info.append(NewMember)
+    Member_info= []
+    for dbuser in get_Member_sj(db):
+        Member = {
+            'info': {
+                'total_member':dbuser['total_member'],
+                'boy':dbuser['boy'],
+                'girl':dbuser['girl'],
+                'seven':dbuser['seven'],
+                'eight':dbuser['eight'],
+                'nine':dbuser['nine'],
+                'ten':dbuser['ten'],
+                'eleven':dbuser['eleven'],
+                'twelve':dbuser['twelve']
+            }
+        }
+        Member_info.append(Member)
+    often_info= []
+    for dbuser in get_ComeOften_sj(db):
+        often = {
+            'info': {
+                'name':dbuser['name'],
+                'frequency':dbuser['frequency']
+            }
+        }
+        often_info.append(often)
+    ##한달간 방문객이 없을 경우
+    if len(often_info) == 0:
+        often = {
+            'info':{
+                'name':'없음',
+                'frequency':'0'
+            }
+        }
+        often_info.append(often)
+    Workload_info= []
+    for dbuser in get_Workload_sj(db):
+        Workload = {
+            'info': {
+                'name':dbuser['name'],
+                'time':dbuser['time']
+            }
+        }
+        Workload_info.append(Workload)
+    ##한달간 작업시간이 없을 경우
+    if len(Workload_info) == 0:
+        Workload = {
+            'info':{
+                'name':'없음',
+                'time':'0'
+            }
+        }
+        Workload_info.append(Workload)
+    return render_template('statistics_sj.html', 
+                            user=user, 
+                            title='관리자', 
+                            form=form, 
+                            TotalVisit_info=TotalVisit_info, 
+                            TotalVisit=TotalVisit, 
+                            WeekendVisit_info=WeekendVisit_info, 
+                            WeekendVisit=WeekendVisit,
+                            WeekVisit_info=WeekVisit_info, 
+                            WeekVisit=WeekVisit,
+                            LastMonthVisit_info=LastMonthVisit_info, 
+                            LastMonthVisit=LastMonthVisit,
+                            LastWeekVisit_info=LastWeekVisit_info, 
+                            LastWeekVisit=LastWeekVisit,
+                            NewMember_info=NewMember_info, 
+                            NewMember=NewMember,
+                            Member_info=Member_info,
+                            Member=Member,
+                            often_info=often_info,
+                            often=often,
+                            Workload_info=Workload_info,
+                            Workload=Workload) 
+
+
 
 def file_log(e):
     log_dir = os.path.join(application.config['HOME_DIR'], application.config['LOGGING_LOCATION'])

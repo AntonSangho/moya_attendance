@@ -1,4 +1,4 @@
-{% extends "base_test.html" %}
+{% extends "base_sj.html" %}
 {% block content %}
 <div class="ui padded segments">
   <div class="ui padded segment">
@@ -19,11 +19,11 @@
           {% if LastMonthVisit.info.frequency == 0 %}
             0
           {% else %}
-            {{ LastMonthVisit.info.frequency }} 
+           {{ LastMonthVisit.info.frequency }} 
           {% endif %}
         </div>
         <div class="label">
-          최근 한달 
+          이번 달 
         </div>
       </div>
       <div class="statistic">
@@ -35,7 +35,7 @@
           {% endif %} 
         </div>
         <div class="label">
-          최근 한주 
+          이번 주 
         </div>
       </div>
       <div class="statistic">
@@ -78,7 +78,7 @@
           {% endif %}
         </div>
         <div class="label">
-          최근 한달 
+          이번 달 
         </div>
       </div>
       <div class="statistic">
@@ -90,7 +90,7 @@
           {% endif %} 
         </div>
         <div class="label">
-          최근 한주 
+          이번 주 
         </div>
       </div>
     </div> 
