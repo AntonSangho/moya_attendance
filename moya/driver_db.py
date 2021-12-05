@@ -808,7 +808,19 @@ def get_username_test(db):
 def get_workingtime_test(db, selected_name):
     try:
         cursor = db.cursor()
-        cursor.execute(f"SELECT a.id, a.name , b.* FROM dev_users a LEFT JOIN (SELECT userid, max(used_time) AS used, count(*) as visit, sum(used_time) as total FROM dev_stat_attendance GROUP BY userid) b ON a.id = b.userid where name = '{selected_name}'; ")
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM dev_users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit, 
+                            sum(used_time) as total 
+                            FROM dev_stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where name = '{selected_name}';
+        """)
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
@@ -819,8 +831,8 @@ def get_TotalVisit_test(db):
     try:
         cursor = db.cursor()
         cursor.execute(f"""
-        SELECT  count(*) as 'total_visit', 
-                sum(used) as 'total_time' FROM dev_users a LEFT JOIN 
+        SELECT  count(*) as 'frequency', 
+                sum(used) as 'time' FROM dev_users a LEFT JOIN 
                     (SELECT substr(entry_time, 1, 10) AS ent, 
                     userid, 
                     MAX(date_format(entry_time,"%r")) AS entry, 
@@ -841,9 +853,9 @@ def get_WeekendVisit_test(db):
     try:
         cursor = db.cursor()
         cursor.execute(f"""
-        select count(weekday(entry_time)) as 'weekend_visit'
-        from dev_stat_attendance 
-        where weekday(entry_time) between 5 and 6; 
+        select  count(weekday(entry_time)) as 'frequency'
+                from dev_stat_attendance 
+                where weekday(entry_time) between 5 and 6; 
         """)
         return cursor.fetchall()
     except pymysql.Error as e:
@@ -855,9 +867,9 @@ def get_WeekVisit_test(db):
     try:
         cursor = db.cursor()
         cursor.execute(f"""
-        select count(weekday(entry_time)) as 'week_visit'
-        from dev_stat_attendance 
-        where weekday(entry_time) between 0 and 4; 
+        select  count(weekday(entry_time)) as 'frequency'
+                from dev_stat_attendance 
+                where weekday(entry_time) between 0 and 4; 
         """)
         return cursor.fetchall()
     except pymysql.Error as e:
@@ -869,8 +881,8 @@ def get_LastMonthVisit_test(db):
     try:
         cursor = db.cursor()
         cursor.execute(f"""
-        SELECT count(*) as 'last_month_visit', 
-            sum(used) as 'last_month_time' FROM dev_users a LEFT JOIN 
+        SELECT count(*) as 'frequency', 
+            sum(used) as 'time' FROM dev_users a LEFT JOIN 
                 (SELECT substr(entry_time, 1, 10) AS ent, 
                 userid, 
                 MAX(date_format(entry_time,"%r")) AS entry, 
@@ -890,14 +902,19 @@ def get_LastWeekVisit_test(db):
     try:
         cursor = db.cursor()
         cursor.execute(f"""
-        SELECT count(*) as 'last_week_visit', 
-            sum(used) as 'last_week_time' FROM dev_users a LEFT JOIN 
-                (SELECT substr(entry_time, 1, 10) AS ent, 
-                userid, 
-                MAX(date_format(entry_time,"%r")) AS entry, 
-                MAX(date_format(exit_time,"%r")) AS exits, 
-                max(used_time) AS used
-                FROM dev_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+        SELECT  count(*) as 'frequency', 
+                sum(used) as 'time' 
+                FROM dev_users a LEFT JOIN 
+                    (SELECT substr(entry_time, 1, 10) AS ent, 
+                    userid, 
+                    MAX(date_format(entry_time,"%r")) AS entry, 
+                    MAX(date_format(exit_time,"%r")) AS exits, 
+                    max(used_time) AS used
+                    FROM dev_stat_attendance 
+                    GROUP BY userid, 
+                    substr(entry_time, 1, 10) 
+                    ORDER BY substr(entry_time, 1, 10) DESC, 
+                    userid ASC ) 
                 b ON a.id = b.userid 
             where date_format(b.ent, '%Y%m%j') = date_format(current_date, '%Y%m%j');
         """)
@@ -911,8 +928,9 @@ def get_NewMember_test(db):
     try:
         cursor = db.cursor()
         cursor.execute(f"""
-        select count(created) as 'new_member' from `dev_users_detail` 
-        where date_format(created, '%Y%m') = date_format(current_date, '%Y%m');
+        select  count(created) as 'new_member' 
+                from `dev_users_detail` 
+                where date_format(created, '%Y%m') = date_format(current_date, '%Y%m');
         """)
         return cursor.fetchall()
     except pymysql.Error as e:
@@ -957,7 +975,7 @@ def get_ComeOften_test(db):
                 substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
                 userid ASC ) 
             b ON a.id = b.userid 
-            where date_format(b.ent, '%Y%m') = 202111 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
             group by name 
             order by count(*) desc 
             limit 3;
@@ -973,7 +991,7 @@ def get_Workload_test(db):
         cursor = db.cursor()
         cursor.execute(f"""
         SELECT  name as 'name', 
-                sum(used) as 'used_time' 
+                sum(used) as 'time' 
                 FROM dev_users a LEFT JOIN 
                 (SELECT substr(entry_time, 1, 10) AS ent, 
                 userid, 

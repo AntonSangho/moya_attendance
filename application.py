@@ -2122,8 +2122,8 @@ def statistics_test():
     for dbuser in get_TotalVisit_test(db):
         TotalVisit = {
             'info': {
-                'total_visit':dbuser['total_visit'],
-                'total_time':dbuser['total_time']
+                'frequency':dbuser['frequency'],
+                'time':dbuser['time']
             }
         }
         TotalVisit_info.append(TotalVisit)
@@ -2131,7 +2131,7 @@ def statistics_test():
     for dbuser in get_WeekendVisit_test(db):
         WeekendVisit = {
             'info': {
-                'weekend_visit':dbuser['weekend_visit']
+                'frequency':dbuser['frequency']
             }
         }
         WeekendVisit_info.append(WeekendVisit)
@@ -2139,7 +2139,7 @@ def statistics_test():
     for dbuser in get_WeekVisit_test(db):
         WeekVisit = {
             'info': {
-                'week_visit':dbuser['week_visit']
+                'frequency':dbuser['frequency']
             }
         }
         WeekVisit_info.append(WeekVisit)
@@ -2147,20 +2147,36 @@ def statistics_test():
     for dbuser in get_LastMonthVisit_test(db):
         LastMonthVisit = {
             'info': {
-                'last_month_visit':dbuser['last_month_visit'],
-                'last_month_time':dbuser['last_month_time']
+                'frequency':dbuser['frequency'],
+                'time':dbuser['time']
             }
         }
         LastMonthVisit_info.append(LastMonthVisit)
+    ##한달간 방문객이 없을 경우
+    if len(LastMonthVisit_info) == 1: 
+        LastMonthVisit = {
+            'info': {
+                'frequency':'0',
+                'time':'0'
+            }
+        }
     LastWeekVisit_info= []
     for dbuser in get_LastWeekVisit_test(db):
         LastWeekVisit = {
             'info': {
-                'last_week_visit':dbuser['last_week_visit'],
-                'last_week_time':dbuser['last_week_time']
+                'frequency':dbuser['frequency'],
+                'time':dbuser['time']
             }
         }
         LastWeekVisit_info.append(LastWeekVisit)
+    ##일주일간 방문객이 없을 경우
+    if len(LastWeekVisit_info) == 1: 
+        LastWeekVisit = {
+            'info': {
+                'frequency':'0',
+                'time':'0'
+            }
+        }
     NewMember_info= []
     for dbuser in get_NewMember_test(db):
         NewMember = {
@@ -2173,6 +2189,7 @@ def statistics_test():
     for dbuser in get_Member_test(db):
         Member = {
             'info': {
+                'total_member':dbuser['total_member'],
                 'boy':dbuser['boy'],
                 'girl':dbuser['girl'],
                 'seven':dbuser['seven'],
@@ -2193,6 +2210,7 @@ def statistics_test():
             }
         }
         often_info.append(often)
+    ##한달간 방문객이 없을 경우
     if len(often_info) == 0:
         often = {
             'info':{
@@ -2206,15 +2224,16 @@ def statistics_test():
         Workload = {
             'info': {
                 'name':dbuser['name'],
-                'used_time':dbuser['used_time']
+                'time':dbuser['time']
             }
         }
         Workload_info.append(Workload)
+    ##한달간 작업시간이 없을 경우
     if len(Workload_info) == 0:
         Workload = {
             'info':{
                 'name':'없음',
-                'used_time':'0'
+                'time':'0'
             }
         }
         Workload_info.append(Workload)

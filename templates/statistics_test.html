@@ -8,7 +8,7 @@
     <div class="ui statistics">
       <div class="statistic">
         <div class="value">
-          {{ TotalVisit.info.total_visit }}
+          {{ TotalVisit.info.frequency }}
         </div>
         <div class="label">
           오픈이후  
@@ -16,7 +16,7 @@
       </div>
       <div class="statistic">
         <div class="value">
-          {{ LastMonthVisit.info.last_month_visit}}
+          {{ LastMonthVisit.info.frequency}}
         </div>
         <div class="label">
           최근 한달 
@@ -24,7 +24,7 @@
       </div>
       <div class="statistic">
         <div class="value">
-          {{ LastWeekVisit.info.last_week_visit}}
+          {{ LastWeekVisit.info.frequency }} 
         </div>
         <div class="label">
           최근 한주 
@@ -32,7 +32,7 @@
       </div>
       <div class="statistic">
         <div class="value">
-          {{ WeekendVisit.info.weekend_visit }} 
+          {{ WeekendVisit.info.frequency }} 
         </div>
         <div class="label">
           오픈이후 주말방문자 
@@ -40,7 +40,7 @@
       </div>
       <div class="statistic">
         <div class="value">
-          {{ WeekVisit.info.week_visit }} 
+          {{ WeekVisit.info.frequency }} 
         </div>
         <div class="label">
           오픈이후 평일방문자 
@@ -50,12 +50,12 @@
   </div>
   <div class="ui padded segment">
     <div class="lable">
-      <h2>작업시간</h2> 
+      <h2>작업시간(분)</h2> 
     </div>
     <div class="ui statistics">
       <div class="statistic">
         <div class="value">
-          240340
+          {{ TotalVisit.info.time }}
         </div>
         <div class="label">
           오픈 이후 
@@ -63,7 +63,7 @@
       </div>
       <div class="statistic">
         <div class="value">
-          430
+          {{ LastMonthVisit.info.time }} 
         </div>
         <div class="label">
           최근 한달 
@@ -71,7 +71,7 @@
       </div>
       <div class="statistic">
         <div class="value">
-          122
+          {{ LastWeekVisit.info.time }} 
         </div>
         <div class="label">
           최근 한주 
@@ -86,7 +86,7 @@
     <div class="ui statistics">
       <div class="statistic">
         <div class="value">
-          121
+          {{ Member.info.total_member }}
         </div>
         <div class="label">
           총 회원수 
@@ -168,27 +168,27 @@
     </div>
   <div class="ui padded segment">
     <div class="lable">
-      <h2>작은손</h2> 
+      <h2>작은손(횟수)</h2> 
     </div>
     <div class="ui statistics">
       <div class="statistic">
         <div class="value">
           {% for often in often_info %}
-            {{ often.info.name }}({{ often.info.frequency }}회)
+            {{ often.info.name }}({{ often.info.frequency }})
           {% endfor %}
         </div>
         <div class="label">
-          자주오는 작은손 
+          한달간 자주온   
         </div>
       </div>
       <div class="statistic">
         <div class="value">
           {% for Workload in Workload_info %}
-            {{ Workload.info.name }}({{ Workload.info.used_time }}분)
+            {{ Workload.info.name }}({{ Workload.info.time }})
           {% endfor %}
         </div>
         <div class="label">
-          작업시간이 많은 작은손 
+          한달간 작업을 많이한  
         </div>
       </div>
       <div class="statistic">
