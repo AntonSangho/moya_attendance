@@ -1221,7 +1221,7 @@ def get_Workload_sj(db):
         return 0 
 
 # [세종] 방문 횟수와 작업시간 가져오는 기능
-def get_workingtime_sj(db, selected_name):
+def get_userwork_sj(db, selected_name):
     try:
         cursor = db.cursor()
         cursor.execute(f"SELECT a.id, a.name , b.* FROM sj_users a LEFT JOIN (SELECT userid, max(used_time) AS used, count(*) as visit, sum(used_time) as total FROM sj_stat_attendance GROUP BY userid) b ON a.id = b.userid where name = '{selected_name}'; ")
@@ -1230,8 +1230,8 @@ def get_workingtime_sj(db, selected_name):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0 
 
-# [bp] 방문 횟수와 작업시간 가져오는 기능
-def get_workingtime_bp(db, selected_name):
+# [반포] 방문 횟수와 작업시간 가져오는 기능
+def get_userwork_bp(db, selected_name):
     try:
         cursor = db.cursor()
         cursor.execute(f"""
@@ -1251,6 +1251,72 @@ def get_workingtime_bp(db, selected_name):
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0 
+
+# [수원] 방문 횟수와 작업시간 가져오는 기능
+def get_userwork_sw(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM sw_users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit, 
+                            sum(used_time) as total 
+                            FROM sw_stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where name = '{selected_name}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [마하] 방문 횟수와 작업시간 가져오는 기능
+def get_userwork_mh(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM mh_users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit, 
+                            sum(used_time) as total 
+                            FROM mh_stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where name = '{selected_name}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [제천] 방문 횟수와 작업시간 가져오는 기능
+def get_userwork(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit, 
+                            sum(used_time) as total 
+                            FROM stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where name = '{selected_name}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
 
 # [bp] 오픈이후의 방문자 수, 작업시간 
 def get_TotalVisit_bp(db):

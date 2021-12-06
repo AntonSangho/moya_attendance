@@ -33,7 +33,8 @@ from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_
     get_TotalVisit_mh, get_WeekendVisit_mh,get_WeekVisit_mh,get_LastMonthVisit_mh,get_LastWeekVisit_mh,get_NewMember_mh,get_Member_mh, get_ComeOften_mh, get_Workload_mh,\
     get_TotalVisit, get_WeekendVisit,get_WeekVisit,get_LastMonthVisit,get_LastWeekVisit,get_NewMember,get_Member, get_ComeOften, get_Workload,\
     get_dayattendance_bp, get_RangeAttendance_bp, get_userattendance_bp, get_userinfo_bp, get_rfid_bp, get_adduserlist_bp, get_userdetail_bp, get_userselectdetail_bp, set_modify_bp, set_signup_bp, set_attendance_bp, set_exit_bp, \
-    get_dayattendance_sj, get_RangeAttendance_sj, get_userattendance_sj, get_userinfo_sj, get_rfid_sj, get_adduserlist_sj, get_userdetail_sj, get_userselectdetail_sj, set_modify_sj, set_signup_sj, set_attendance_sj, set_exit_sj, get_workingtime_sj
+    get_dayattendance_sj, get_RangeAttendance_sj, get_userattendance_sj, get_userinfo_sj, get_rfid_sj, get_adduserlist_sj, get_userdetail_sj, get_userselectdetail_sj, set_modify_sj, set_signup_sj, set_attendance_sj, set_exit_sj, \
+    get_userwork_sj, get_userwork_bp, get_userwork_sw, get_userwork_mh, get_userwork
 from sqlalchemy import create_engine
 
 from flask.logging import default_handler
@@ -837,8 +838,6 @@ def aftermodify(username):
     # print('270#########' + username)
     if request.method == 'GET':
         selected_name = username
-        # print(selected_name)
-
         user = {'name': '관리자'}
         # db = init_connect_db()
         db=get_conn()
@@ -853,7 +852,6 @@ def aftermodify(username):
                             }
             }
             userlist.append(user)
-        # print(user)
         userlist_info = []
         for dbuser in get_userselectdetail(db, selected_name):
             user_info = {
@@ -866,7 +864,19 @@ def aftermodify(username):
                 }
             }
             userlist_info.append(user_info)
-        print(selected_name)
+        userworking = []
+        for dbuser in get_userwork(db, selected_name):
+            user_time = {
+                'time': {
+                    'id': dbuser['id'],
+                    'name': dbuser['name'],
+                    'userid': dbuser['userid'],
+                    'used': dbuser['used'], 
+                    'visit': dbuser['visit'],
+                    'total': dbuser['total']
+                }
+            }
+            userworking.append(user_time)
         if len(userlist_info) == 0:
             return """<h2>해당사용자는 아직 개인정보가 없습니다.</h2>
                         <script>
@@ -875,7 +885,7 @@ def aftermodify(username):
                         }, 3000);
                         </script>"""
         return render_template('afteruserinfo.html', title='검색', user=user, userlist=userlist, user_info=user_info,
-                               userlist_info=userlist_info)
+                               userlist_info=userlist_info, user_time=user_time)
 
 
 ## [마하도서관] 사용자이름 선택시 정보 확인
@@ -900,7 +910,6 @@ def aftermodify_mh(username):
                             }
             }
             userlist.append(user)
-        print(userlist)
         userlist_info = []
         for dbuser in get_userselectdetail_mh(db, selected_name):
             user_info = {
@@ -913,7 +922,19 @@ def aftermodify_mh(username):
                 }
             }
             userlist_info.append(user_info)
-        print(selected_name)
+        userworking = []
+        for dbuser in get_userwork_mh(db, selected_name):
+            user_time = {
+                'time': {
+                    'id': dbuser['id'],
+                    'name': dbuser['name'],
+                    'userid': dbuser['userid'],
+                    'used': dbuser['used'], 
+                    'visit': dbuser['visit'],
+                    'total': dbuser['total']
+                }
+            }
+            userworking.append(user_time)   
         if len(userlist_info) == 0:
             return """<h2>해당사용자는 아직 개인정보가 없습니다.</h2>
                         <script>
@@ -922,7 +943,7 @@ def aftermodify_mh(username):
                         }, 3000);
                         </script>"""
         return render_template('afteruserinfo_mh.html', title='검색', user=user, userlist=userlist, user_info=user_info,
-                               userlist_info=userlist_info)
+                               userlist_info=userlist_info, user_time=user_time)
 
 
 ## [바른샘도서관] 사용자이름 선택시 정보 확인
@@ -947,7 +968,6 @@ def aftermodify_sw(username):
                             }
             }
             userlist.append(user)
-        print(userlist)
         userlist_info = []
         for dbuser in get_userselectdetail_sw(db, selected_name):
             user_info = {
@@ -960,7 +980,19 @@ def aftermodify_sw(username):
                 }
             }
             userlist_info.append(user_info)
-        print(selected_name)
+        userworking = []
+        for dbuser in get_userwork_sw(db, selected_name):
+            user_time = {
+                'time': {
+                    'id': dbuser['id'],
+                    'name': dbuser['name'],
+                    'userid': dbuser['userid'],
+                    'used': dbuser['used'], 
+                    'visit': dbuser['visit'],
+                    'total': dbuser['total']
+                }
+            }
+            userworking.append(user_time)
         if len(userlist_info) == 0:
             return """<h2>해당사용자는 아직 개인정보가 없습니다.</h2>
                         <script>
@@ -969,7 +1001,7 @@ def aftermodify_sw(username):
                         }, 3000);
                         </script>"""
         return render_template('afteruserinfo_sw.html', title='검색', user=user, userlist=userlist, user_info=user_info,
-                               userlist_info=userlist_info)
+                               userlist_info=userlist_info, user_time=user_time)
 
 ## [개발용 ] 사용자이름 선택시 정보 확인
 @application.route('/test/view/<username>', methods=['POST', 'GET'])
@@ -1059,6 +1091,19 @@ def aftermodify_bp(username):
                 }
             }
             userlist_info.append(user_info)
+        userworking = []
+        for dbuser in get_userwork_bp(db, selected_name):
+            user_time = {
+                'time': {
+                    'id': dbuser['id'],
+                    'name': dbuser['name'],
+                    'userid': dbuser['userid'],
+                    'used': dbuser['used'], 
+                    'visit': dbuser['visit'],
+                    'total': dbuser['total']
+                }
+            }
+            userworking.append(user_time)
         # print(selected_name)
         if len(userlist_info) == 0:
             return """<h2>해당사용자는 아직 개인정보가 없습니다.</h2>
@@ -1068,7 +1113,7 @@ def aftermodify_bp(username):
                         }, 3000);
                         </script>"""
         return render_template('afteruserinfo_bp.html', title='검색', user=user, userlist=userlist, user_info=user_info,
-                               userlist_info=userlist_info)
+                               userlist_info=userlist_info,user_time=user_time)
 
 ## [세종시립도서관] 사용자이름 선택시 정보 확인
 @application.route('/sj/view/<username>', methods=['POST', 'GET'])
@@ -1102,7 +1147,7 @@ def aftermodify_sj(username):
             }
             userlist_info.append(user_info)
         userworking = []
-        for dbuser in get_workingtime_sj(db, selected_name):
+        for dbuser in get_userwork_sj(db, selected_name):
             user_time = {
                 'time': {
                     'id': dbuser['id'],
