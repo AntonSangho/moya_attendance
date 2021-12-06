@@ -63,7 +63,11 @@
     <div class="ui statistics">
       <div class="statistic">
         <div class="value">
-          {{ TotalVisit.info.time }}
+          {% if TotalVisit.info.time == none %}
+            0
+          {% else %}
+           {{ TotalVisit.info.time // 60 }} 
+          {% endif %}
         </div>
         <div class="label">
           오픈 이후 
@@ -74,7 +78,7 @@
           {% if LastMonthVisit.info.time == none %}
             0
           {% else %}
-           {{ LastMonthVisit.info.time }} 
+           {{ LastMonthVisit.info.time // 60 }} 
           {% endif %}
         </div>
         <div class="label">
@@ -86,7 +90,7 @@
           {% if LastWeekVisit.info.time == none %}
             0
           {% else %}
-           {{ LastWeekVisit.info.time }} 
+           {{ LastWeekVisit.info.time // 60 }} 
           {% endif %} 
         </div>
         <div class="label">

@@ -2214,7 +2214,7 @@ def statistics_test():
         Workload = {
             'info': {
                 'name':dbuser['name'],
-                'time':dbuser['time']
+                'time':(dbuser['time'])//60
             }
         }
         Workload_info.append(Workload)
@@ -2261,7 +2261,7 @@ def statistics_sj():
         TotalVisit = {
             'info': {
                 'frequency':dbuser['frequency'],
-                'time':dbuser['time']
+                'time':dbuser['time'] 
             }
         }
         TotalVisit_info.append(TotalVisit)
@@ -2346,7 +2346,7 @@ def statistics_sj():
         Workload = {
             'info': {
                 'name':dbuser['name'],
-                'time':dbuser['time']
+                'time':(dbuser['time'])//60
             }
         }
         Workload_info.append(Workload)
@@ -2478,7 +2478,7 @@ def statistics_bp():
         Workload = {
             'info': {
                 'name':dbuser['name'],
-                'time':dbuser['time']
+                'time':(dbuser['time'])//60
             }
         }
         Workload_info.append(Workload)
@@ -2610,7 +2610,7 @@ def statistics_sw():
         Workload = {
             'info': {
                 'name':dbuser['name'],
-                'time':dbuser['time']
+                'time':(dbuser['time'])//60
             }
         }
         Workload_info.append(Workload)
@@ -2742,7 +2742,7 @@ def statistics_mh():
         Workload = {
             'info': {
                 'name':dbuser['name'],
-                'time':dbuser['time']
+                'time':(dbuser['time'])//60
             }
         }
         Workload_info.append(Workload)
@@ -2874,7 +2874,7 @@ def statistics():
         Workload = {
             'info': {
                 'name':dbuser['name'],
-                'time':dbuser['time']
+                'time':(dbuser['time'])//60
             }
         }
         Workload_info.append(Workload)
