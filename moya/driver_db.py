@@ -808,11 +808,1326 @@ def get_username_test(db):
 def get_workingtime_test(db, selected_name):
     try:
         cursor = db.cursor()
-        cursor.execute(f"SELECT a.id, a.name , b.* FROM dev_users a LEFT JOIN (SELECT userid, max(used_time) AS used, count(*) as visit, sum(used_time) as total FROM dev_stat_attendance GROUP BY userid) b ON a.id = b.userid where name = '{selected_name}'; ")
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM dev_users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit, 
+                            sum(used_time) as total 
+                            FROM dev_stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where name = '{selected_name}';
+        """)
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0 
+
+# [개발] 오픈이후의 방문자 수, 작업시간 
+def get_TotalVisit_test(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  count(*) as 'frequency', 
+                sum(used) as 'time' FROM dev_users a LEFT JOIN 
+                    (SELECT substr(entry_time, 1, 10) AS ent, 
+                    userid, 
+                    MAX(date_format(entry_time,"%r")) AS entry, 
+                    MAX(date_format(exit_time,"%r")) AS exits, 
+                    max(used_time) AS used
+                    FROM dev_stat_attendance 
+                    GROUP BY userid, substr(entry_time, 1, 10) 
+                    ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+                b ON a.id =b.userid; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [개발] 오픈 이후주말 방문자 수  
+def get_WeekendVisit_test(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(weekday(entry_time)) as 'frequency'
+                from dev_stat_attendance 
+                where weekday(entry_time) between 5 and 6; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [개발] 오픈 이후 평일 방문자 수  
+def get_WeekVisit_test(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(weekday(entry_time)) as 'frequency'
+                from dev_stat_attendance 
+                where weekday(entry_time) between 0 and 4; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [개발] 최근 한달 방문자 수  
+def get_LastMonthVisit_test(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT count(*) as 'frequency', 
+            sum(used) as 'time' FROM dev_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM dev_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+                b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [개발] 최근 한주 방문자 수  
+def get_LastWeekVisit_test(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  count(*) as 'frequency', 
+                sum(used) as 'time' 
+                FROM dev_users a LEFT JOIN 
+                    (SELECT substr(entry_time, 1, 10) AS ent, 
+                    userid, 
+                    MAX(date_format(entry_time,"%r")) AS entry, 
+                    MAX(date_format(exit_time,"%r")) AS exits, 
+                    max(used_time) AS used
+                    FROM dev_stat_attendance 
+                    GROUP BY userid, 
+                    substr(entry_time, 1, 10) 
+                    ORDER BY substr(entry_time, 1, 10) DESC, 
+                    userid ASC ) 
+                b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m%j') = date_format(current_date, '%Y%m%j');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [개발] 이번달 신규회원  
+def get_NewMember_test(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(created) as 'new_member' 
+                from `dev_users_detail` 
+                where date_format(created, '%Y%m') = date_format(current_date, '%Y%m');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [개발] 회원정보 구별
+def get_Member_test(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(*) as 'total_member',
+                count(case when sex = '남자' then 1 end) as 'boy', 
+                count(case when sex = '여자' then 1 end) as 'girl',
+                count(case when (year(current_date) - 6) = year  then 1 end) as 'seven',
+                count(case when (year(current_date) - 7) = year  then 1 end) as 'eight',
+                count(case when (year(current_date) - 8) = year  then 1 end) as 'nine',
+                count(case when (year(current_date) - 9) = year  then 1 end) as 'ten',
+                count(case when (year(current_date) - 10) = year  then 1 end) as 'eleven',
+                count(case when (year(current_date) - 11) = year  then 1 end) as 'twelve'
+        from dev_users_detail;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [개발] 최근 한달간 자주오는 작은손  
+def get_ComeOften_test(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  name as 'name', 
+                count(*) as 'frequency' 
+                FROM dev_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM dev_stat_attendance GROUP BY userid, 
+                substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
+                userid ASC ) 
+            b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
+            group by name 
+            order by count(*) desc 
+            limit 3;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [개발] 최근 한달간 작업시간이 많은 작은손  
+def get_Workload_test(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  name as 'name', 
+                sum(used) as 'time' 
+                FROM dev_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM dev_stat_attendance GROUP BY userid, 
+                substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
+                userid ASC ) 
+            b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
+            group by name 
+            order by sum(used) desc 
+            limit 3;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [sj] 방문 횟수와 작업시간 가져오는 기능
+def get_workingtime_sj(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM sj_users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit, 
+                            sum(used_time) as total 
+                            FROM sj_stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where name = '{selected_name}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [sj] 오픈이후의 방문자 수, 작업시간 
+def get_TotalVisit_sj(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  count(*) as 'frequency', 
+                sum(used) as 'time' FROM sj_users a LEFT JOIN 
+                    (SELECT substr(entry_time, 1, 10) AS ent, 
+                    userid, 
+                    MAX(date_format(entry_time,"%r")) AS entry, 
+                    MAX(date_format(exit_time,"%r")) AS exits, 
+                    max(used_time) AS used
+                    FROM sj_stat_attendance 
+                    GROUP BY userid, substr(entry_time, 1, 10) 
+                    ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+                b ON a.id =b.userid; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [sj] 오픈 이후주말 방문자 수  
+def get_WeekendVisit_sj(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(weekday(entry_time)) as 'frequency'
+                from sj_stat_attendance 
+                where weekday(entry_time) between 5 and 6; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [sj] 오픈 이후 평일 방문자 수  
+def get_WeekVisit_sj(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(weekday(entry_time)) as 'frequency'
+                from sj_stat_attendance 
+                where weekday(entry_time) between 0 and 4; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [sj] 최근 한달 방문자 수  
+def get_LastMonthVisit_sj(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT count(*) as 'frequency', 
+            sum(used) as 'time' FROM sj_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM sj_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+                b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [sj] 최근 한주 방문자 수  
+def get_LastWeekVisit_sj(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  count(*) as 'frequency', 
+                sum(used) as 'time' 
+                FROM sj_users a LEFT JOIN 
+                    (SELECT substr(entry_time, 1, 10) AS ent, 
+                    userid, 
+                    MAX(date_format(entry_time,"%r")) AS entry, 
+                    MAX(date_format(exit_time,"%r")) AS exits, 
+                    max(used_time) AS used
+                    FROM sj_stat_attendance 
+                    GROUP BY userid, 
+                    substr(entry_time, 1, 10) 
+                    ORDER BY substr(entry_time, 1, 10) DESC, 
+                    userid ASC ) 
+                b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m%j') = date_format(current_date, '%Y%m%j');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [sj] 이번달 신규회원  
+def get_NewMember_sj(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(created) as 'new_member' 
+                from `sj_users_detail` 
+                where date_format(created, '%Y%m') = date_format(current_date, '%Y%m');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [sj] 회원정보 구별
+def get_Member_sj(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(*) as 'total_member',
+                count(case when sex = '남자' then 1 end) as 'boy', 
+                count(case when sex = '여자' then 1 end) as 'girl',
+                count(case when (year(current_date) - 6) = year  then 1 end) as 'seven',
+                count(case when (year(current_date) - 7) = year  then 1 end) as 'eight',
+                count(case when (year(current_date) - 8) = year  then 1 end) as 'nine',
+                count(case when (year(current_date) - 9) = year  then 1 end) as 'ten',
+                count(case when (year(current_date) - 10) = year  then 1 end) as 'eleven',
+                count(case when (year(current_date) - 11) = year  then 1 end) as 'twelve'
+        from sj_users_detail;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [sj] 최근 한달간 자주오는 작은손  
+def get_ComeOften_sj(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  name as 'name', 
+                count(*) as 'frequency' 
+                FROM sj_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM sj_stat_attendance GROUP BY userid, 
+                substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
+                userid ASC ) 
+            b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
+            group by name 
+            order by count(*) desc 
+            limit 3;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [sj] 최근 한달간 작업시간이 많은 작은손  
+def get_Workload_sj(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  name as 'name', 
+                sum(used) as 'time' 
+                FROM sj_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM sj_stat_attendance GROUP BY userid, 
+                substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
+                userid ASC ) 
+            b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
+            group by name 
+            order by sum(used) desc 
+            limit 3;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [세종] 방문 횟수와 작업시간 가져오는 기능
+def get_userwork_sj(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"SELECT a.id, a.name , b.* FROM sj_users a LEFT JOIN (SELECT userid, max(used_time) AS used, count(*) as visit, sum(used_time) as total FROM sj_stat_attendance GROUP BY userid) b ON a.id = b.userid where name = '{selected_name}'; ")
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [반포] 방문 횟수와 작업시간 가져오는 기능
+def get_userwork_bp(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM bp_users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit, 
+                            sum(used_time) as total 
+                            FROM bp_stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where name = '{selected_name}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [수원] 방문 횟수와 작업시간 가져오는 기능
+def get_userwork_sw(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM sw_users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit, 
+                            sum(used_time) as total 
+                            FROM sw_stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where name = '{selected_name}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [마하] 방문 횟수와 작업시간 가져오는 기능
+def get_userwork_mh(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM mh_users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit, 
+                            sum(used_time) as total 
+                            FROM mh_stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where name = '{selected_name}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [제천] 방문 횟수와 작업시간 가져오는 기능
+def get_userwork(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit, 
+                            sum(used_time) as total 
+                            FROM stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where name = '{selected_name}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [bp] 오픈이후의 방문자 수, 작업시간 
+def get_TotalVisit_bp(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  count(*) as 'frequency', 
+                sum(used) as 'time' FROM bp_users a LEFT JOIN 
+                    (SELECT substr(entry_time, 1, 10) AS ent, 
+                    userid, 
+                    MAX(date_format(entry_time,"%r")) AS entry, 
+                    MAX(date_format(exit_time,"%r")) AS exits, 
+                    max(used_time) AS used
+                    FROM bp_stat_attendance 
+                    GROUP BY userid, substr(entry_time, 1, 10) 
+                    ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+                b ON a.id =b.userid; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [bp] 오픈 이후주말 방문자 수  
+def get_WeekendVisit_bp(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(weekday(entry_time)) as 'frequency'
+                from bp_stat_attendance 
+                where weekday(entry_time) between 5 and 6; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [bp] 오픈 이후 평일 방문자 수  
+def get_WeekVisit_bp(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(weekday(entry_time)) as 'frequency'
+                from bp_stat_attendance 
+                where weekday(entry_time) between 0 and 4; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [bp] 최근 한달 방문자 수  
+def get_LastMonthVisit_bp(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT count(*) as 'frequency', 
+            sum(used) as 'time' FROM bp_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM bp_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+                b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [bp] 최근 한주 방문자 수  
+def get_LastWeekVisit_bp(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  count(*) as 'frequency', 
+                sum(used) as 'time' 
+                FROM bp_users a LEFT JOIN 
+                    (SELECT substr(entry_time, 1, 10) AS ent, 
+                    userid, 
+                    MAX(date_format(entry_time,"%r")) AS entry, 
+                    MAX(date_format(exit_time,"%r")) AS exits, 
+                    max(used_time) AS used
+                    FROM bp_stat_attendance 
+                    GROUP BY userid, 
+                    substr(entry_time, 1, 10) 
+                    ORDER BY substr(entry_time, 1, 10) DESC, 
+                    userid ASC ) 
+                b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m%j') = date_format(current_date, '%Y%m%j');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [bp] 이번달 신규회원  
+def get_NewMember_bp(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(created) as 'new_member' 
+                from `bp_users_detail` 
+                where date_format(created, '%Y%m') = date_format(current_date, '%Y%m');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [bp] 회원정보 구별
+def get_Member_bp(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(*) as 'total_member',
+                count(case when sex = '남자' then 1 end) as 'boy', 
+                count(case when sex = '여자' then 1 end) as 'girl',
+                count(case when (year(current_date) - 6) = year  then 1 end) as 'seven',
+                count(case when (year(current_date) - 7) = year  then 1 end) as 'eight',
+                count(case when (year(current_date) - 8) = year  then 1 end) as 'nine',
+                count(case when (year(current_date) - 9) = year  then 1 end) as 'ten',
+                count(case when (year(current_date) - 10) = year  then 1 end) as 'eleven',
+                count(case when (year(current_date) - 11) = year  then 1 end) as 'twelve'
+        from bp_users_detail;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [bp] 최근 한달간 자주오는 작은손  
+def get_ComeOften_bp(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  name as 'name', 
+                count(*) as 'frequency' 
+                FROM bp_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM bp_stat_attendance GROUP BY userid, 
+                substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
+                userid ASC ) 
+            b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
+            group by name 
+            order by count(*) desc 
+            limit 3;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [bp] 최근 한달간 작업시간이 많은 작은손  
+def get_Workload_bp(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  name as 'name', 
+                sum(used) as 'time' 
+                FROM bp_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM bp_stat_attendance GROUP BY userid, 
+                substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
+                userid ASC ) 
+            b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
+            group by name 
+            order by sum(used) desc 
+            limit 3;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [sw] 방문 횟수와 작업시간 가져오는 기능
+def get_workingtime_sw(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM sw_users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit, 
+                            sum(used_time) as total 
+                            FROM sw_stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where name = '{selected_name}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [sw] 오픈이후의 방문자 수, 작업시간 
+def get_TotalVisit_sw(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  count(*) as 'frequency', 
+                sum(used) as 'time' FROM sw_users a LEFT JOIN 
+                    (SELECT substr(entry_time, 1, 10) AS ent, 
+                    userid, 
+                    MAX(date_format(entry_time,"%r")) AS entry, 
+                    MAX(date_format(exit_time,"%r")) AS exits, 
+                    max(used_time) AS used
+                    FROM sw_stat_attendance 
+                    GROUP BY userid, substr(entry_time, 1, 10) 
+                    ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+                b ON a.id =b.userid; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [sw] 오픈 이후주말 방문자 수  
+def get_WeekendVisit_sw(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(weekday(entry_time)) as 'frequency'
+                from sw_stat_attendance 
+                where weekday(entry_time) between 5 and 6; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [sw] 오픈 이후 평일 방문자 수  
+def get_WeekVisit_sw(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(weekday(entry_time)) as 'frequency'
+                from sw_stat_attendance 
+                where weekday(entry_time) between 0 and 4; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [sw] 최근 한달 방문자 수  
+def get_LastMonthVisit_sw(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT count(*) as 'frequency', 
+            sum(used) as 'time' FROM sw_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM sw_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+                b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [sw] 최근 한주 방문자 수  
+def get_LastWeekVisit_sw(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  count(*) as 'frequency', 
+                sum(used) as 'time' 
+                FROM sw_users a LEFT JOIN 
+                    (SELECT substr(entry_time, 1, 10) AS ent, 
+                    userid, 
+                    MAX(date_format(entry_time,"%r")) AS entry, 
+                    MAX(date_format(exit_time,"%r")) AS exits, 
+                    max(used_time) AS used
+                    FROM sw_stat_attendance 
+                    GROUP BY userid, 
+                    substr(entry_time, 1, 10) 
+                    ORDER BY substr(entry_time, 1, 10) DESC, 
+                    userid ASC ) 
+                b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m%j') = date_format(current_date, '%Y%m%j');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [sw] 이번달 신규회원  
+def get_NewMember_sw(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(created) as 'new_member' 
+                from `sw_users_detail` 
+                where date_format(created, '%Y%m') = date_format(current_date, '%Y%m');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [sw] 회원정보 구별
+def get_Member_sw(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(*) as 'total_member',
+                count(case when sex = '남자' then 1 end) as 'boy', 
+                count(case when sex = '여자' then 1 end) as 'girl',
+                count(case when (year(current_date) - 6) = year  then 1 end) as 'seven',
+                count(case when (year(current_date) - 7) = year  then 1 end) as 'eight',
+                count(case when (year(current_date) - 8) = year  then 1 end) as 'nine',
+                count(case when (year(current_date) - 9) = year  then 1 end) as 'ten',
+                count(case when (year(current_date) - 10) = year  then 1 end) as 'eleven',
+                count(case when (year(current_date) - 11) = year  then 1 end) as 'twelve'
+        from sw_users_detail;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [sw] 최근 한달간 자주오는 작은손  
+def get_ComeOften_sw(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  name as 'name', 
+                count(*) as 'frequency' 
+                FROM sw_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM sw_stat_attendance GROUP BY userid, 
+                substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
+                userid ASC ) 
+            b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
+            group by name 
+            order by count(*) desc 
+            limit 3;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [sw] 최근 한달간 작업시간이 많은 작은손  
+def get_Workload_sw(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  name as 'name', 
+                sum(used) as 'time' 
+                FROM sw_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM sw_stat_attendance GROUP BY userid, 
+                substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
+                userid ASC ) 
+            b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
+            group by name 
+            order by sum(used) desc 
+            limit 3;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [mh] 방문 횟수와 작업시간 가져오는 기능
+def get_workingtime_mh(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM mh_users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit, 
+                            sum(used_time) as total 
+                            FROM mh_stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where name = '{selected_name}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [mh] 오픈이후의 방문자 수, 작업시간 
+def get_TotalVisit_mh(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  count(*) as 'frequency', 
+                sum(used) as 'time' FROM mh_users a LEFT JOIN 
+                    (SELECT substr(entry_time, 1, 10) AS ent, 
+                    userid, 
+                    MAX(date_format(entry_time,"%r")) AS entry, 
+                    MAX(date_format(exit_time,"%r")) AS exits, 
+                    max(used_time) AS used
+                    FROM mh_stat_attendance 
+                    GROUP BY userid, substr(entry_time, 1, 10) 
+                    ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+                b ON a.id =b.userid; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [mh] 오픈 이후주말 방문자 수  
+def get_WeekendVisit_mh(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(weekday(entry_time)) as 'frequency'
+                from mh_stat_attendance 
+                where weekday(entry_time) between 5 and 6; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [mh] 오픈 이후 평일 방문자 수  
+def get_WeekVisit_mh(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(weekday(entry_time)) as 'frequency'
+                from mh_stat_attendance 
+                where weekday(entry_time) between 0 and 4; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [mh] 최근 한달 방문자 수  
+def get_LastMonthVisit_mh(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT count(*) as 'frequency', 
+            sum(used) as 'time' FROM mh_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM mh_stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+                b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [mh] 최근 한주 방문자 수  
+def get_LastWeekVisit_mh(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  count(*) as 'frequency', 
+                sum(used) as 'time' 
+                FROM mh_users a LEFT JOIN 
+                    (SELECT substr(entry_time, 1, 10) AS ent, 
+                    userid, 
+                    MAX(date_format(entry_time,"%r")) AS entry, 
+                    MAX(date_format(exit_time,"%r")) AS exits, 
+                    max(used_time) AS used
+                    FROM mh_stat_attendance 
+                    GROUP BY userid, 
+                    substr(entry_time, 1, 10) 
+                    ORDER BY substr(entry_time, 1, 10) DESC, 
+                    userid ASC ) 
+                b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m%j') = date_format(current_date, '%Y%m%j');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [mh] 이번달 신규회원  
+def get_NewMember_mh(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(created) as 'new_member' 
+                from `mh_users_detail` 
+                where date_format(created, '%Y%m') = date_format(current_date, '%Y%m');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [mh] 회원정보 구별
+def get_Member_mh(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(*) as 'total_member',
+                count(case when sex = '남자' then 1 end) as 'boy', 
+                count(case when sex = '여자' then 1 end) as 'girl',
+                count(case when (year(current_date) - 6) = year  then 1 end) as 'seven',
+                count(case when (year(current_date) - 7) = year  then 1 end) as 'eight',
+                count(case when (year(current_date) - 8) = year  then 1 end) as 'nine',
+                count(case when (year(current_date) - 9) = year  then 1 end) as 'ten',
+                count(case when (year(current_date) - 10) = year  then 1 end) as 'eleven',
+                count(case when (year(current_date) - 11) = year  then 1 end) as 'twelve'
+        from mh_users_detail;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [mh] 최근 한달간 자주오는 작은손  
+def get_ComeOften_mh(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  name as 'name', 
+                count(*) as 'frequency' 
+                FROM mh_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM mh_stat_attendance GROUP BY userid, 
+                substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
+                userid ASC ) 
+            b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
+            group by name 
+            order by count(*) desc 
+            limit 3;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [mh] 최근 한달간 작업시간이 많은 작은손  
+def get_Workload_mh(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  name as 'name', 
+                sum(used) as 'time' 
+                FROM mh_users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM mh_stat_attendance GROUP BY userid, 
+                substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
+                userid ASC ) 
+            b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
+            group by name 
+            order by sum(used) desc 
+            limit 3;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [jc] 방문 횟수와 작업시간 가져오는 기능
+def get_workingtime(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit, 
+                            sum(used_time) as total 
+                            FROM stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where name = '{selected_name}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [jc] 오픈이후의 방문자 수, 작업시간 
+def get_TotalVisit(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  count(*) as 'frequency', 
+                sum(used) as 'time' FROM users a LEFT JOIN 
+                    (SELECT substr(entry_time, 1, 10) AS ent, 
+                    userid, 
+                    MAX(date_format(entry_time,"%r")) AS entry, 
+                    MAX(date_format(exit_time,"%r")) AS exits, 
+                    max(used_time) AS used
+                    FROM stat_attendance 
+                    GROUP BY userid, substr(entry_time, 1, 10) 
+                    ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+                b ON a.id =b.userid; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [jc] 오픈 이후주말 방문자 수  
+def get_WeekendVisit(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(weekday(entry_time)) as 'frequency'
+                from stat_attendance 
+                where weekday(entry_time) between 5 and 6; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [jc] 오픈 이후 평일 방문자 수  
+def get_WeekVisit(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(weekday(entry_time)) as 'frequency'
+                from stat_attendance 
+                where weekday(entry_time) between 0 and 4; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [jc] 최근 한달 방문자 수  
+def get_LastMonthVisit(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT count(*) as 'frequency', 
+            sum(used) as 'time' FROM users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM stat_attendance GROUP BY userid, substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , userid ASC ) 
+                b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [jc] 최근 한주 방문자 수  
+def get_LastWeekVisit(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  count(*) as 'frequency', 
+                sum(used) as 'time' 
+                FROM users a LEFT JOIN 
+                    (SELECT substr(entry_time, 1, 10) AS ent, 
+                    userid, 
+                    MAX(date_format(entry_time,"%r")) AS entry, 
+                    MAX(date_format(exit_time,"%r")) AS exits, 
+                    max(used_time) AS used
+                    FROM stat_attendance 
+                    GROUP BY userid, 
+                    substr(entry_time, 1, 10) 
+                    ORDER BY substr(entry_time, 1, 10) DESC, 
+                    userid ASC ) 
+                b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m%j') = date_format(current_date, '%Y%m%j');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+# [jc] 이번달 신규회원  
+def get_NewMember(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(created) as 'new_member' 
+                from `users_detail` 
+                where date_format(created, '%Y%m') = date_format(current_date, '%Y%m');
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [jc] 회원정보 구별
+def get_Member(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select  count(*) as 'total_member',
+                count(case when sex = '남자' then 1 end) as 'boy', 
+                count(case when sex = '여자' then 1 end) as 'girl',
+                count(case when (year(current_date) - 6) = year  then 1 end) as 'seven',
+                count(case when (year(current_date) - 7) = year  then 1 end) as 'eight',
+                count(case when (year(current_date) - 8) = year  then 1 end) as 'nine',
+                count(case when (year(current_date) - 9) = year  then 1 end) as 'ten',
+                count(case when (year(current_date) - 10) = year  then 1 end) as 'eleven',
+                count(case when (year(current_date) - 11) = year  then 1 end) as 'twelve'
+        from users_detail;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [jc] 최근 한달간 자주오는 작은손  
+def get_ComeOften(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  name as 'name', 
+                count(*) as 'frequency' 
+                FROM users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM stat_attendance GROUP BY userid, 
+                substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
+                userid ASC ) 
+            b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
+            group by name 
+            order by count(*) desc 
+            limit 3;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+# [jc] 최근 한달간 작업시간이 많은 작은손  
+def get_Workload(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  name as 'name', 
+                sum(used) as 'time' 
+                FROM users a LEFT JOIN 
+                (SELECT substr(entry_time, 1, 10) AS ent, 
+                userid, 
+                MAX(date_format(entry_time,"%r")) AS entry, 
+                MAX(date_format(exit_time,"%r")) AS exits, 
+                max(used_time) AS used
+                FROM stat_attendance GROUP BY userid, 
+                substr(entry_time, 1, 10) ORDER BY substr(entry_time, 1, 10) DESC , 
+                userid ASC ) 
+            b ON a.id = b.userid 
+            where date_format(b.ent, '%Y%m') = date_format(current_date, '%Y%m') 
+            group by name 
+            order by sum(used) desc 
+            limit 3;
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
 
 # [세종] 방문 횟수와 작업시간 가져오는 기능
 def get_workingtime_sj(db, selected_name):
@@ -822,8 +2137,7 @@ def get_workingtime_sj(db, selected_name):
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
-        return 0 
-
+        return 0
 ## [제천기적의도서관]이름, 성별, 년도, 전화번호, 메모를 수정하는 기능 
 def set_modify(db, selected_name, modifyname, sex, year, phone, memo):
     try:
