@@ -26,6 +26,8 @@
     </div>
     <div class="ui padded segment">
         <h2>입출입 기록</h2>
+        <h3>방문 횟수: {{ user_time.time.visit }}</h3>
+        <h3>작업 시간: {{ user_time.time.total //60 }} 시간</h3>
         <table class="ui celled table">
         <thead>
         <tr>

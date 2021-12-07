@@ -1,0 +1,220 @@
+{% extends "base_bp.html" %}
+{% block content %}
+<!-- 방문자, 작업시간 -->
+<div class="ui segment">
+<table class="ui definition table">
+  <thead>
+    <tr><th></th>
+    <th>방문횟수</th>
+    <th>작업시간(h)</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td>이번 주</td>
+      <td>{% if LastWeekVisit.info.frequency == none %}
+            0
+          {% else %}
+           {{ LastWeekVisit.info.frequency }} 
+          {% endif %}</td>
+      <td>{% if LastWeekVisit.info.time == none %}
+            0
+          {% else %}
+           {{ LastWeekVisit.info.time // 60 }}  
+          {% endif %}</td>
+    </tr>
+    <tr>
+      <td>이번 달</td>
+      <td>{% if LastMonthVisit.info.frequency == 0 %}
+            0
+          {% else %}
+           {{ LastMonthVisit.info.frequency }} 
+          {% endif %}</td>
+      <td>{% if LastMonthVisit.info.time == none %}
+            0
+          {% else %}
+           {{ LastMonthVisit.info.time // 60 }} 
+          {% endif %}</td>
+    </tr>
+    <tr>
+      <td>주말</td>
+      <td>{{ WeekendVisit.info.frequency }} </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>주중</td>
+      <td>{{ WeekVisit.info.frequency }}</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>오픈이후</td>
+      <td>{{ TotalVisit.info.frequency }}</td>
+      <td>{% if TotalVisit.info.time == none %}
+            0
+          {% else %}
+           {{ TotalVisit.info.time // 60 }} 
+          {% endif %}</td>
+    </tr>
+</tbody></table>
+</div>
+
+<!-- 회원정보 -->
+<div class="ui segments">
+  <div class="ui segment">
+<div class="ui four statistics">
+  <div class="statistic">
+    <div class="value">
+      {{ Member.info.total_member }}
+    </div>
+    <div class="label">
+      총 회원수 
+    </div>
+  </div>
+  <div class="statistic">
+    <div class="value">
+      {{ NewMember.info.new_member}}
+    </div>
+    <div class="label">
+      이번 달 신규회원 
+    </div>
+  </div>
+  <div class="statistic">
+    <div class="value">
+      <i class="mars icon"></i>{{ Member.info.girl}} 
+    </div>
+    <div class="label">
+      여아 
+    </div>
+  </div>
+  <div class="statistic">
+    <div class="value">
+      <i class="venus icon"></i>{{ Member.info.boy}}
+    </div>
+    <div class="label">
+      남아 
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="ui segment">
+<table class="ui very basic celled table">
+  <thead>
+    <tr><th class="center aligned five wide">연령대</th>
+    <th class="center aligned six wide">인원</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td>
+        <h4 class="ui header center aligned">
+          <div class="content">
+            7세 
+            <div class="sub header">2015년생
+          </div>
+        </div>
+      </h4></td>
+      <td class="center aligned ">
+        {{ Member.info.seven}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h4 class="ui header center aligned">
+          <div class="content">
+           8세 
+            <div class="sub header">2014년생
+          </div>
+        </div>
+      </h4></td>
+      <td class="center aligned ">
+        {{ Member.info.eight}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h4 class="ui header center aligned">
+          <div class="content">
+           9세 
+            <div class="sub header">2013년생
+          </div>
+        </div>
+      </h4></td>
+      <td class="center aligned ">
+        {{ Member.info.nine}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h4 class="ui header center aligned">
+          <div class="content">
+            10세 
+            <div class="sub header">2012년생
+          </div>
+        </div>
+      </h4></td>
+      <td class="center aligned ">
+        {{ Member.info.ten}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h4 class="ui header center aligned">
+          <div class="content">
+            11세 
+            <div class="sub header">2011년생
+          </div>
+        </div>
+      </h4></td>
+      <td class="center aligned ">
+        {{ Member.info.eleven}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h4 class="ui header center aligned">
+          <div class="content">
+            12세 
+            <div class="sub header">2010년생
+          </div>
+        </div>
+      </h4></td>
+      <td class="center aligned ">
+        {{ Member.info.twelve}}
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+<!-- 작은손 -->
+<div class="ui segments">
+<div class="ui segment">
+<div class="ui horizontal list">
+  <h3 class="ui header">자주오는 작은손</h3>
+{% for often in often_info %}
+  <div class="item">
+    <div class="content">
+      <div class="header">{{ often.info.name }}</div>
+      {{ often.info.frequency }} 회
+    </div>
+  </div>
+  {% endfor %}
+  </div>
+</div>
+</div>
+
+<div class="ui segment">
+<div class="ui horizontal list">
+  <h3 class="ui header">작업시간이 많은 작은손</h3>
+{% for Workload in Workload_info %}
+  <div class="item">
+    <div class="content">
+      <div class="header">{{ Workload.info.name }}</div>
+      {{ Workload.info.time }} 시간
+    </div>
+  </div>
+{% endfor %}
+</div>
+</div>
+</div>
+{% endblock %}

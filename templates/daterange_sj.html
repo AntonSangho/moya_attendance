@@ -1,13 +1,16 @@
 {% extends "base_sj.html" %}
 {% block content %}
- <h1 class="ui header" >자료다운로드 </h1>
+<div class="ui padded segment">
+ <div class="label">
+    <h1>자료다운로드</h1> 
     <h3 class ="ui headaer"> 날짜를 선택하세요 </h3>
- <form action="/sj/daterange" method="post">
+        <form action="/sj/daterange" method="post">
      <p>{{ form.dStart.label }}{{ form.dStart() }}</p>
      <p>{{ form.dEnd.label }}{{ form.dEnd() }}</p>
     </div>
     <div class="field">
         <button  type="submit" >액셀파일 다운로드</button>
     </div>
-</form>
+ </form>
+</div>
 {% endblock %}
