@@ -1,0 +1,155 @@
+{% extends "base_sj.html" %}
+{% block content %}
+<button class="ui button">
+  Follow
+</button>
+<div class="ui segment">
+  <p>Starting with <span class="ui mini red text">mini</span> text</p>
+  <p>which turns into <span class="ui tiny red text">tiny</span> text</p>
+  <p>changing to <span class="ui small red text">small</span> text until it is</p>
+  <p>the default <span class="ui medium red text">medium</span> text</p>
+  <p>and could be <span class="ui large red text">large</span> text</p>
+  <p>to turn into <span class="ui big red text">big</span> text</p>
+  <p>then growing to <span class="ui huge red text">huge</span> text</p>
+  <p>to finally become <span class="ui red massive text">massive</span> text</p>
+</div>
+<div class="ui segment">
+        <p>이번 주엔 <span class="ui red massive text">13</span>명이 와서<span class="ui red text">{% if LastWeekVisit.info.frequency == 0 %}
+                    0
+                  {% else %}
+                  {{ LastMonthVisit.info.frequency }} 
+                  {% endif %}</span>시간을 보냈습니다.</p>
+</div>
+<div class="ui padded segments">
+    <div class="ui padded segment">
+      <div class="ui segment">
+        <p>이번 주엔 <span class="ui red massive text">{% if LastWeekVisit.info.frequency == 0 %}
+                    0
+                  {% else %}
+                  {{ LastMonthVisit.info.frequency }} 
+                  {% endif %}</span>명이 와서<span class="ui red text">{% if LastWeekVisit.info.frequency == 0 %}
+                    0
+                  {% else %}
+                  {{ LastMonthVisit.info.frequency }} 
+                  {% endif %}</span>시간을 보냈습니다.</p>
+       </div> 
+      </div>
+        <div class="ui eight column grid">
+            <h2>최근</h2>
+            <div class="equal row">
+                <div class="column">이번 주엔</div>
+                <div class="statistics">
+                  {% if LastWeekVisit.info.frequency == 0 %}
+                    0
+                  {% else %}
+                  {{ LastMonthVisit.info.frequency }} 
+                  {% endif %}
+                </div>
+                <div class="column">명이 와서</div>
+                <div class="column">{% if LastWeekVisit.info.time == none %}
+                    0
+                  {% else %}
+                  {{ LastMonthVisit.info.time // 60 }} 
+                  {% endif %}
+                </div>
+                <div class="column">시간을 보냈습니다.</div>
+            </div>
+                <div class="equal row">
+                    <div class="column">이번 달엔</div>
+                    <div class="column">{% if LastMonthVisit.info.frequency == 0 %}
+                        0
+                      {% else %}
+                      {{ LastMonthVisit.info.frequency }} 
+                      {% endif %}</div>
+                    <div class="column">명이 와서 </div>
+                    <div class="column">{% if LastMonthVisit.info.time == none %}
+                        0
+                      {% else %}
+                      {{ LastMonthVisit.info.time // 60 }} 
+                      {% endif %}</div>
+                    <div class="column">시간을 보냈습니다.</div>
+                </div>
+        </div>
+        <div class="ui eight column grid">
+                <div class="equal row">
+                    <div class="column">이번 달에 가장 많이 온 작은손은</div>
+                    <div class="column">{% for often in often_info %}
+                      {{ often.info.name }}({{ often.info.frequency }}회)
+                      {% endfor %}</div>
+                    <div class="column">이고 작업을 많이한 작은손은 </div>
+                    <div class="column">{% for Workload in Workload_info %}
+                        {{ Workload.info.name }}({{ Workload.info.time }}시간)
+                        {% endfor %}</div>
+                    <div class="column">입니다.</div>
+                </div>
+        </div>
+        <div class="ui eight column grid">
+            <h2>방문누적</h2>
+                <div class="equal row">
+                    <div class="column">오픈 이후 지금까지</div>
+                    <div class="column">{{ TotalVisit.info.frequency }}</div>
+                    <div class="column">명이 방문했고, 평일에는 </div>
+                    <div class="column">{{ WeekVisit.info.frequency }}</div>
+                    <div class="column">명, 주말에는 </div>
+                    <div class="column">{{ WeekendVisit.info.frequency }}</div>
+                    <div class="column">명이 방문했습니다.</div>
+                </div>
+        </div>
+        <div class="ui eight column grid">
+                <div class="equal row">
+                    <div class="column">오픈 이후 지금까지</div>
+                    <div class="column">{% if TotalVisit.info.time == none %}
+                        0
+                      {% else %}
+                      {{ TotalVisit.info.time // 60 }} 
+                      {% endif %}</div>
+                    <div class="column">시간 작업했습니다.</div>
+                </div>
+        </div>
+        <div class="ui eight column grid">
+            <h2>회원</h2>
+                <div class="equal row">
+                    <div class="column">지금까지 </div>
+                    <div class="column">{{ Member.info.total_member }}</div>
+                    <div class="column">명이 작은손에 가입했으며, 이번 달에만</div>
+                    <div class="column">{{ NewMember.info.new_member}}</div>
+                    <div class="column">명이 가입했습니다.</div>
+                </div>
+        </div>
+        <div class="ui eight column grid">
+                <div class="equal row">
+                    <div class="column">가입된 작은손 중에 여아는 </div>
+                    <div class="column">{{ Member.info.girl}}</div>
+                    <div class="column">명이고 남아는 </div>
+                    <div class="column">{{ Member.info.boy}}</div>
+                    <div class="column">명입니다.</div>
+                </div>
+        </div>
+                <div class="equal row">
+                    <div class="column">연령대별 가입한 작은손입니다.</div>
+                </div>
+            <table class="ui collapsing table">
+                <thead>
+                  <tr>
+                    <th>7세</th>
+                    <th>8세</th>
+                    <th>9세</th>
+                    <th>10세</th>
+                    <th>11세</th>
+                    <th>12세</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{ Member.info.seven}}</td>
+                    <td>{{ Member.info.eight}}</td>
+                    <td>{{ Member.info.nine}}</td>
+                    <td>{{ Member.info.ten}}</td>
+                    <td>{{ Member.info.eleven}}</td>
+                    <td>{{ Member.info.twelve}}</td>
+                  </tr>
+                </tbody>
+            </table>
+    </div>
+</div>
+{% endblock %}
