@@ -10,10 +10,10 @@ reader = SimpleMFRC522()
 def read():
     try:
         GPIO.cleanup()       
-        print("Hold a tag near the reader")
+        # print("Hold a tag near the reader")
         id, text = reader.read_no_block()
         #id, text = reader.read_block()
-        print("ID: %s\nText: %s" % (id,text))
+        # print("ID: %s\nText: %s" % (id,text))
         lis = [id, text]
         sleep(1)
     except Exception as e:
