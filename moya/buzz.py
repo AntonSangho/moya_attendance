@@ -28,8 +28,8 @@ def buzz():
         # print("buzz GPIO error  %d: %s" %(e.args[0], e.args[1]))
         print("OMXplayer error  %d: %s" % (e.args[0], e.args[1]))
         raise
-    finally:
-        GPIO.cleanup()
+    # finally:
+        # GPIO.cleanup()
     
     
 

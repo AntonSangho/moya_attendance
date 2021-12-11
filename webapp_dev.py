@@ -18,7 +18,7 @@ from wtforms.fields.html5 import DateField
 # from datetime import date
 from time import sleep
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
-from moya.driver_db import init_connect_db, add_newcard, is_rfid_sj, get_rfid_sj, get_userinfo_sj, set_exit_sj, set_attendance_sj
+from moya.driver_db import get_userinfo_test, init_connect_db, add_newcard, is_rfid_test, get_rfid_test, get_userinfo_test, set_exit_test, set_attendance_test
 # from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, \
 #     set_signup, set_signup_mh, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, \
 #     get_RangeAttendance_mh, get_userdetail, get_userdetail_mh, \
@@ -1078,8 +1078,8 @@ def endpoint_rfid_read_exit():
                 else:
                     userid = rst[2]
                 rfid_uid = rst[1]
-                name = get_userinfo_sj(db, userid, rfid_uid)
-                rst.append("DB TRUE" if set_exit_sj(db, userid) else "DB FALSE")
+                name = get_userinfo_test(db, userid, rfid_uid)
+                rst.append("DB TRUE" if set_exit_test(db, userid) else "DB FALSE")
                 if len(name) > 0:
                     rst.append(name[0])
                 else:
@@ -1110,8 +1110,8 @@ def endpoint_rfid_read_entry():
                 else:
                     userid = rst[2]
                 rfid_uid = rst[1]
-                name = get_userinfo_sj(db, userid, rfid_uid)
-                rst.append("db true" if set_attendance_sj(db, userid) else "db false")
+                name = get_userinfo_test(db, userid, rfid_uid)
+                rst.append("db true" if set_attendance_test(db, userid) else "db false")
                 if len(name) > 0:
                     rst.append(name[0])
                 else:
@@ -1144,7 +1144,7 @@ def endpoint_rfid_read():
                     buzzer_call()
                     # DB에 접속해서 배정된 카드번호 표시
                 else:
-                    uid = get_rfid_sj(db, rfid_uid)['id']
+                    uid = get_rfid_dev(db, rfid_uid)['id']
                     # 이미카드가 있는 경우
                     rfid_write(str(uid))
                     # print("uid write %d", uid)
