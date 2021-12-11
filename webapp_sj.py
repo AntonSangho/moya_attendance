@@ -1,36 +1,38 @@
 # -*- coding:utf-8 -*-
 import os
-import shutil
-import hashlib
+# import shutil
+# import hashlib
 import time
-import pandas as pd
-import datetime
-from pprint import pprint
-from flask import Flask, render_template, jsonify, abort, request, redirect, session, url_for, Response, make_response
+# import pandas as pd
+# import datetime
+# from pprint import pprint
+from flask import Flask, render_template, jsonify, abort \
+    #  request, redirect, session, url_for, Response, make_response
 from flask_wtf import Form
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired
 from wtforms.fields.html5 import DateField
-from wtforms import SelectField
+# from wtforms import SelectField
 # from wtforms import DateField
-from datetime import date
+# from datetime import date
 
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
-from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, \
-    set_signup, set_signup_mh, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, \
-    get_RangeAttendance_mh, get_userdetail, get_userdetail_mh, \
-    get_userattendance, get_userattendance_mh, set_modify, set_modify_mh, get_userselectdetail, get_userselectdetail_mh, \
-    get_adduserlist, get_adduserlist_mh, get_dayattendance_mh, \
-    get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, \
-    get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, \
-    set_exit_sw, \
-    is_rfid_sj, get_rfid_sj, get_userinfo_sj, set_exit_sj, set_attendance_sj
+from moya.driver_db import init_connect_db, add_newcard, is_rfid_sj, get_rfid_sj, get_userinfo_sj, set_exit_sj, set_attendance_sj
+# from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, \
+#     set_signup, set_signup_mh, is_rfid, add_newcard, get_rfid, get_dayattendance, get_RangeAttendance, \
+#     get_RangeAttendance_mh, get_userdetail, get_userdetail_mh, \
+#     get_userattendance, get_userattendance_mh, set_modify, set_modify_mh, get_userselectdetail, get_userselectdetail_mh, \
+#     get_adduserlist, get_adduserlist_mh, get_dayattendance_mh, \
+#     get_dayattendance_sw, get_RangeAttendance_sw, get_userattendance_sw, get_userinfo_sw, is_rfid_sw, get_rfid_sw, \
+#     get_adduserlist_sw, get_userdetail_sw, get_userselectdetail_sw, set_modify_sw, set_signup_sw, set_attendance_sw, \
+#     set_exit_sw, \
+#     is_rfid_sj, get_rfid_sj, get_userinfo_sj, set_exit_sj, set_attendance_sj
 
 
-from sqlalchemy import create_engine
+# from sqlalchemy import create_engine
 
-from flask.logging import default_handler
+# from flask.logging import default_handler
 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -71,54 +73,54 @@ application.config['LOGGING_BACKUP_COUNT'] = 1000
 # blocking = False
 
 
-# 로그인 페이지
-@application.route('/', methods=['POST', 'GET'])
-def login():
-    """Login Form"""
-    if request.method == 'GET':
-        return render_template('login.html')
-    else:
-        pp = request.form['pp']
-        try:
-            if (hashlib.sha256(
-                    pp.encode()).hexdigest().upper() == 'B6E01168DC7579E745D41638CBDA0D9EAEA5EE9E8DADD1DB250AFCAD9D6B29D2'):
-                session['reliquum'] = "active"
-                db = init_connect_db(1);
-                res = make_response(redirect('./inputdateform'))
-                res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
-                return res
+# # 로그인 페이지
+# @application.route('/', methods=['POST', 'GET'])
+# def login():
+#     """Login Form"""
+#     if request.method == 'GET':
+#         return render_template('login.html')
+#     else:
+#         pp = request.form['pp']
+#         try:
+#             if (hashlib.sha256(
+#                     pp.encode()).hexdigest().upper() == 'B6E01168DC7579E745D41638CBDA0D9EAEA5EE9E8DADD1DB250AFCAD9D6B29D2'):
+#                 session['reliquum'] = "active"
+#                 db = init_connect_db(1);
+#                 res = make_response(redirect('./inputdateform'))
+#                 res.set_cookie('conn', '1', max_age=60 * 60 * 24 * 365 * 2)
+#                 return res
 
-            # lib2password
-            if (hashlib.sha256(
-                    pp.encode()).hexdigest().upper() == "ac4624660c6bd995ae624f978cd85865e3e6aa40db3a95bbf119780f03080671".upper()):
-                session['reliquum'] = "active"
-                db = init_connect_db(2);
+#             # lib2password
+#             if (hashlib.sha256(
+#                     pp.encode()).hexdigest().upper() == "ac4624660c6bd995ae624f978cd85865e3e6aa40db3a95bbf119780f03080671".upper()):
+#                 session['reliquum'] = "active"
+#                 db = init_connect_db(2);
 
-                res = make_response(redirect('./mh/inputdateform'))
-                res.set_cookie('conn', '2', max_age=60 * 60 * 24 * 365 * 2)
-                return res
+#                 res = make_response(redirect('./mh/inputdateform'))
+#                 res.set_cookie('conn', '2', max_age=60 * 60 * 24 * 365 * 2)
+#                 return res
 
-            # adminmoya
-            if (hashlib.sha256(
-                    pp.encode()).hexdigest().upper() == '203D45443356D2BB30B4A2D6C0119F18A8B54E9E686D6D17FF636D85112E8351'):
-                session['reliquum'] = "active"
-                db = init_connect_db(3);
-                res = make_response(redirect('./adminmoya'))
-                res.set_cookie('conn', '3', max_age=60 * 60 * 24 * 365 * 2)
-                return res
+#             # adminmoya
+#             if (hashlib.sha256(
+#                     pp.encode()).hexdigest().upper() == '203D45443356D2BB30B4A2D6C0119F18A8B54E9E686D6D17FF636D85112E8351'):
+#                 session['reliquum'] = "active"
+#                 db = init_connect_db(3);
+#                 res = make_response(redirect('./adminmoya'))
+#                 res.set_cookie('conn', '3', max_age=60 * 60 * 24 * 365 * 2)
+#                 return res
 
-            # suwon1
-            if (hashlib.sha256(
-                    pp.encode()).hexdigest().upper() == 'AB42590B4070E9B6C79B1E650C464FBCC7834E1BA7871F0B2E935B28F58A6856'):
-                session['reliquum'] = "active"
-                db = init_connect_db(4);
-                res = make_response(redirect('./sw/inputdateform'))
-                res.set_cookie('conn', '4', max_age=60 * 60 * 24 * 365 * 2)
-                return res
-            else:
-                return render_template('login_error.html')
-        except:
-            return render_template('login.html')
+#             # suwon1
+#             if (hashlib.sha256(
+#                     pp.encode()).hexdigest().upper() == 'AB42590B4070E9B6C79B1E650C464FBCC7834E1BA7871F0B2E935B28F58A6856'):
+#                 session['reliquum'] = "active"
+#                 db = init_connect_db(4);
+#                 res = make_response(redirect('./sw/inputdateform'))
+#                 res.set_cookie('conn', '4', max_age=60 * 60 * 24 * 365 * 2)
+#                 return res
+#             else:
+#                 return render_template('login_error.html')
+#         except:
+#             return render_template('login.html')
 
 
 @application.route('/webapp')
