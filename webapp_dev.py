@@ -48,10 +48,10 @@ db = init_connect_db(2)
 #     dEnd = DateField('종료일자', format='%Y-%m-%d')
 
 
-# signup신규등록에 사용됨
-class MyForm(FlaskForm):
-    name = StringField('name', validators=[DataRequired()])
-    yob = StringField('yearofbirth', validators=[DataRequired()])
+# # signup신규등록에 사용됨
+# class MyForm(FlaskForm):
+#     name = StringField('name', validators=[DataRequired()])
+#     yob = StringField('yearofbirth', validators=[DataRequired()])
 
 
 application = Flask(__name__, static_folder="static")
