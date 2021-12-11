@@ -6,7 +6,7 @@ import time
 # import pandas as pd
 # import datetime
 # from pprint import pprint
-from flask import Flask, render_template, jsonify, abort \
+from flask import Flask, render_template, jsonify, abort, request \
     #  request, redirect, session, url_for, Response, make_response
 from flask_wtf import Form
 from flask_wtf import FlaskForm
