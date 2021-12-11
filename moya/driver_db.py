@@ -122,7 +122,7 @@ def init_connect_db(switch_db):
 
         )
 
-        print("1 번 유저로 로그인")
+        # print("1 번 유저로 로그인")
         return db
 
     db = pymysql.connect(
@@ -140,7 +140,7 @@ def init_connect_db(switch_db):
         cursorclass=pymysql.cursors.DictCursor
     )
 
-    print("righthand_01 번 유저로 로그인")
+    # print("righthand_01 번 유저로 로그인")
     return db
 
 

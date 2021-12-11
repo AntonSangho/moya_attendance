@@ -1137,14 +1137,14 @@ def endpoint_rfid_read():
             if rst[1] != None:
                 rfid_uid = rst[1]
                 # rfid_uid가 user_mh테이블에 있는지 확인하는 함수
-                if is_rfid_sj(db, rfid_uid)['cnt'] == 0:
+                if is_rfid_test(db, rfid_uid)['cnt'] == 0:
                     # 새로운 카드 등록시 개발용은 5번의 db 번호로 강제정의
                     add_newcard(db, rfid_uid, '이름없음', 5)
                     time.sleep(1)
                     buzzer_call()
                     # DB에 접속해서 배정된 카드번호 표시
                 else:
-                    uid = get_rfid_dev(db, rfid_uid)['id']
+                    uid = get_rfid_test(db, rfid_uid)['id']
                     # 이미카드가 있는 경우
                     rfid_write(str(uid))
                     # print("uid write %d", uid)
