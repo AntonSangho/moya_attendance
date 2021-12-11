@@ -16,7 +16,7 @@ from wtforms.fields.html5 import DateField
 # from wtforms import SelectField
 # from wtforms import DateField
 # from datetime import date
-
+from time import sleep
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
 from moya.driver_db import init_connect_db, add_newcard, is_rfid_sj, get_rfid_sj, get_userinfo_sj, set_exit_sj, set_attendance_sj
 # from moya.driver_db import init_connect_db, get_attendance, set_attendance, set_exit, get_userinfo, \
@@ -41,11 +41,11 @@ from logging import Formatter
 db = init_connect_db(2)
 
 
-# datepicker에 사용됨
-class DateForm(Form):
-    dt = DateField('날짜선택', format='%Y-%m-%d')
-    dStart = DateField('시작일자', format='%Y-%m-%d')
-    dEnd = DateField('종료일자', format='%Y-%m-%d')
+# # datepicker에 사용됨
+# class DateForm(Form):
+#     dt = DateField('날짜선택', format='%Y-%m-%d')
+#     dStart = DateField('시작일자', format='%Y-%m-%d')
+#     dEnd = DateField('종료일자', format='%Y-%m-%d')
 
 
 # signup신규등록에 사용됨
@@ -1066,9 +1066,7 @@ def exis():
 @application.route('/api/v1.0/exits', methods=['GET'])
 def endpoint_rfid_read_exit():
     try:
-        print("rpi buzz test- exit")
         rst = rfid_read()
-        print("rfid buzz test-----")
         if rst[0] != "not support this platform.":
             # db = init_connect_db()
             db = get_conn()
@@ -1087,6 +1085,7 @@ def endpoint_rfid_read_exit():
                 else:
                     rst.append('누구예요?')
                 buzzer_call()
+                time.sleep(0.1)
     except Exception as e:
         print("error", e)
         return abort(500)
@@ -1118,6 +1117,7 @@ def endpoint_rfid_read_entry():
                 else:
                     rst.append('누구예요?')
                 buzzer_call()
+                time.sleep(0.1)
     except Exception as e:
         print("error", e)
         return abort(500)
@@ -1129,7 +1129,6 @@ def endpoint_rfid_read_entry():
 @application.route('/api/v1.0/newcard', methods=['GET'])
 def endpoint_rfid_read():
     try:
-        print("rpi buzz")
         rfid_uid = ""
         uid = 0
         rst = rfid_read()
@@ -1151,6 +1150,7 @@ def endpoint_rfid_read():
                     # print("uid write %d", uid)
                     rfid_uid = 00000
                     buzzer_call()
+                    time.sleep(1)
     except Exception as e:
         print("error", e)
         return abort(500)
