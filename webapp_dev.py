@@ -9,7 +9,7 @@ from wtforms.validators import DataRequired
 from wtforms.fields.html5 import DateField
 from time import sleep
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
-from moya.driver_db import get_userinfo_test, init_connect_db, add_newcard, is_rfid_test, get_rfid_test, get_userinfo_test, set_exit_test, set_attendance_test
+from moya.driver_db import get_userinfo_test, init_connect_db, add_newcard, is_rfid_test, get_rfid_test, get_userinfo_test, set_exit_test, set_attendance_test, get_workingtimeWithUserid_test
 import logging
 from logging.handlers import RotatingFileHandler
 from logging import Formatter
@@ -83,10 +83,14 @@ def endpoint_rfid_read_exit():
                 else:
                     userid = rst[2]
                 rfid_uid = rst[1]
+                #카드의 userid를 가지고 DB에 등록된 name을 가져온다
                 name = get_userinfo_test(db, userid, rfid_uid)
+                #카드의 userid를 가지고 DB에 등록된 방문횟수와 작업시간을 가져온다.
+                info = get_workingtimeWithUserid_test(db, userid)
                 rst.append("DB TRUE" if set_exit_test(db, userid) else "DB FALSE")
+                # 이름이 DB에 등록되어있으면 방문횟수와 작업시간 정보를 가지고 있는다. 
                 if len(name) > 0:
-                    rst.append(name[0])
+                    rst.append(info[0])
                 else:
                     rst.append('누구예요?')
                 buzzer_call()
@@ -115,9 +119,12 @@ def endpoint_rfid_read_entry():
                     userid = rst[2]
                 rfid_uid = rst[1]
                 name = get_userinfo_test(db, userid, rfid_uid)
+                #카드의 userid를 가지고 DB에 등록된 방문횟수와 작업시간을 가져온다.
+                info = get_workingtimeWithUserid_test(db, userid)
                 rst.append("db true" if set_attendance_test(db, userid) else "db false")
+                # 이름이 DB에 등록되어있으면 방문횟수와 작업시간 정보를 가지고 있는다. 
                 if len(name) > 0:
-                    rst.append(name[0])
+                    rst.append(info[0])
                 else:
                     rst.append('누구예요?')
                 buzzer_call()

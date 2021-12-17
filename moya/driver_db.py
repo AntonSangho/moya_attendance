@@ -441,7 +441,7 @@ def get_userinfo_test(db, userid, rfid_uid):
         cursor = db.cursor()
         # print("$$$$$$$$")
         # print(userid, rfid_uid)
-        cursor.execute(f"SELECT name FROM dev_users WHERE id = {userid} and rfid_uid = {rfid_uid};")
+        cursor.execute(f"SELECT name, id FROM dev_users WHERE id = {userid} and rfid_uid = {rfid_uid};")
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
@@ -804,8 +804,7 @@ def get_username_test(db):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0
 
-# [개발] 방문 횟수와 작업시간 가져오는 기능
-def get_workingtime_test(db, selected_name):
+def get_workingtimeWithUserid_test(db, userid):
     try:
         cursor = db.cursor()
         cursor.execute(f"""
@@ -814,18 +813,17 @@ def get_workingtime_test(db, selected_name):
                 FROM dev_users a LEFT JOIN 
                     (SELECT userid, 
                             max(used_time) AS used, 
-                            count(*) as visit, 
+                            count(*) as visit,
                             sum(used_time) as total 
                             FROM dev_stat_attendance 
                             GROUP BY userid) 
                             b ON a.id = b.userid 
-                            where name = '{selected_name}';
+                            where userid = '{userid}';
         """)
         return cursor.fetchall()
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0 
-
 # [개발] 오픈이후의 방문자 수, 작업시간 
 def get_TotalVisit_test(db):
     try:
