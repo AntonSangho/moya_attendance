@@ -12,7 +12,7 @@ def load_module(module_name):
 
 def is_support_platform():
     rpi_file = '/proc/device-tree/model'
-    print(rpi_file)
+    # print(rpi_file)
     return os.path.exists(rpi_file)
 
 

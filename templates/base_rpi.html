@@ -60,7 +60,16 @@
         <div><span>{{platform}}</span></div>
         <div id="hor">
             <div id="go_webapp"></div>
-                <div id="container"> {{ msg if msg else '상호' }}</div>
+                <div id="container"> 
+                    {{ msg if msg else '상호' }}
+                    <!-- <script>
+                        document.write("카드를 대세요");
+                    </script>
+                    <input type="button" value="확인하기" onclick="
+                    document.querySelector('#container').textContent = '홍길동 작은손 변신' 
+                    document.querySelector('body').style.backgroundColor = 'white' 
+                    "> -->
+                </div>
             <div id="go_exits"></div>
         </div>
         <div></div>
@@ -78,8 +87,11 @@
                 return response.json();
             })
                 .then(function (usercardjson) {
+                    //카드에 데이터가 있는경우
                     if (usercardjson.ps[1] != null) {
+                        //카드의 데이터에 이름이 있는 경우
                         if (usercardjson.ps[4].name) {
+                            //작은손의 이름이 출력
                             {% block textContent %}
                             {% endblock %}
                             setTimeout(function name(params) {
@@ -104,6 +116,7 @@
                             {%  endblock %}
                         }
                     } else {
+                       //카드가 아직 인식이 안된 경우 
                         //document.querySelector('#container').textContent = '카드를 원에 대주세요' //제천, 반포
                         document.querySelector('#container').textContent = '카드를 그림에 대주세요' //수원
                     }
