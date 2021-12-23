@@ -803,7 +803,29 @@ def get_username_test(db):
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0
+#[개발용] 작은손의 최대 작업시간, 방문시간, 지금까지 작업시간을 이름으로 확인하기
+def get_workingtime_test(db, selected_name):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM dev_users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit,
+                            sum(used_time) as total 
+                            FROM dev_stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where name = '{selected_name}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
 
+#[개발용] 작은손의 최대 작업시간, 방문시간, 지금까지 작업시간을 카드id로 확인하기
 def get_workingtimeWithUserid_test(db, userid):
     try:
         cursor = db.cursor()
