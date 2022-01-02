@@ -4,7 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=/home/pi/moya_attendance/moyavenv/bin/python3 /home/pi/moya_attendance/application_sj.py
+ExecStart=/home/pi/moya_attendance/moyavenv/bin/python3 /home/pi/moya_attendance/webapp_sj.py
 WorkingDirectory=/home/pi/moya_attendance
 User=root
 
