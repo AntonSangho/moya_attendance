@@ -162,5 +162,6 @@ deploy.zip
 #sql for test
 stat.sql
 
-
+#vs code workspacefile
+moya_attendance.code-workspace
 
