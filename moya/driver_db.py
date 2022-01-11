@@ -105,7 +105,7 @@ sqlmapper = {
 
 
 def init_connect_db(switch_db):
-    if switch_db == 1:
+    # if switch_db == 1:
         db = pymysql.connect(
             # if app.env =='development':
             # user=os.getenv('DB_USER'),
@@ -114,34 +114,33 @@ def init_connect_db(switch_db):
             # host=os.getenv('DB_HOST'), #beanstalk 환경변수 이용
             # charset='utf8', #beanstalk 환경변수 이용
             user='righthand',
-            passwd='moya_0526',  # beanstalk 환경변수 이용
+            passwd='rir3plip9trex4NENG3rais3nesh6sad9zo',  # beanstalk 환경변수 이용
             db='moya',  # beanstalk 환경변수 이용
             host='moy.cismqc0tinee.ap-northeast-2.rds.amazonaws.com',  # beanstalk 환경변수 이용
             charset='utf8',  # beanstalk 환경변수 이용
             cursorclass=pymysql.cursors.DictCursor
 
         )
-
-        # print("1 번 유저로 로그인")
+        print("rigthand 유저로 로그인")
         return db
 
-    db = pymysql.connect(
-        # if app.env =='development':
-        # user=os.getenv('DB_USER'),
-        # passwd=os.getenv('DB_PASSWORD'), #beanstalk 환경변수 이용
-        # db=os.getenv('DB_NAME'), #beanstalk 환경변수 이용
-        # host=os.getenv('DB_HOST'), #beanstalk 환경변수 이용
-        # charset='utf8', #beanstalk 환경변수 이용
-        user='righthand_01',
-        passwd='1cl1kc02,!c',  # beanstalk 환경변수 이용
-        db='moya',  # beanstalk 환경변수 이용
-        host='moy.cismqc0tinee.ap-northeast-2.rds.amazonaws.com',  # beanstalk 환경변수 이용
-        charset='utf8',  # beanstalk 환경변수 이용
-        cursorclass=pymysql.cursors.DictCursor
-    )
+    # db = pymysql.connect(
+    #     # if app.env =='development':
+    #     # user=os.getenv('DB_USER'),
+    #     # passwd=os.getenv('DB_PASSWORD'), #beanstalk 환경변수 이용
+    #     # db=os.getenv('DB_NAME'), #beanstalk 환경변수 이용
+    #     # host=os.getenv('DB_HOST'), #beanstalk 환경변수 이용
+    #     # charset='utf8', #beanstalk 환경변수 이용
+    #     user='righthand_01',
+    #     passwd='1cl1kc02,!c',  # beanstalk 환경변수 이용
+    #     db='moya',  # beanstalk 환경변수 이용
+    #     host='moy.cismqc0tinee.ap-northeast-2.rds.amazonaws.com',  # beanstalk 환경변수 이용
+    #     charset='utf8',  # beanstalk 환경변수 이용
+    #     cursorclass=pymysql.cursors.DictCursor
+    # )
 
     # print("righthand_01 번 유저로 로그인")
-    return db
+    # return db
 
 
 # rfid 태그값 가져오기
