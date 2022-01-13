@@ -144,6 +144,20 @@ sudo crontab -e
 #자정에 재부팅되록 설정
 0 0 * * * /sbin/shutdown -r now
 ```
+
+12. 권한설정 
+- moya 사용자계정만들기
+```bash
+sudo su 
+adduser moya 
+```
+- moya 그룹을 추가하기
+```bash
+sudo su 
+cat /etc/group | grep pi (pi의 그룹확인)
+usermod -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio moya
+```
+
 ## 파일 정보 및 목록 
 - 실행파일
 - 사운드파일
