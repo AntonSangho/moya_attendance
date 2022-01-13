@@ -43,7 +43,7 @@ export PATH="$PATH":/home/pi/.local/bin 						#.bashrc맨 마지막 줄에 path 
 source ~/.bashrc												# .bashrc를 적용해주기
 virtualenv moyavenv 											#moyavenv 만들기기
 source ./moyavenv/bin/activate 									#moyavenv 실행시키기
-pip install -r requirement.txt 									#requirement 설치하기
+pip install -r requirements.txt 									#requirements 설치하기
 sudo apt-get install libatlas-base-dev #numpy issue 해결을 위해 libatlas-base-dev 설치하기
 ```
 4. mfrc522 library 
@@ -72,7 +72,7 @@ sudo cp moya-flask-xx.service /lib/systemd/system/moya-flask-xx.service
 sudo chmod 644 /lib/systemd/system/moya-flask-xx.service #권한설정 변경
 sudo systemctl daemon-reload #변경한것 적용하기
 sudo systemctl enable moya-flask-xx.service #활성화 시키기
-sudo systemctl enable moya-flask-xx.service #재부팅후에도 실행되도록 하기
+sudo systemctl start moya-flask-xx.service #재부팅후에도 실행되도록 하기
 ```
 7. Systemctl - kiosk
 
@@ -157,6 +157,12 @@ sudo su
 cat /etc/group | grep pi (pi의 그룹확인)
 usermod -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio moya
 ```
+- 부팅시 moya계정으로 자동로그인하기
+```bash
+sudo vim /etc/lightdm/lightdm.conf
+```
+ autologin-user=moya 로 변경
+
 
 ## 파일 정보 및 목록 
 - 실행파일
