@@ -158,7 +158,10 @@ sanghoemail@gmail.com
 ## 알려진 버그
 
 ## 문제 발생 해결첵 
-
+- wifi가 잘 안잡한다
+: 사용하려고하는 wifi에 priority 설정한다. (sudo vi /etc/wpa_supplicant/wpa_supplicant.conf)
+- 스크린이 자주 꺼진다.
+: SD카드 불량
 ## 업데이트 정보 
 
 ## 참고
