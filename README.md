@@ -159,7 +159,7 @@ sudo crontab -e
 0 0 * * * /sbin/shutdown -r now
 ```
 
-12. 권한설정 
+12. 권한설정 (이 기능은 kiosk가 지원되지 않으므로 보류)
 - moya 사용자계정만들기
 ```bash
 sudo su 
@@ -196,6 +196,8 @@ sanghoemail@gmail.com
 : 사용하려고하는 wifi에 priority 설정한다. (sudo vi /etc/wpa_supplicant/wpa_supplicant.conf)
 - 스크린이 자주 꺼진다.
 : SD카드 불량
+- 입출입페이지에 구글 번역문구가 뜬다면 '이페이지는 번역안함'으로 변경 
+
 ## 업데이트 정보 
 
 ## 참고
