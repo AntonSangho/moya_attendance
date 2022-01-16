@@ -128,11 +128,25 @@ sudo vim /boot/config.txt
 avoid_warnings=2
 ```
 
-10. 한글깨짐 해결
+10. 지역및 언어설정
 ```doc
 raspi-config 
-set-locale : korean 
-charactor Set :UTF-8 
+- set-locale
+Country : KR (South Korea)
+Character Set : UTF-8
+
+- Timezone 
+Area : Asia
+Location : Seoul
+
+-Keyboard
+Model : Generic 105-key PC (intl.)
+Layout : Korean
+Variant : Korean (101/104 key compatible)
+
+-Wif
+GB (KR 로하면 안되는 문제가 있음)
+
 ```
 
 11. Crontab
