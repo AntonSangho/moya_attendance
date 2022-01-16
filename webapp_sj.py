@@ -84,11 +84,12 @@ def endpoint_rfid_read_exit():
                 #카드의 userid를 가지고 DB에 등록된 name을 가져온다
                 name = get_userinfo_sj(db, userid, rfid_uid)
                 #카드의 userid를 가지고 DB에 등록된 방문횟수와 작업시간을 가져온다.
-                info = get_workingtimeWithUserid_sj(db, userid)
+                #info = get_workingtimeWithUserid_sj(db, userid)
                 rst.append("DB TRUE" if set_exit_sj(db, userid) else "DB FALSE")
                 # 이름이 DB에 등록되어있으면 방문횟수와 작업시간 정보를 가지고 있는다. 
                 if len(name) > 0:
-                    rst.append(info[0])
+                    #rst.append(info[0])
+                    rst.append(name[0])
                 else:
                     rst.append('누구예요?')
                 buzzer_call()
@@ -117,12 +118,13 @@ def endpoint_rfid_read_entry():
                     userid = rst[2]
                 rfid_uid = rst[1]
                 name = get_userinfo_sj(db, userid, rfid_uid)
-                #카드의 userid를 가지고 DB에 등록된 방문횟수와 작업시간을 가져온다.
-                info = get_workingtimeWithUserid_sj(db, userid)
+                # 카드의 userid를 가지고 DB에 등록된 방문횟수와 작업시간을 가져온다.
+                # info = get_workingtimeWithUserid_sj(db, userid)
                 rst.append("DB TRUE" if set_attendance_sj(db, userid) else "DB FALSE")
                 # 이름이 DB에 등록되어있으면 방문횟수와 작업시간 정보를 가지고 있는다.
                 if len(name) > 0:
-                    rst.append(info[0])
+                    #rst.append(info[0])
+                    rst.append(name[0])
                 else:
                     rst.append('누구예요?')
                 buzzer_call()
