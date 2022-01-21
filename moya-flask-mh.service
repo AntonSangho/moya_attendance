@@ -1,12 +1,14 @@
 [Unit]
-Description=maha moya flask application
+Description=Maha flask application
 After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=/usr/bin/python3 /home/pi/moya_attendance/application_mh.py
+ExecStart=/home/pi/moya_attendance/moyavenv/bin/python3 /home/pi/moya_attendance/webapp_mh.py
 WorkingDirectory=/home/pi/moya_attendance
 User=root
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
+
