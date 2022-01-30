@@ -177,6 +177,23 @@ sudo vim /etc/lightdm/lightdm.conf
 ```
  autologin-user=moya 로 변경
 
+ 13. 폰트 설정을 위한 설치 (입출입만 해당)
+ - 설치환경확인
+ node -v 
+ npm -v
+ - nodejs 설치
+```bash
+weget https://nodejs.org/dist/v16.13.2/node-v16.13.2-linux-armv7l.tar.xz
+xz -d node-v16.13.2-linux-armv7l.tar.xz
+tar xvf node-v16.13.2-linux-armv7l.tar
+cd node-v16.13.2-linux-armv7l/
+sudo cp -R * /usr/local/
+```
+- 버전확인으로 설치되었는지 확인 
+- 폰트설치
+```bash
+npm install --save @kfonts/neodgm
+```
 
 ## 파일 정보 및 목록 
 - 실행파일
