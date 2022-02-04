@@ -9,7 +9,7 @@ from wtforms.validators import DataRequired
 from wtforms.fields.html5 import DateField
 from time import sleep
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
-from moya.driver_db import get_userinfo_test, init_connect_db, add_newcard, is_rfid_test, get_rfid_test, get_userinfo_test, set_exit_test, set_attendance_test, get_workingtimeWithUserid_test
+from moya.driver_db import get_userinfo_test, init_connect_db, add_newcard, is_rfid_test, get_rfid_test, get_userinfo_test, set_exit_test, set_attendance_test, get_workingtimeWithUserid_test, get_existence_test
 import logging
 from logging.handlers import RotatingFileHandler
 from logging import Formatter
@@ -118,6 +118,9 @@ def endpoint_rfid_read_entry():
                 else:
                     userid = rst[2]
                 rfid_uid = rst[1]
+                newmemeber = get_existence_test(db, userid)
+                print("newmember:")
+                print(newmemeber)
                 name = get_userinfo_test(db, userid, rfid_uid)
                 #카드의 userid를 가지고 DB에 등록된 방문횟수와 작업시간을 가져온다.
                 info = get_workingtimeWithUserid_test(db, userid)
