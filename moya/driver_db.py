@@ -846,6 +846,18 @@ def get_workingtimeWithUserid_test(db, userid):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0 
 
+# [개발] 작은손 기록여부 확인 (1: 출입기록이 없는 작은손, 0: 출입기록이 있는 작은손)  
+def get_existence_test(db, userid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select not exists (select * from dev_stat_attendance where userid ='{userid}') as value; 
+        """)
+        return cursor.fetchone()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
 #[세종] 작은손의 최대 작업시간, 방문시간, 지금까지 작업시간을 카드id로 확인하기
 def get_workingtimeWithUserid_sj(db, userid):
     try:

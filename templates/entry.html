@@ -10,8 +10,8 @@ background-color: orangered;
 
 
 {% block textContent %}
-document.querySelector('#container').textContent = usercardjson.ps[4].name + " 작은손 변신!!"
-<!-- document.querySelector('#container').textContent = usercardjson.ps[4].name+ " 작은손" + usercardjson.ps[4].visit +"번째 변신!!" -->
+<!-- document.querySelector('#container').textContent = usercardjson.ps[4].name + " 작은손 변신!!" -->
+document.querySelector('#container').textContent = usercardjson.ps[4].name+ " 작은손 " + usercardjson.ps[4].visit +"번째 변신!!"
 <!-- document.querySelector('#container').textContent = usercardjson.ps[4].name+ " 작은손" + "총"+ usercardjson.ps[4].total +"분 작업!!" -->
 
 {% endblock %}
