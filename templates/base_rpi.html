@@ -31,22 +31,25 @@
         #container {
             text-align: center;
             line-height: 400px;
-            min-width: 300px;
+            /* width: 100%; */
+            width: 700px;
+            /* margin-right: -100px; */
+            /* min-width: 300px; */
         }
         #go_webapp {
             text-align: left;
             line-height: 400px;
-            min-width: 200px;
+            min-width: 80px;
         }
 	
 	    #go_exits {
             text-align: left;
             line-height: 400px;
-            min-width: 200px;
+            min-width: 400px;
         }
         body {
             min-width: 400px;
-            font-size:2rem;
+            font-size:2.5rem;
             margin:0;
             min-width: 600px;
             min-height: 100%;
@@ -94,8 +97,9 @@
                             //작은손의 이름이 출력
                             {% block textContent %}
                             {% endblock %}
+                            //입퇴장 버튼으로 돌아가는 스크립트
                             setTimeout(function name(params) {
-                                window.location.href = './webapp';
+                               window.location.href = './webapp';
                             }, 2000);
                         }
                     else {
