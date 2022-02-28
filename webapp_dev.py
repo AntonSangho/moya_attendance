@@ -129,6 +129,9 @@ def endpoint_rfid_read_entry():
                 else:
                     userid = rst[2]
                 rfid_uid = rst[1]
+                newmemeber = get_existence_test(db, userid)
+                print("newmember:")
+                print(newmemeber)
                 name = get_userinfo_test(db, userid, rfid_uid)
                 if len(name) > 0:
                     #등록된 카드일 경우

@@ -1065,6 +1065,18 @@ def get_Workload_test(db):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0 
 
+# [개발] 작은손 기록여부 확인  
+def get_existence_test(db):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        select not exists (select * from dev_stat_attendance where userid ='{userid}') as newmember; 
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
 # [sj] 방문 횟수와 작업시간 가져오는 기능
 def get_workingtime_sj(db, selected_name):
     try:
