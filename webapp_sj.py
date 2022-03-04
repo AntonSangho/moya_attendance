@@ -9,7 +9,7 @@ from wtforms.validators import DataRequired
 from wtforms.fields.html5 import DateField
 from time import sleep
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
-from moya.driver_db import init_connect_db, add_newcard, is_rfid_sj, get_rfid_sj, get_userinfo_sj, set_exit_sj, set_attendance_sj, get_workingtimeWithUserid_sj
+from moya.driver_db import init_connect_db, add_newcard, is_rfid_sj, get_rfid_sj, get_userinfo_sj, set_exit_sj, set_attendance_sj, get_workingtimeWithUserid_sj, get_existence_sj
 import logging
 from logging.handlers import RotatingFileHandler
 from logging import Formatter
@@ -83,14 +83,24 @@ def endpoint_rfid_read_exit():
                 rfid_uid = rst[1]
                 #카드의 userid를 가지고 DB에 등록된 name을 가져온다
                 name = get_userinfo_sj(db, userid, rfid_uid)
-                #카드의 userid를 가지고 DB에 등록된 방문횟수와 작업시간을 가져온다.
-                #info = get_workingtimeWithUserid_sj(db, userid)
-                rst.append("DB TRUE" if set_exit_sj(db, userid) else "DB FALSE")
-                # 이름이 DB에 등록되어있으면 방문횟수와 작업시간 정보를 가지고 있는다. 
                 if len(name) > 0:
-                    #rst.append(info[0])
-                    rst.append(name[0])
+                    #등록된 카드일 경우
+                    data = get_existence_sj(db, userid)
+                    value = int(data['value'])
+                    if value == 1:
+                        #등록은 됬으나 작업이력이 없는 경우
+                        # print("등록은 됬으나 작업이력이 없는 경우")
+                        rst.append("db true" if set_exit_sj(db, userid) else "db false")
+                        rst.append({'name':'처음 온', 'total':'미적용 '})
+                    else:
+                        #등록도 됬고 작업이력이 있는 경우
+                        # print("등록도 됬고 작업이력이 있는 경우")
+                        info = get_workingtimeWithUserid_sj(db, userid)
+                        rst.append("db true" if set_exit_sj(db, userid) else "db false")
+                        rst.append(info[0]) 
                 else:
+                    #등록된 카드가 아닐 경우
+                    rst.append("db true" if set_exit_sj(db, userid) else "db false")
                     rst.append('누구예요?')
                 buzzer_call()
                 time.sleep(0.1)
@@ -117,15 +127,26 @@ def endpoint_rfid_read_entry():
                 else:
                     userid = rst[2]
                 rfid_uid = rst[1]
+                newmemeber = get_existence_sj(db, userid)
                 name = get_userinfo_sj(db, userid, rfid_uid)
-                # 카드의 userid를 가지고 DB에 등록된 방문횟수와 작업시간을 가져온다.
-                # info = get_workingtimeWithUserid_sj(db, userid)
-                rst.append("DB TRUE" if set_attendance_sj(db, userid) else "DB FALSE")
-                # 이름이 DB에 등록되어있으면 방문횟수와 작업시간 정보를 가지고 있는다.
                 if len(name) > 0:
-                    #rst.append(info[0])
-                    rst.append(name[0])
+                    #등록된 카드일 경우
+                    data = get_existence_sj(db, userid)
+                    value = int(data['value'])
+                    if value == 1:
+                        #등록은 됬으나 작업이력이 없는 경우
+                        # print("등록은 됬으나 작업이력이 없는 경우")
+                        rst.append("db true" if set_attendance_sj(db, userid) else "db false")
+                        rst.append({'name':'처음 온', 'visit':'첫 '})
+                    else:
+                        #등록도 됬고 작업이력이 있는 경우
+                        # print("등록도 됬고 작업이력이 있는 경우")
+                        info = get_workingtimeWithUserid_sj(db, userid)
+                        rst.append("db true" if set_attendance_sj(db, userid) else "db false")
+                        rst.append(info[0]) 
                 else:
+                    #등록된 카드가 아닐 경우
+                    rst.append("db true" if set_attendance_sj(db, userid) else "db false")
                     rst.append('누구예요?')
                 buzzer_call()
                 time.sleep(0.1)
