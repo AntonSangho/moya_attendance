@@ -824,28 +824,6 @@ def get_workingtime_test(db, selected_name):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0
 
-#[개발용] 작은손의 최대 작업시간, 방문시간, 지금까지 작업시간을 카드id로 확인하기
-def get_workingtimeWithUserid_test(db, userid):
-    try:
-        cursor = db.cursor()
-        cursor.execute(f"""
-        SELECT  a.id, a.name , 
-                b.* 
-                FROM dev_users a LEFT JOIN 
-                    (SELECT userid, 
-                            max(used_time) AS used, 
-                            count(*) as visit,
-                            sum(used_time) as total 
-                            FROM dev_stat_attendance 
-                            GROUP BY userid) 
-                            b ON a.id = b.userid 
-                            where userid = '{userid}';
-        """)
-        return cursor.fetchall()
-    except pymysql.Error as e:
-        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
-        return 0 
-
 # [개발] 작은손 기록여부 확인 (1: 출입기록이 없는 작은손, 0: 출입기록이 있는 작은손)  
 def get_existence_test(db, userid):
     try:
@@ -918,6 +896,28 @@ def get_existence_sj(db, userid):
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0
 
+#[개발용] 작은손의 최대 작업시간, 방문시간, 지금까지 작업시간을 카드id로 확인하기
+def get_workingtimeWithUserid_test(db, userid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM dev_users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit,
+                            sum(used_time) as total 
+                            FROM dev_stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where userid = '{userid}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
 #[세종] 작은손의 최대 작업시간, 방문시간, 지금까지 작업시간을 카드id로 확인하기
 def get_workingtimeWithUserid_sj(db, userid):
     try:
@@ -939,6 +939,95 @@ def get_workingtimeWithUserid_sj(db, userid):
     except pymysql.Error as e:
         print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
         return 0 
+
+#[반포] 작은손의 최대 작업시간, 방문시간, 지금까지 작업시간을 카드id로 확인하기
+def get_workingtimeWithUserid_bp(db, userid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM bp_users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit,
+                            sum(used_time) as total 
+                            FROM bp_stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where userid = '{userid}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0 
+
+#[수원] 작은손의 최대 작업시간, 방문시간, 지금까지 작업시간을 카드id로 확인하기
+def get_workingtimeWithUserid_sw(db, userid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM sw_users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit,
+                            sum(used_time) as total 
+                            FROM sw_stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where userid = '{userid}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+#[마하] 작은손의 최대 작업시간, 방문시간, 지금까지 작업시간을 카드id로 확인하기
+def get_workingtimeWithUserid_mh(db, userid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM mh_users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit,
+                            sum(used_time) as total 
+                            FROM mh_stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where userid = '{userid}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
+#[제천] 작은손의 최대 작업시간, 방문시간, 지금까지 작업시간을 카드id로 확인하기
+def get_workingtimeWithUserid(db, userid):
+    try:
+        cursor = db.cursor()
+        cursor.execute(f"""
+        SELECT  a.id, a.name , 
+                b.* 
+                FROM users a LEFT JOIN 
+                    (SELECT userid, 
+                            max(used_time) AS used, 
+                            count(*) as visit,
+                            sum(used_time) as total 
+                            FROM stat_attendance 
+                            GROUP BY userid) 
+                            b ON a.id = b.userid 
+                            where userid = '{userid}';
+        """)
+        return cursor.fetchall()
+    except pymysql.Error as e:
+        print("db error pymysql %d: %s" % (e.args[0], e.args[1]))
+        return 0
+
 # [개발] 오픈이후의 방문자 수, 작업시간 
 def get_TotalVisit_test(db):
     try:
