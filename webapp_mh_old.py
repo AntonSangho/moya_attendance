@@ -9,8 +9,7 @@ from wtforms.validators import DataRequired
 from wtforms.fields.html5 import DateField
 from time import sleep
 from moya.driver_rpi import rfid_read, rfid_write, buzzer_call
-from moya.driver_db import init_connect_db, add_newcard, is_rfid_mh, get_rfid_mh, get_userinfo_mh, set_exit_mh, set_attendance_mh, get_workingtimeWithUserid_mh, get_existence_mh
-
+from moya.driver_db import init_connect_db, add_newcard, is_rfid_mh, get_rfid_mh, get_userinfo_mh, set_exit_mh, set_attendance_mh
 import logging
 from logging.handlers import RotatingFileHandler
 from logging import Formatter
@@ -22,6 +21,7 @@ application = Flask(__name__, static_folder="static")
 application.env = 'development'
 application.debug = True
 application.secret_key = '05C18B18FBDBD041342F6D0360523720934514A9C55945E64EA9D13BF74E09E5'  # sha256 str(time.time()) 10분에 한번씩 변경하도록
+
 application.config['HOME_DIR'] = './'
 application.config['LOGGING_LEVEL'] = logging.DEBUG
 application.config['LOGGING_FORMAT'] = '%(asctime)s %(levelname)s: %(message)s in %(filename)s:%(lineno)d]'
@@ -37,7 +37,7 @@ def index():
 @application.route('/newcard')
 def newcard():
     try:
-        return render_template('newcard.html', msg="카드를 대주세요", platform="카드등록")
+        return render_template('newcard.html', msg="카드를 넣어주세요", platform="카드등록")
     except Exception as e:
         return str(e)
 
@@ -55,7 +55,7 @@ def get_conn():
 @application.route('/entry')
 def entry():
     try:
-        return render_template('entry.html', msg="카드를 대주세요", platform="입장")
+        return render_template('entry.html', msg="카드를 넣어주세요", platform="입장")
     except Exception as e:
         return str(e)
 
@@ -63,7 +63,7 @@ def entry():
 @application.route('/exits')
 def exis():
     print(application.env)
-    return render_template('exits.html', msg="카드를 대주세요", platform="퇴장")
+    return render_template('exits.html', msg="카드를 넣어주세요", platform="퇴장")
 
 # 퇴장시 RFID카드와 DB 대조작업
 @application.route('/api/v1.0/exits', methods=['GET'])
@@ -83,24 +83,14 @@ def endpoint_rfid_read_exit():
                 rfid_uid = rst[1]
                 #카드의 userid를 가지고 DB에 등록된 name을 가져온다
                 name = get_userinfo_mh(db, userid, rfid_uid)
+                #카드의 userid를 가지고 DB에 등록된 방문횟수와 작업시간을 가져온다.
+                #info = get_workingtimeWithUserid_mh(db, userid)
+                rst.append("DB TRUE" if set_exit_mh(db, userid) else "DB FALSE")
+                # 이름이 DB에 등록되어있으면 방문횟수와 작업시간 정보를 가지고 있는다. 
                 if len(name) > 0:
-                    #등록된 카드일 경우
-                    data = get_existence_mh(db, userid)
-                    value = int(data['value'])
-                    if value == 1:
-                        #등록은 됬으나 작업이력이 없는 경우
-                        # print("등록은 됬으나 작업이력이 없는 경우")
-                        rst.append("db true" if set_exit_mh(db, userid) else "db false")
-                        rst.append({'name':'처음 온', 'total':'미적용 '})
-                    else:
-                        #등록도 됬고 작업이력이 있는 경우
-                        # print("등록도 됬고 작업이력이 있는 경우")
-                        info = get_workingtimeWithUserid_mh(db, userid)
-                        rst.append("db true" if set_exit_mh(db, userid) else "db false")
-                        rst.append(info[0]) 
+                    #rst.append(info[0])
+                    rst.append(name[0])
                 else:
-                    #등록된 카드가 아닐 경우
-                    rst.append("db true" if set_exit_mh(db, userid) else "db false")
                     rst.append('누구예요?')
                 buzzer_call()
                 time.sleep(0.1)
@@ -127,26 +117,15 @@ def endpoint_rfid_read_entry():
                 else:
                     userid = rst[2]
                 rfid_uid = rst[1]
-                newmemeber = get_existence_mh(db, userid)
                 name = get_userinfo_mh(db, userid, rfid_uid)
+                # 카드의 userid를 가지고 DB에 등록된 방문횟수와 작업시간을 가져온다.
+                # info = get_workingtimeWithUserid_mh(db, userid)
+                rst.append("DB TRUE" if set_attendance_mh(db, userid) else "DB FALSE")
+                # 이름이 DB에 등록되어있으면 방문횟수와 작업시간 정보를 가지고 있는다.
                 if len(name) > 0:
-                    #등록된 카드일 경우
-                    data = get_existence_mh(db, userid)
-                    value = int(data['value'])
-                    if value == 1:
-                        #등록은 됬으나 작업이력이 없는 경우
-                        # print("등록은 됬으나 작업이력이 없는 경우")
-                        rst.append("db true" if set_attendance_mh(db, userid) else "db false")
-                        rst.append({'name':'처음 온', 'visit':'첫 '})
-                    else:
-                        #등록도 됬고 작업이력이 있는 경우
-                        # print("등록도 됬고 작업이력이 있는 경우")
-                        info = get_workingtimeWithUserid_mh(db, userid)
-                        rst.append("db true" if set_attendance_mh(db, userid) else "db false")
-                        rst.append(info[0]) 
+                    #rst.append(info[0])
+                    rst.append(name[0])
                 else:
-                    #등록된 카드가 아닐 경우
-                    rst.append("db true" if set_attendance_mh(db, userid) else "db false")
                     rst.append('누구예요?')
                 buzzer_call()
                 time.sleep(0.1)

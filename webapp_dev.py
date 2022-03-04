@@ -33,7 +33,6 @@ application.config['LOGGING_BACKUP_COUNT'] = 1000
 def index():
     return render_template('webapp.html', platform="개발용")
 
-
 @application.route('/newcard')
 def newcard():
     try:
@@ -51,7 +50,6 @@ def get_conn():
         return init_connect_db(3)
     else:
         return init_connect_db(4)
-
 # 입장시 RFID카드를 인식하는 페이지
 @application.route('/entry')
 def entry():
