@@ -21,7 +21,6 @@ application = Flask(__name__, static_folder="static")
 application.env = 'development'
 application.debug = True
 application.secret_key = '05C18B18FBDBD041342F6D0360523720934514A9C55945E64EA9D13BF74E09E5'  # sha256 str(time.time()) 10분에 한번씩 변경하도록
-
 application.config['HOME_DIR'] = './'
 application.config['LOGGING_LEVEL'] = logging.DEBUG
 application.config['LOGGING_FORMAT'] = '%(asctime)s %(levelname)s: %(message)s in %(filename)s:%(lineno)d]'
