@@ -32,7 +32,7 @@ application.config['LOGGING_BACKUP_COUNT'] = 1000
 
 @application.route('/webapp')
 def index():
-    return render_template('webapp.html', platform="진주마하어린이도서관")
+    return render_template('webapp.html', platform="수원바른샘어린이도서관")
 
 @application.route('/newcard')
 def newcard():
