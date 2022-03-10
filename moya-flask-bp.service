@@ -7,6 +7,7 @@ Type=idle
 ExecStart=/home/pi/moya_attendance/moyavenv/bin/python3 /home/pi/moya_attendance/webapp_bp.py
 WorkingDirectory=/home/pi/moya_attendance
 User=root
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
