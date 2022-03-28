@@ -189,6 +189,9 @@ reliquum
 ## 배포자 및 개발자 연락처 
 sanghoemail@gmail.com 
 
+## 도메인 설정하는 법
+[reliquum2f 구글문서](https://docs.google.com/document/d/1G01aJYVy00cNOCsVkcytjtPJx3K8cd0Q550Ket_e2tY/edit?usp=sharing)
+
 ## 알려진 버그
 
 ## 문제 발생 해결첵 
