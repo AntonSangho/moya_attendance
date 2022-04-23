@@ -126,20 +126,21 @@ def login():
             # 개발용 : moyatest
             if (hashlib.sha256(pp.encode()).hexdigest().upper() == 'FCE5456D8F30FDC0940346C271A04BA301F345A99CBADA3A615B65C11F532908'):
                 session['reliquum'] = "active"
+                #session['reliquum'] = "moyatest"
                 db = init_connect_db(5);
                 res = make_response(redirect('./test/inputdateform'))
                 res.set_cookie('conn', '5', max_age=60 * 60 * 24 * 365 * 2)
                 return res
-            
-            # 반포도서관: banpomoya 
+
+            # 반포도서관: banpomoya
             if (hashlib.sha256(pp.encode()).hexdigest().upper() == 'CDC9A45EDD7164E9E13218ADC08885CEB1C450D5F6C8DDEC63260C5DE9E21710'):
                 session['reliquum'] = "active"
                 db = init_connect_db(6);
                 res = make_response(redirect('./bp/inputdateform'))
                 res.set_cookie('conn', '6', max_age=60 * 60 * 24 * 365 * 2)
                 return res
-             
-            # 세종시립도서관: sejongmoya 
+
+            # 세종시립도서관: sejongmoya
             if (hashlib.sha256(pp.encode()).hexdigest().upper() == '3972C29350A5FBD7B9BFE767B52EF88492A7332B542CCA643DF5463A53B4AB05'):
                 session['reliquum'] = "active"
                 db = init_connect_db(7);
@@ -147,27 +148,27 @@ def login():
                 res.set_cookie('conn', '7', max_age=60 * 60 * 24 * 365 * 2)
                 return res
             else:
-                return render_template('login_error.html')   
-            """ 
+                return render_template('login_error.html')
+            """
             # 도서관추가
-            # 도서관이름: 도서관영어이름 
+            # 도서관이름: 도서관영어이름
             if (hashlib.sha256(pp.encode()).hexdigest().upper() == 'CDC9A45EDD7164E9E13218ADC08885CEB1C450D5F6C8DDEC63260C5DE9E21710'):
                 session['reliquum'] = "active"
                 db = init_connect_db(마지막숫자);
                 res = make_response(redirect('./알파벳약자/inputdateform'))
                 res.set_cookie('conn', '마지막숫자', max_age=60 * 60 * 24 * 365 * 2)
                 return res
-            else: 
+            else:
                 return render_template('login_error.html')
             """
         except:
             return render_template('login.html')
 
-@application.route('/webapp')
-def index():
-    # print(application.env)
-    return render_template('webapp.html', platform="제천기적의도서관")
-
+#@application.route('/webapp')
+#def index():
+#    # print(application.env)
+#    return render_template('webapp.html', platform="제천기적의도서관")
+#
 
 # YouTube embedded page
 @application.route('/intro')
@@ -183,72 +184,74 @@ def intro2():
     return render_template('intro-s.html', platform="")
 
 
-# 입장시 RFID카드를 인식하는 페이지
-@application.route('/entry')
-def entry():
-    try:
-        # print(application.env)
-        # global blocking
-        # blocking = False
-        return render_template('entry.html', msg="카드를 원에 대주세요", platform="입장")
-    except Exception as e:
-        return str(e)
-
-@application.route('/newcard')
-def newcard():
-    try:
-        # print(application.env)
-        # global blocking
-        # blocking = False
-        return render_template('newcard.html', msg="카드를 원에 대주세요", platform="카드등록")
-    except Exception as e:
-        return str(e)
-
+## 입장시 RFID카드를 인식하는 페이지
+#@application.route('/entry')
+#def entry():
+#    try:
+#        # print(application.env)
+#        # global blocking
+#        # blocking = False
+#        return render_template('entry.html', msg="카드를 원에 대주세요", platform="입장")
+#    except Exception as e:
+#        return str(e)
+#
+#@application.route('/newcard')
+#def newcard():
+#    try:
+#        # print(application.env)
+#        # global blocking
+#        # blocking = False
+#        return render_template('newcard.html', msg="카드를 원에 대주세요", platform="카드등록")
+#    except Exception as e:
+#        return str(e)
+#
 def get_conn():
     conn = request.cookies.get('conn')
-    if conn == "1": 
-        return init_connect_db(1) #제천기적의도서관 
+    if conn == "1":
+        return init_connect_db(1) #제천기적의도서관
     elif conn == "2":
-        return init_connect_db(2) #진주마하도서관  
+        return init_connect_db(2) #진주마하도서관
     elif conn == "3":
         return init_connect_db(3) #관리자계정페이지
     elif conn == "4":
-        return init_connect_db(4) #수원바른샘도서관 
+        return init_connect_db(4) #수원바른샘도서관
     elif conn == "5":
-        return init_connect_db(5) #개발용 
+        return init_connect_db(5) #개발용
     elif conn == "6":
         return init_connect_db(6) #반포도서관
-    else: 
-        return init_connect_db(7) #세종시립도서관
-    """ 
-    ##도서관추가 
     else:
-        return init_connect_db(#) #도서관이름 
+        return init_connect_db(7) #세종시립도서관
+    """
+    ##도서관추가
+    else:
+        return init_connect_db(#) #도서관이름
     """
 
 
 # 총괄 관리자 페이지
-@application.route('/admin')
-def admin():
-    print(application.env)
-    user = {'name': '관리자'}
-    print('admin')
-    if 'reliquum' in session:
-        on_active = session['reliquum']
-        return render_template('admin.html', title='관리자', user=user)
-    return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
-
+#@application.route('/admin')
+#def admin():
+#    print(application.env)
+#    user = {'name': '관리자'}
+#    print('admin')
+#    if 'reliquum' in session:
+#        on_active = session['reliquum']
+#        return render_template('admin.html', title='관리자', user=user)
+#    return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
+#
 
 # adminmoya관리 페이지
 @application.route('/adminmoya')
 def adminmoya():
-    print(application.env)
+    #print(application.env)
     user = {'name': '관리자'}
-    print('admin')
+    #print('admin')
     if 'reliquum' in session:
         on_active = session['reliquum']
         return render_template('adminmoya.html', title='관리자', user=user)
-    return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
+    #return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
+    else:
+        return redirect(url_for('login'))
 
 
 # 현재 사용자를 확인하는 페이지
@@ -276,8 +279,8 @@ def userlist():
     if request.method == 'POST':
         df = pd.DataFrame(get_userdetail(db))
         output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
         response = Response(
             output.getvalue(),
             mimetype="text/csv",
@@ -322,8 +325,8 @@ def userlist_mh():
     if request.method == 'POST':
         df = pd.DataFrame(get_userdetail_mh(db))
         output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
         response = Response(
             output.getvalue(),
             mimetype="text/csv",
@@ -369,8 +372,8 @@ def userlist_sw():
     if request.method == 'POST':
         df = pd.DataFrame(get_userdetail_sw(db))
         output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
         response = Response(
             output.getvalue(),
             mimetype="text/csv",
@@ -385,7 +388,7 @@ def userlist_sw():
 
     else:
         return redirect(url_for('sw/auth'))
-    
+
 # [개발용] 현재 사용자를 확인하는 페이지
 @application.route('/test/userlist', methods=['GET', 'POST'])
 def userlist_test():
@@ -415,8 +418,8 @@ def userlist_test():
     if request.method == 'POST':
         df = pd.DataFrame(get_userdetail_test(db))
         output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
         response = Response(
             output.getvalue(),
             mimetype="text/csv",
@@ -461,8 +464,8 @@ def userlist_bp():
     if request.method == 'POST':
         df = pd.DataFrame(get_userdetail_bp(db))
         output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
         response = Response(
             output.getvalue(),
             mimetype="text/csv",
@@ -507,8 +510,8 @@ def userlist_xx():
     if request.method == 'POST':
         df = pd.DataFrame(get_userdetail_sj(db))
         output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
         response = Response(
             output.getvalue(),
             mimetype="text/csv",
@@ -871,7 +874,7 @@ def aftermodify(username):
                     'id': dbuser['id'],
                     'name': dbuser['name'],
                     'userid': dbuser['userid'],
-                    'used': dbuser['used'], 
+                    'used': dbuser['used'],
                     'visit': dbuser['visit'],
                     'total': dbuser['total']
                 }
@@ -929,12 +932,12 @@ def aftermodify_mh(username):
                     'id': dbuser['id'],
                     'name': dbuser['name'],
                     'userid': dbuser['userid'],
-                    'used': dbuser['used'], 
+                    'used': dbuser['used'],
                     'visit': dbuser['visit'],
                     'total': dbuser['total']
                 }
             }
-            userworking.append(user_time)   
+            userworking.append(user_time)
         if len(userlist_info) == 0:
             return """<h2>해당사용자는 아직 개인정보가 없습니다.</h2>
                         <script>
@@ -987,7 +990,7 @@ def aftermodify_sw(username):
                     'id': dbuser['id'],
                     'name': dbuser['name'],
                     'userid': dbuser['userid'],
-                    'used': dbuser['used'], 
+                    'used': dbuser['used'],
                     'visit': dbuser['visit'],
                     'total': dbuser['total']
                 }
@@ -1042,7 +1045,7 @@ def aftermodify_test(username):
                     'id': dbuser['id'],
                     'name': dbuser['name'],
                     'userid': dbuser['userid'],
-                    'used': dbuser['used'], 
+                    'used': dbuser['used'],
                     'visit': dbuser['visit'],
                     'total': dbuser['total']
                 }
@@ -1098,7 +1101,7 @@ def aftermodify_bp(username):
                     'id': dbuser['id'],
                     'name': dbuser['name'],
                     'userid': dbuser['userid'],
-                    'used': dbuser['used'], 
+                    'used': dbuser['used'],
                     'visit': dbuser['visit'],
                     'total': dbuser['total']
                 }
@@ -1153,7 +1156,7 @@ def aftermodify_sj(username):
                     'id': dbuser['id'],
                     'name': dbuser['name'],
                     'userid': dbuser['userid'],
-                    'used': dbuser['used'], 
+                    'used': dbuser['used'],
                     'visit': dbuser['visit'],
                     'total': dbuser['total']
                 }
@@ -1180,7 +1183,7 @@ def modify(username):
         user_info = {
             'info': {
                 'id': dbuser['id'],
-                'name': dbuser['name'], 
+                'name': dbuser['name'],
                 'sex': dbuser['sex'],
                 'phone': dbuser['phone'],
                 'year': dbuser['year'],
@@ -1199,7 +1202,7 @@ def modify(username):
         if set_modify(db, selected_name, modifyname, sex, year, phone, memo):
             return redirect(url_for('aftermodify', username=modifyname))
         return render_template('update.html', username=username, user=user, user_info=user_info,
-                               userlist_info=userlist_info) 
+                               userlist_info=userlist_info)
 
 ## [마하도서관] 수정하는 기능
 @application.route('/mh/userinfo/<username>', methods=['POST', 'GET'])
@@ -1212,7 +1215,7 @@ def modify_mh(username):
         user_info = {
             'info': {
                 'id': dbuser['id'],
-                'name': dbuser['name'], 
+                'name': dbuser['name'],
                 'sex': dbuser['sex'],
                 'phone': dbuser['phone'],
                 'year': dbuser['year'],
@@ -1231,7 +1234,7 @@ def modify_mh(username):
         if set_modify_mh(db, selected_name, modifyname, sex, year, phone, memo):
             return redirect(url_for('aftermodify_mh', username=modifyname))
         return render_template('update_mh.html', username=username, user=user, user_info=user_info,
-                               userlist_info=userlist_info) 
+                               userlist_info=userlist_info)
 ## [수원바른샘] 수정하는 기능
 @application.route('/sw/userinfo/<username>', methods=['POST', 'GET'])
 def modify_sw(username):
@@ -1243,7 +1246,7 @@ def modify_sw(username):
         user_info = {
             'info': {
                 'id': dbuser['id'],
-                'name': dbuser['name'], 
+                'name': dbuser['name'],
                 'sex': dbuser['sex'],
                 'phone': dbuser['phone'],
                 'year': dbuser['year'],
@@ -1262,7 +1265,7 @@ def modify_sw(username):
         if set_modify_sw(db, selected_name, modifyname, sex, year, phone, memo):
             return redirect(url_for('aftermodify_sw', username=modifyname))
         return render_template('update_sw.html', username=username, user=user, user_info=user_info,
-                               userlist_info=userlist_info) 
+                               userlist_info=userlist_info)
 ## [개발용] 수정하는 기능
 @application.route('/test/userinfo/<username>', methods=['POST', 'GET'])
 def modify_test(username):
@@ -1274,7 +1277,7 @@ def modify_test(username):
         user_info = {
             'info': {
                 'id': dbuser['id'],
-                'name': dbuser['name'], 
+                'name': dbuser['name'],
                 'sex': dbuser['sex'],
                 'phone': dbuser['phone'],
                 'year': dbuser['year'],
@@ -1293,7 +1296,7 @@ def modify_test(username):
         if set_modify_test(db, selected_name, modifyname, sex, year, phone, memo):
             return redirect(url_for('aftermodify_test', username=modifyname))
         return render_template('update_test.html', username=username, user=user, user_info=user_info,
-                               userlist_info=userlist_info) 
+                               userlist_info=userlist_info)
 
 ## [반포도서관] 수정하는 기능
 @application.route('/bp/userinfo/<username>', methods=['POST', 'GET'])
@@ -1306,7 +1309,7 @@ def modify_bp(username):
         user_info = {
             'info': {
                 'id': dbuser['id'],
-                'name': dbuser['name'], 
+                'name': dbuser['name'],
                 'sex': dbuser['sex'],
                 'phone': dbuser['phone'],
                 'year': dbuser['year'],
@@ -1325,7 +1328,7 @@ def modify_bp(username):
         if set_modify_bp(db, selected_name, modifyname, sex, year, phone, memo):
             return redirect(url_for('aftermodify_bp', username=modifyname))
         return render_template('update_bp.html', username=username, user=user, user_info=user_info,
-                               userlist_info=userlist_info) 
+                               userlist_info=userlist_info)
 
 ## [세종시립도서관] 수정하는 기능
 @application.route('/sj/userinfo/<username>', methods=['POST', 'GET'])
@@ -1337,7 +1340,7 @@ def modify_sj(username):
         user_info = {
             'info': {
                 'id': dbuser['id'],
-                'name': dbuser['name'], 
+                'name': dbuser['name'],
                 'sex': dbuser['sex'],
                 'phone': dbuser['phone'],
                 'year': dbuser['year'],
@@ -1356,7 +1359,7 @@ def modify_sj(username):
         if set_modify_sj(db, selected_name, modifyname, sex, year, phone, memo):
             return redirect(url_for('aftermodify_sj', username=modifyname))
         return render_template('update_sj.html', username=username, user=user, user_info=user_info,
-                               userlist_info=userlist_info) 
+                               userlist_info=userlist_info)
 
 # 자료받기 원하는 구간을 정하기
 @application.route('/daterange', methods=['GET', 'POST'])
@@ -1372,8 +1375,8 @@ def daterange():
         db = get_conn()
         df = pd.DataFrame(get_RangeAttendance(db, StartDate, EndDate))
         output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
         response = Response(
             output.getvalue(),
             mimetype="text/csv",
@@ -1400,8 +1403,8 @@ def daterange_mh():
         db = get_conn()
         df = pd.DataFrame(get_RangeAttendance_mh(db, StartDate, EndDate))
         output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
         response = Response(
             output.getvalue(),
             mimetype="text/csv",
@@ -1428,8 +1431,8 @@ def daterange_sw():
         db = get_conn()
         df = pd.DataFrame(get_RangeAttendance_sw(db, StartDate, EndDate))
         output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
         response = Response(
             output.getvalue(),
             mimetype="text/csv",
@@ -1455,8 +1458,8 @@ def daterange_test():
         db = get_conn()
         df = pd.DataFrame(get_RangeAttendance_test(db, StartDate, EndDate))
         output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
         response = Response(
             output.getvalue(),
             mimetype="text/csv",
@@ -1482,8 +1485,8 @@ def daterange_bp():
         db = get_conn()
         df = pd.DataFrame(get_RangeAttendance_bp(db, StartDate, EndDate))
         output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
         response = Response(
             output.getvalue(),
             mimetype="text/csv",
@@ -1506,9 +1509,9 @@ def daterange_sj():
         db = get_conn()
         df = pd.DataFrame(get_RangeAttendance_sj(db, StartDate, EndDate))
         output = StringIO()
-        
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기 
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기 
+
+        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
         response = Response(
             output.getvalue(),
             mimetype="text/csv",
@@ -1663,48 +1666,53 @@ def inputdateform_sw():
 # [개발용] 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/test/inputdateform', methods=['GET', 'POST'])
 def inputdateform_test():
-    form = DateForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            filterdate = form.dt.data.strftime('%Y-%m-%d')
+    #session이 moyatest일 때 접속가능
+    if 'reliquum' in session:
+        print("session="+session["reliquum"])
+        form = DateForm()
+        if request.method == 'POST':
+            if form.validate_on_submit():
+                filterdate = form.dt.data.strftime('%Y-%m-%d')
+            else:
+                return redirect('/test/inputdateform')
+            user = {'name': '관리자'}
+            db = get_conn()
+            userlist = []
+            #print(filterdate)
+            for dbuser in get_dayattendance_test(db, filterdate):
+                user = {
+                    'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                                'exits': dbuser['exits'], 'used': dbuser['used']}
+                }
+                userlist.append(user)
+
+            #print('test_attendace' + str(userlist))
+            if len(userlist) == 0:
+                return """<h2>해당날짜에는 기록이 없습니다.</h2>
+                <script>
+                setTimeout(function(){
+                    history.back()
+                }, 3000);
+                </script>"""
+
+            return render_template('daylist_test.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
+            # return '''<h1>{}</h1>'''.format(filterdate)
         else:
-            return redirect('/test/inputdateform')
-        user = {'name': '관리자'}
-        db = get_conn()
-        userlist = []
-        print(filterdate)
-        for dbuser in get_dayattendance_test(db, filterdate):
-            user = {
-                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-                            'exits': dbuser['exits'], 'used': dbuser['used']}
-            }
-            userlist.append(user)
-
-        print('test_attendace' + str(userlist))
-        if len(userlist) == 0:
-            return """<h2>해당날짜에는 기록이 없습니다.</h2>
-            <script>
-            setTimeout(function(){
-                history.back()
-            }, 3000);
-            </script>"""
-
-        return render_template('daylist_test.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
-        # return '''<h1>{}</h1>'''.format(filterdate)
+            today = datetime.date.today()
+            #print(today)
+            user = {'name': '관리자'}
+            db = get_conn()
+            userlist = []
+            for dbuser in get_dayattendance_test(db, today):
+                user = {
+                    'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                                'exits': dbuser['exits'], 'used': dbuser['used']}
+                }
+                userlist.append(user)
+                #print(user)
+            return render_template('todaytable_test.html', user=user, userlist=userlist, title='도서관현황판', platform="",form=form)
     else:
-        today = datetime.date.today()
-        print(today)
-        user = {'name': '관리자'}
-        db = get_conn()
-        userlist = []
-        for dbuser in get_dayattendance_test(db, today):
-            user = {
-                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-                            'exits': dbuser['exits'], 'used': dbuser['used']}
-            }
-            userlist.append(user)
-            print(user)
-        return render_template('todaytable_test.html', user=user, userlist=userlist, title='도서관현황판', platform="",form=form)
+        return redirect(url_for('login'))
 
 # [반포도서관] 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/bp/inputdateform', methods=['GET', 'POST'])
@@ -1794,9 +1802,9 @@ def inputdateform_sj():
 # 관리자 로그아웃시 index로 이동하는 페이지
 @application.route('/logout')
 def logout():
-    # print(application.env)
     session.pop('reliquum', None)
-    return redirect(url_for('index'))
+    #return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
 # 회원 신규 등록 페이지
@@ -2162,7 +2170,7 @@ def endpoint_rfid_read():
         print("error", e)
         return abort(500)
     return jsonify({'ps': rfid_uid, 'uid': uid})
-    
+
 #[개발용] 통계페이지
 @application.route("/test/statistics")
 def statistics_test():
@@ -2272,28 +2280,28 @@ def statistics_test():
             }
         }
         Workload_info.append(Workload)
-    return render_template('statistics_test.html', 
-                            user=user, 
-                            title='관리자', 
-                            form=form, 
-                            TotalVisit_info=TotalVisit_info, 
-                            TotalVisit=TotalVisit, 
-                            WeekendVisit_info=WeekendVisit_info, 
+    return render_template('statistics_test.html',
+                            user=user,
+                            title='관리자',
+                            form=form,
+                            TotalVisit_info=TotalVisit_info,
+                            TotalVisit=TotalVisit,
+                            WeekendVisit_info=WeekendVisit_info,
                             WeekendVisit=WeekendVisit,
-                            WeekVisit_info=WeekVisit_info, 
+                            WeekVisit_info=WeekVisit_info,
                             WeekVisit=WeekVisit,
-                            LastMonthVisit_info=LastMonthVisit_info, 
+                            LastMonthVisit_info=LastMonthVisit_info,
                             LastMonthVisit=LastMonthVisit,
-                            LastWeekVisit_info=LastWeekVisit_info, 
+                            LastWeekVisit_info=LastWeekVisit_info,
                             LastWeekVisit=LastWeekVisit,
-                            NewMember_info=NewMember_info, 
+                            NewMember_info=NewMember_info,
                             NewMember=NewMember,
                             Member_info=Member_info,
                             Member=Member,
                             often_info=often_info,
                             often=often,
                             Workload_info=Workload_info,
-                            Workload=Workload) 
+                            Workload=Workload)
 
 #[세종시립도서관] 통계페이지
 @application.route("/sj/statistics")
@@ -2306,7 +2314,7 @@ def statistics_sj():
         TotalVisit = {
             'info': {
                 'frequency':dbuser['frequency'],
-                'time':dbuser['time'] 
+                'time':dbuser['time']
             }
         }
         TotalVisit_info.append(TotalVisit)
@@ -2404,28 +2412,28 @@ def statistics_sj():
             }
         }
         Workload_info.append(Workload)
-    return render_template('statistics_sj.html', 
-                            user=user, 
-                            title='관리자', 
-                            form=form, 
-                            TotalVisit_info=TotalVisit_info, 
-                            TotalVisit=TotalVisit, 
-                            WeekendVisit_info=WeekendVisit_info, 
+    return render_template('statistics_sj.html',
+                            user=user,
+                            title='관리자',
+                            form=form,
+                            TotalVisit_info=TotalVisit_info,
+                            TotalVisit=TotalVisit,
+                            WeekendVisit_info=WeekendVisit_info,
                             WeekendVisit=WeekendVisit,
-                            WeekVisit_info=WeekVisit_info, 
+                            WeekVisit_info=WeekVisit_info,
                             WeekVisit=WeekVisit,
-                            LastMonthVisit_info=LastMonthVisit_info, 
+                            LastMonthVisit_info=LastMonthVisit_info,
                             LastMonthVisit=LastMonthVisit,
-                            LastWeekVisit_info=LastWeekVisit_info, 
+                            LastWeekVisit_info=LastWeekVisit_info,
                             LastWeekVisit=LastWeekVisit,
-                            NewMember_info=NewMember_info, 
+                            NewMember_info=NewMember_info,
                             NewMember=NewMember,
                             Member_info=Member_info,
                             Member=Member,
                             often_info=often_info,
                             often=often,
                             Workload_info=Workload_info,
-                            Workload=Workload) 
+                            Workload=Workload)
 
 #[반포도서관] 통계페이지
 @application.route("/bp/statistics")
@@ -2536,28 +2544,28 @@ def statistics_bp():
             }
         }
         Workload_info.append(Workload)
-    return render_template('statistics_bp.html', 
-                            user=user, 
-                            title='관리자', 
-                            form=form, 
-                            TotalVisit_info=TotalVisit_info, 
-                            TotalVisit=TotalVisit, 
-                            WeekendVisit_info=WeekendVisit_info, 
+    return render_template('statistics_bp.html',
+                            user=user,
+                            title='관리자',
+                            form=form,
+                            TotalVisit_info=TotalVisit_info,
+                            TotalVisit=TotalVisit,
+                            WeekendVisit_info=WeekendVisit_info,
                             WeekendVisit=WeekendVisit,
-                            WeekVisit_info=WeekVisit_info, 
+                            WeekVisit_info=WeekVisit_info,
                             WeekVisit=WeekVisit,
-                            LastMonthVisit_info=LastMonthVisit_info, 
+                            LastMonthVisit_info=LastMonthVisit_info,
                             LastMonthVisit=LastMonthVisit,
-                            LastWeekVisit_info=LastWeekVisit_info, 
+                            LastWeekVisit_info=LastWeekVisit_info,
                             LastWeekVisit=LastWeekVisit,
-                            NewMember_info=NewMember_info, 
+                            NewMember_info=NewMember_info,
                             NewMember=NewMember,
                             Member_info=Member_info,
                             Member=Member,
                             often_info=often_info,
                             often=often,
                             Workload_info=Workload_info,
-                            Workload=Workload) 
+                            Workload=Workload)
 
 #[수원바른샘도서관] 통계페이지
 @application.route("/sw/statistics")
@@ -2668,21 +2676,21 @@ def statistics_sw():
             }
         }
         Workload_info.append(Workload)
-    return render_template('statistics_sw.html', 
-                            user=user, 
-                            title='관리자', 
-                            form=form, 
-                            TotalVisit_info=TotalVisit_info, 
-                            TotalVisit=TotalVisit, 
-                            WeekendVisit_info=WeekendVisit_info, 
+    return render_template('statistics_sw.html',
+                            user=user,
+                            title='관리자',
+                            form=form,
+                            TotalVisit_info=TotalVisit_info,
+                            TotalVisit=TotalVisit,
+                            WeekendVisit_info=WeekendVisit_info,
                             WeekendVisit=WeekendVisit,
-                            WeekVisit_info=WeekVisit_info, 
+                            WeekVisit_info=WeekVisit_info,
                             WeekVisit=WeekVisit,
-                            LastMonthVisit_info=LastMonthVisit_info, 
+                            LastMonthVisit_info=LastMonthVisit_info,
                             LastMonthVisit=LastMonthVisit,
-                            LastWeekVisit_info=LastWeekVisit_info, 
+                            LastWeekVisit_info=LastWeekVisit_info,
                             LastWeekVisit=LastWeekVisit,
-                            NewMember_info=NewMember_info, 
+                            NewMember_info=NewMember_info,
                             NewMember=NewMember,
                             Member_info=Member_info,
                             Member=Member,
@@ -2800,21 +2808,21 @@ def statistics_mh():
             }
         }
         Workload_info.append(Workload)
-    return render_template('statistics_mh.html', 
-                            user=user, 
-                            title='관리자', 
-                            form=form, 
-                            TotalVisit_info=TotalVisit_info, 
-                            TotalVisit=TotalVisit, 
-                            WeekendVisit_info=WeekendVisit_info, 
+    return render_template('statistics_mh.html',
+                            user=user,
+                            title='관리자',
+                            form=form,
+                            TotalVisit_info=TotalVisit_info,
+                            TotalVisit=TotalVisit,
+                            WeekendVisit_info=WeekendVisit_info,
                             WeekendVisit=WeekendVisit,
-                            WeekVisit_info=WeekVisit_info, 
+                            WeekVisit_info=WeekVisit_info,
                             WeekVisit=WeekVisit,
-                            LastMonthVisit_info=LastMonthVisit_info, 
+                            LastMonthVisit_info=LastMonthVisit_info,
                             LastMonthVisit=LastMonthVisit,
-                            LastWeekVisit_info=LastWeekVisit_info, 
+                            LastWeekVisit_info=LastWeekVisit_info,
                             LastWeekVisit=LastWeekVisit,
-                            NewMember_info=NewMember_info, 
+                            NewMember_info=NewMember_info,
                             NewMember=NewMember,
                             Member_info=Member_info,
                             Member=Member,
@@ -2932,21 +2940,21 @@ def statistics():
             }
         }
         Workload_info.append(Workload)
-    return render_template('statistics.html', 
-                            user=user, 
-                            title='관리자', 
-                            form=form, 
-                            TotalVisit_info=TotalVisit_info, 
-                            TotalVisit=TotalVisit, 
-                            WeekendVisit_info=WeekendVisit_info, 
+    return render_template('statistics.html',
+                            user=user,
+                            title='관리자',
+                            form=form,
+                            TotalVisit_info=TotalVisit_info,
+                            TotalVisit=TotalVisit,
+                            WeekendVisit_info=WeekendVisit_info,
                             WeekendVisit=WeekendVisit,
-                            WeekVisit_info=WeekVisit_info, 
+                            WeekVisit_info=WeekVisit_info,
                             WeekVisit=WeekVisit,
-                            LastMonthVisit_info=LastMonthVisit_info, 
+                            LastMonthVisit_info=LastMonthVisit_info,
                             LastMonthVisit=LastMonthVisit,
-                            LastWeekVisit_info=LastWeekVisit_info, 
+                            LastWeekVisit_info=LastWeekVisit_info,
                             LastWeekVisit=LastWeekVisit,
-                            NewMember_info=NewMember_info, 
+                            NewMember_info=NewMember_info,
                             NewMember=NewMember,
                             Member_info=Member_info,
                             Member=Member,
