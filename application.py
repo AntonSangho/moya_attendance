@@ -257,137 +257,135 @@ def adminmoya():
 # 현재 사용자를 확인하는 페이지
 @application.route('/userlist', methods=['GET', 'POST'])
 def userlist():
-    # print(application.env)
-    user = {'name': '관리자'}
-    userlist = []
-    db = get_conn()
-    for dbuser in get_userdetail(db):
-        user = {
-            'profile': {'id': dbuser['id'],
-                        'name': dbuser['name'],
-                        'rfid': dbuser['rfid'],
-                        'sex': dbuser['sex'],
-                        'phone': dbuser['phone'],
-                        'year': dbuser['year'],
-                        'memo': dbuser['memo']
-                        },
-            'status': '입장중',
-            'is': True
-        }
-        userlist.append(user)
-    print(request.method)
-    if request.method == 'POST':
-        df = pd.DataFrame(get_userdetail(db))
-        output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
-        response = Response(
-            output.getvalue(),
-            mimetype="text/csv",
-            content_type='application/octet-strem',
-        )
-        #csv_data = df.to_csv(index='false', encoding='utf-8')
-        #response = Response(csv_data, mimetype='text/csv')
-        response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
-        return response
     if 'reliquum' in session:
+        # print(application.env)
+        user = {'name': '관리자'}
+        userlist = []
+        db = get_conn()
+        for dbuser in get_userdetail(db):
+            user = {
+                'profile': {'id': dbuser['id'],
+                            'name': dbuser['name'],
+                            'rfid': dbuser['rfid'],
+                            'sex': dbuser['sex'],
+                            'phone': dbuser['phone'],
+                            'year': dbuser['year'],
+                            'memo': dbuser['memo']
+                            },
+                'status': '입장중',
+                'is': True
+            }
+            userlist.append(user)
+        print(request.method)
+        if request.method == 'POST':
+            df = pd.DataFrame(get_userdetail(db))
+            output = StringIO()
+            output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+            df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
+            response = Response(
+                output.getvalue(),
+                mimetype="text/csv",
+                content_type='application/octet-strem',
+            )
+            #csv_data = df.to_csv(index='false', encoding='utf-8')
+            #response = Response(csv_data, mimetype='text/csv')
+            response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
+            return response
         return render_template('userlist.html', title='도서관현황판', user=user, userlist=userlist)
     else:
-        return redirect(url_for('auth'))
+        return redirect(url_for('login'))
 
 
 # [마하도서관] 현재 사용자를 확인하는 페이지
 @application.route('/mh/userlist', methods=['GET', 'POST'])
 def userlist_mh():
-    # print(application.env)
-    user = {'name': '관리자'}
-    userlist = []
-    db = get_conn()
-    get_userdetail(db)
-    # return 'f<h1>dd</h1>'
-    for dbuser in get_userdetail_mh(db):
-        user = {
-            'profile': {'id': dbuser['id'],
-                        'name': dbuser['name'],
-                        'rfid': dbuser['rfid'],
-                        'sex': dbuser['sex'],
-                        'phone': dbuser['phone'],
-                        'year': dbuser['year'],
-                        'memo': dbuser['memo']
-                        },
-            'status': '입장중',
-            'is': True
-        }
-        userlist.append(user)
-
-    # print(userlist)
-    print(request.method)
-    if request.method == 'POST':
-        df = pd.DataFrame(get_userdetail_mh(db))
-        output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
-        response = Response(
-            output.getvalue(),
-            mimetype="text/csv",
-            content_type='application/octet-strem',
-        )
-        #csv_data = df.to_csv(index='false', encoding='utf-8')
-        #response = Response(csv_data, mimetype='text/csv')
-        response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
-        return response
     if 'reliquum' in session:
-        return render_template('userlist_mh.html', title='도서관현황판', user=user, userlist=userlist)
+        # print(application.env)
+        user = {'name': '관리자'}
+        userlist = []
+        db = get_conn()
+        get_userdetail(db)
+        # return 'f<h1>dd</h1>'
+        for dbuser in get_userdetail_mh(db):
+            user = {
+                'profile': {'id': dbuser['id'],
+                            'name': dbuser['name'],
+                            'rfid': dbuser['rfid'],
+                            'sex': dbuser['sex'],
+                            'phone': dbuser['phone'],
+                            'year': dbuser['year'],
+                            'memo': dbuser['memo']
+                            },
+                'status': '입장중',
+                'is': True
+            }
+            userlist.append(user)
 
+        # print(userlist)
+        print(request.method)
+        if request.method == 'POST':
+            df = pd.DataFrame(get_userdetail_mh(db))
+            output = StringIO()
+            output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+            df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
+            response = Response(
+                output.getvalue(),
+                mimetype="text/csv",
+                content_type='application/octet-strem',
+            )
+            #csv_data = df.to_csv(index='false', encoding='utf-8')
+            #response = Response(csv_data, mimetype='text/csv')
+            response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
+            return response
+        return render_template('userlist_mh.html', title='도서관현황판', user=user, userlist=userlist)
     else:
-        return redirect(url_for('mh/auth'))
+        return redirect(url_for('login'))
 
 
 # [바른샘도서관] 현재 사용자를 확인하는 페이지
 @application.route('/sw/userlist', methods=['GET', 'POST'])
 def userlist_sw():
-    # print(application.env)
-    user = {'name': '관리자'}
-    userlist = []
-    db = get_conn()
-    get_userdetail(db)
-    # return 'f<h1>dd</h1>'
-    for dbuser in get_userdetail_sw(db):
-        user = {
-            'profile': {'id': dbuser['id'],
-                        'name': dbuser['name'],
-                        'rfid': dbuser['rfid'],
-                        'sex': dbuser['sex'],
-                        'phone': dbuser['phone'],
-                        'year': dbuser['year'],
-                        'memo': dbuser['memo']
-                        },
-            'status': '입장중',
-            'is': True
-        }
-        userlist.append(user)
-
-    # print(userlist)
-    print(request.method)
-    if request.method == 'POST':
-        df = pd.DataFrame(get_userdetail_sw(db))
-        output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
-        response = Response(
-            output.getvalue(),
-            mimetype="text/csv",
-            content_type='application/octet-strem',
-        )
-        #csv_data = df.to_csv(index='false', encoding='utf-8')
-        #response = Response(csv_data, mimetype='text/csv')
-        response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
-        return response
     if 'reliquum' in session:
-        return render_template('userlist_sw.html', title='도서관현황판', user=user, userlist=userlist)
+        # print(application.env)
+        user = {'name': '관리자'}
+        userlist = []
+        db = get_conn()
+        get_userdetail(db)
+        # return 'f<h1>dd</h1>'
+        for dbuser in get_userdetail_sw(db):
+            user = {
+                'profile': {'id': dbuser['id'],
+                            'name': dbuser['name'],
+                            'rfid': dbuser['rfid'],
+                            'sex': dbuser['sex'],
+                            'phone': dbuser['phone'],
+                            'year': dbuser['year'],
+                            'memo': dbuser['memo']
+                            },
+                'status': '입장중',
+                'is': True
+            }
+            userlist.append(user)
 
+        # print(userlist)
+        print(request.method)
+        if request.method == 'POST':
+            df = pd.DataFrame(get_userdetail_sw(db))
+            output = StringIO()
+            output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+            df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
+            response = Response(
+                output.getvalue(),
+                mimetype="text/csv",
+                content_type='application/octet-strem',
+            )
+            #csv_data = df.to_csv(index='false', encoding='utf-8')
+            #response = Response(csv_data, mimetype='text/csv')
+            response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
+            return response
+        return render_template('userlist_sw.html', title='도서관현황판', user=user, userlist=userlist)
     else:
-        return redirect(url_for('sw/auth'))
+        return redirect(url_for('login'))
 
 # [개발용] 현재 사용자를 확인하는 페이지
 @application.route('/test/userlist', methods=['GET', 'POST'])
@@ -434,446 +432,412 @@ def userlist_test():
     else:
         return redirect(url_for('login'))
 
-#    # print(application.env)
-#    user = {'name': '관리자'}
-#    userlist = []
-#    db = get_conn()
-#    get_userdetail(db)
-#    # return 'f<h1>dd</h1>'
-#    for dbuser in get_userdetail_test(db):
-#        user = {
-#            'profile': {'id': dbuser['id'],
-#                        'name': dbuser['name'],
-#                        'rfid': dbuser['rfid'],
-#                        'sex': dbuser['sex'],
-#                        'phone': dbuser['phone'],
-#                        'year': dbuser['year'],
-#                        'memo': dbuser['memo']
-#                        },
-#            'status': '입장중',
-#            'is': True
-#        }
-#        userlist.append(user)
-#
-#    # print(userlist)
-#    print(request.method)
-#    if request.method == 'POST':
-#        df = pd.DataFrame(get_userdetail_test(db))
-#        output = StringIO()
-#        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
-#        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
-#        response = Response(
-#            output.getvalue(),
-#            mimetype="text/csv",
-#            content_type='application/octet-strem',
-#        )
-#        #csv_data = df.to_csv(index='false', encoding='utf-8')
-#        #response = Response(csv_data, mimetype='text/csv')
-#        response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
-#        return response
-#    return render_template('userlist_test.html', title='도서관현황판', user=user, userlist=userlist)
-    #if 'reliquum' in session:
-    #    return render_template('userlist_test.html', title='도서관현황판', user=user, userlist=userlist)
-    #else:
-    #    return redirect(url_for('test/auth'))
-
 # [반포도서관] 현재 사용자를 확인하는 페이지
 @application.route('/bp/userlist', methods=['GET', 'POST'])
 def userlist_bp():
-    # print(application.env)
-    user = {'name': '관리자'}
-    userlist = []
-    db = get_conn()
-    get_userdetail(db)
-    # return 'f<h1>dd</h1>'
-    for dbuser in get_userdetail_bp(db):
-        user = {
-            'profile': {'id': dbuser['id'],
-                        'name': dbuser['name'],
-                        'rfid': dbuser['rfid'],
-                        'sex': dbuser['sex'],
-                        'phone': dbuser['phone'],
-                        'year': dbuser['year'],
-                        'memo': dbuser['memo']
-                        },
-            'status': '입장중',
-            'is': True
-        }
-        userlist.append(user)
-
-    # print(userlist)
-    # print(request.method)
-    if request.method == 'POST':
-        df = pd.DataFrame(get_userdetail_bp(db))
-        output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
-        response = Response(
-            output.getvalue(),
-            mimetype="text/csv",
-            content_type='application/octet-strem',
-        )
-        #csv_data = df.to_csv(index='false', encoding='utf-8')
-        #response = Response(csv_data, mimetype='text/csv')
-        response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
-        return response
     if 'reliquum' in session:
-        return render_template('userlist_bp.html', title='도서관현황판', user=user, userlist=userlist)
+        # print(application.env)
+        user = {'name': '관리자'}
+        userlist = []
+        db = get_conn()
+        get_userdetail(db)
+        # return 'f<h1>dd</h1>'
+        for dbuser in get_userdetail_bp(db):
+            user = {
+                'profile': {'id': dbuser['id'],
+                            'name': dbuser['name'],
+                            'rfid': dbuser['rfid'],
+                            'sex': dbuser['sex'],
+                            'phone': dbuser['phone'],
+                            'year': dbuser['year'],
+                            'memo': dbuser['memo']
+                            },
+                'status': '입장중',
+                'is': True
+            }
+            userlist.append(user)
 
+        # print(userlist)
+        # print(request.method)
+        if request.method == 'POST':
+            df = pd.DataFrame(get_userdetail_bp(db))
+            output = StringIO()
+            output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+            df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
+            response = Response(
+                output.getvalue(),
+                mimetype="text/csv",
+                content_type='application/octet-strem',
+            )
+            #csv_data = df.to_csv(index='false', encoding='utf-8')
+            #response = Response(csv_data, mimetype='text/csv')
+            response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
+            return response
+        return render_template('userlist_bp.html', title='도서관현황판', user=user, userlist=userlist)
     else:
-        return redirect(url_for('bp/auth'))
+        return redirect(url_for('login'))
 
 # [세종시립도서관] 현재 사용자를 확인하는 페이지
 @application.route('/sj/userlist', methods=['GET', 'POST'])
 def userlist_xx():
-    # print(application.env)
-    user = {'name': '관리자'}
-    userlist = []
-    db = get_conn()
-    get_userdetail(db)
-    # return 'f<h1>dd</h1>'
-    for dbuser in get_userdetail_sj(db):
-        user = {
-            'profile': {'id': dbuser['id'],
-                        'name': dbuser['name'],
-                        'rfid': dbuser['rfid'],
-                        'sex': dbuser['sex'],
-                        'phone': dbuser['phone'],
-                        'year': dbuser['year'],
-                        'memo': dbuser['memo']
-                        },
-            'status': '입장중',
-            'is': True
-        }
-        userlist.append(user)
-
-    # print(userlist)
-    # print(request.method)
-    if request.method == 'POST':
-        df = pd.DataFrame(get_userdetail_sj(db))
-        output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
-        response = Response(
-            output.getvalue(),
-            mimetype="text/csv",
-            content_type='application/octet-strem',
-        )
-        #csv_data = df.to_csv(index='false', encoding='utf-8')
-        #response = Response(csv_data, mimetype='text/csv')
-        response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
-        return response
     if 'reliquum' in session:
-        return render_template('userlist_sj.html', title='도서관현황판', user=user, userlist=userlist)
+        # print(application.env)
+        user = {'name': '관리자'}
+        userlist = []
+        db = get_conn()
+        get_userdetail(db)
+        # return 'f<h1>dd</h1>'
+        for dbuser in get_userdetail_sj(db):
+            user = {
+                'profile': {'id': dbuser['id'],
+                            'name': dbuser['name'],
+                            'rfid': dbuser['rfid'],
+                            'sex': dbuser['sex'],
+                            'phone': dbuser['phone'],
+                            'year': dbuser['year'],
+                            'memo': dbuser['memo']
+                            },
+                'status': '입장중',
+                'is': True
+            }
+            userlist.append(user)
 
+        # print(userlist)
+        # print(request.method)
+        if request.method == 'POST':
+            df = pd.DataFrame(get_userdetail_sj(db))
+            output = StringIO()
+            output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+            df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
+            response = Response(
+                output.getvalue(),
+                mimetype="text/csv",
+                content_type='application/octet-strem',
+            )
+            #csv_data = df.to_csv(index='false', encoding='utf-8')
+            #response = Response(csv_data, mimetype='text/csv')
+            response.headers.set("Content-Disposition", "attachment", filename="userlist.csv")
+            return response
+        return render_template('userlist_sj.html', title='도서관현황판', user=user, userlist=userlist)
     else:
-        return redirect(url_for('sj/auth'))
+        return redirect(url_for('login'))
 
 # 사용자를 확인하는 페이지
 @application.route('/userinfo', methods=['GET', 'POST'])
 def userinfo():
-    if request.method == 'GET':
-        abort(403, '잘못된 접근입니다.')
-    # print("######" + str(request.form))
-    if request.method == 'POST':
-        selected_name = request.form['name']
-        user = {'name': '관리자'}
-        # db = init_connect_db()
-        db = get_conn()
-        userlist = []
-        for dbuser in get_userattendance(db, selected_name):
-            user = {
-                'profile': {'userid': dbuser['userid'],
-                            'name': dbuser['name'],
-                            'entry': dbuser['entry'],
-                            'exits': dbuser['exits'],
-                            'used': dbuser['used']
-                            }
-            }
-            userlist.append(user)
-        # print(user)
-        userlist_info = []
-        for dbuser in get_userselectdetail(db, selected_name):
-            user_info = {
-                'info': {
-                    'id': dbuser['id'],
-                    'sex': dbuser['sex'],
-                    'phone': dbuser['phone'],
-                    'year': dbuser['year'],
-                    'memo': dbuser['memo']
+    if 'reliquum' in session:
+        if request.method == 'GET':
+            abort(403, '잘못된 접근입니다.')
+        # print("######" + str(request.form))
+        if request.method == 'POST':
+            selected_name = request.form['name']
+            user = {'name': '관리자'}
+            # db = init_connect_db()
+            db = get_conn()
+            userlist = []
+            for dbuser in get_userattendance(db, selected_name):
+                user = {
+                    'profile': {'userid': dbuser['userid'],
+                                'name': dbuser['name'],
+                                'entry': dbuser['entry'],
+                                'exits': dbuser['exits'],
+                                'used': dbuser['used']
+                                }
                 }
-            }
-            userlist_info.append(user_info)
-        # print(user_info)
-        # print('****' + selected_name)
-        # print(userlist)
-        # print(userlist_info)
-        if len(userlist_info) == 0:
-            return """<h2>해당사용자는 기록이 없습니다.</h2>
-                        <script>
-                        setTimeout(function(){
-                            history.back()
-                        }, 3000);
-                        </script>"""
-        return render_template('userinfo.html', title='검색', user=user, userlist=userlist, user_info=user_info,
-                               userlist_info=userlist_info)
-
+                userlist.append(user)
+            # print(user)
+            userlist_info = []
+            for dbuser in get_userselectdetail(db, selected_name):
+                user_info = {
+                    'info': {
+                        'id': dbuser['id'],
+                        'sex': dbuser['sex'],
+                        'phone': dbuser['phone'],
+                        'year': dbuser['year'],
+                        'memo': dbuser['memo']
+                    }
+                }
+                userlist_info.append(user_info)
+            # print(user_info)
+            # print('****' + selected_name)
+            # print(userlist)
+            # print(userlist_info)
+            if len(userlist_info) == 0:
+                return """<h2>해당사용자는 기록이 없습니다.</h2>
+                            <script>
+                            setTimeout(function(){
+                                history.back()
+                            }, 3000);
+                            </script>"""
+            return render_template('userinfo.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+                                   userlist_info=userlist_info)
+        else:
+            return f"<h1>not selected</h1>"
     else:
-        return f"<h1>not selected</h1>"
-
+        return redirect(url_for('login'))
 
 # [마하도서관] 사용자를 확인하는 페이지
 @application.route('/mh/userinfo', methods=['GET', 'POST'])
 def userinfo_mh():
-    if request.method == 'GET':
-        abort(403, '잘못된 접근입니다.')
-    # print("######" + str(request.form))
-    if request.method == 'POST':
-        selected_name = request.form['name']
-        user = {'name': '관리자'}
-        # db = init_connect_db()
-        db = get_conn()
-        userlist = []
-        for dbuser in get_userattendance_mh(db, selected_name):
-            user = {
-                'profile': {'userid': dbuser['userid'],
-                            'name': dbuser['name'],
-                            'entry': dbuser['entry'],
-                            'exits': dbuser['exits'],
-                            'used': dbuser['used']
-                            }
-            }
-            userlist.append(user)
-        # print(user)
-        userlist_info = []
-        for dbuser in get_userselectdetail_mh(db, selected_name):
-            user_info = {
-                'info': {
-                    'id': dbuser['id'],
-                    'sex': dbuser['sex'],
-                    'phone': dbuser['phone'],
-                    'year': dbuser['year'],
-                    'memo': dbuser['memo']
+    if 'reliquum' in session:
+        if request.method == 'GET':
+            abort(403, '잘못된 접근입니다.')
+        # print("######" + str(request.form))
+        if request.method == 'POST':
+            selected_name = request.form['name']
+            user = {'name': '관리자'}
+            # db = init_connect_db()
+            db = get_conn()
+            userlist = []
+            for dbuser in get_userattendance_mh(db, selected_name):
+                user = {
+                    'profile': {'userid': dbuser['userid'],
+                                'name': dbuser['name'],
+                                'entry': dbuser['entry'],
+                                'exits': dbuser['exits'],
+                                'used': dbuser['used']
+                                }
                 }
-            }
-            userlist_info.append(user_info)
-        # print(user_info)
-        # print('****' + selected_name)
-        # print(userlist)
-        # print(userlist_info)
-        if len(userlist_info) == 0:
-            return """<h2>해당사용자는 기록이 없습니다.</h2>
-                        <script>
-                        setTimeout(function(){
-                            history.back()
-                        }, 3000);
-                        </script>"""
-        return render_template('userinfo_mh.html', title='검색', user=user, userlist=userlist, user_info=user_info,
-                               userlist_info=userlist_info)
-
+                userlist.append(user)
+            # print(user)
+            userlist_info = []
+            for dbuser in get_userselectdetail_mh(db, selected_name):
+                user_info = {
+                    'info': {
+                        'id': dbuser['id'],
+                        'sex': dbuser['sex'],
+                        'phone': dbuser['phone'],
+                        'year': dbuser['year'],
+                        'memo': dbuser['memo']
+                    }
+                }
+                userlist_info.append(user_info)
+            # print(user_info)
+            # print('****' + selected_name)
+            # print(userlist)
+            # print(userlist_info)
+            if len(userlist_info) == 0:
+                return """<h2>해당사용자는 기록이 없습니다.</h2>
+                            <script>
+                            setTimeout(function(){
+                                history.back()
+                            }, 3000);
+                            </script>"""
+            return render_template('userinfo_mh.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+                                   userlist_info=userlist_info)
+        else:
+            return f"<h1>not selected</h1>"
     else:
-        return f"<h1>not selected</h1>"
-
+        return redirect(url_for('login'))
 
 # [바른샘도서관] 사용자를 확인하는 페이지
 @application.route('/sw/userinfo', methods=['GET', 'POST'])
 def userinfo_sw():
-    if request.method == 'GET':
-        abort(403, '잘못된 접근입니다.')
-    # print("######" + str(request.form))
-    if request.method == 'POST':
-        selected_name = request.form['name']
-        user = {'name': '관리자'}
-        # db = init_connect_db()
-        db = get_conn()
-        userlist = []
-        for dbuser in get_userattendance_sw(db, selected_name):
-            user = {
-                'profile': {'userid': dbuser['userid'],
-                            'name': dbuser['name'],
-                            'entry': dbuser['entry'],
-                            'exits': dbuser['exits'],
-                            'used': dbuser['used']
-                            }
-            }
-            userlist.append(user)
-        # print(user)
-        userlist_info = []
-        for dbuser in get_userselectdetail_sw(db, selected_name):
-            user_info = {
-                'info': {
-                    'id': dbuser['id'],
-                    'sex': dbuser['sex'],
-                    'phone': dbuser['phone'],
-                    'year': dbuser['year'],
-                    'memo': dbuser['memo']
+    if 'reliquum' in session:
+        if request.method == 'GET':
+            abort(403, '잘못된 접근입니다.')
+        # print("######" + str(request.form))
+        if request.method == 'POST':
+            selected_name = request.form['name']
+            user = {'name': '관리자'}
+            # db = init_connect_db()
+            db = get_conn()
+            userlist = []
+            for dbuser in get_userattendance_sw(db, selected_name):
+                user = {
+                    'profile': {'userid': dbuser['userid'],
+                                'name': dbuser['name'],
+                                'entry': dbuser['entry'],
+                                'exits': dbuser['exits'],
+                                'used': dbuser['used']
+                                }
                 }
-            }
-            userlist_info.append(user_info)
-        # print(user_info)
-        # print('****' + selected_name)
-        # print(userlist)
-        # print(userlist_info)
-        if len(userlist_info) == 0:
-            return """<h2>해당사용자는 기록이 없습니다.</h2>
-                        <script>
-                        setTimeout(function(){
-                            history.back()
-                        }, 3000);
-                        </script>"""
-        return render_template('userinfo_sw.html', title='검색', user=user, userlist=userlist, user_info=user_info,
-                               userlist_info=userlist_info)
-
+                userlist.append(user)
+            # print(user)
+            userlist_info = []
+            for dbuser in get_userselectdetail_sw(db, selected_name):
+                user_info = {
+                    'info': {
+                        'id': dbuser['id'],
+                        'sex': dbuser['sex'],
+                        'phone': dbuser['phone'],
+                        'year': dbuser['year'],
+                        'memo': dbuser['memo']
+                    }
+                }
+                userlist_info.append(user_info)
+            # print(user_info)
+            # print('****' + selected_name)
+            # print(userlist)
+            # print(userlist_info)
+            if len(userlist_info) == 0:
+                return """<h2>해당사용자는 기록이 없습니다.</h2>
+                            <script>
+                            setTimeout(function(){
+                                history.back()
+                            }, 3000);
+                            </script>"""
+            return render_template('userinfo_sw.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+                                   userlist_info=userlist_info)
+        else:
+            return f"<h1>not selected</h1>"
     else:
-        return f"<h1>not selected</h1>"
+        return redirect(url_for('login'))
 
 # [개발용] 사용자를 확인하는 페이지
 @application.route('/test/userinfo', methods=['GET', 'POST'])
 def userinfo_test():
-    if request.method == 'GET':
-        abort(403, '잘못된 접근입니다.')
-    # print("######" + str(request.form))
-    if request.method == 'POST':
-        selected_name = request.form['name']
-        user = {'name': '관리자'}
-        # db = init_connect_db()
-        db = get_conn()
-        userlist = []
-        for dbuser in get_userattendance_test(db, selected_name):
-            user = {
-                'profile': {'userid': dbuser['userid'],
-                            'name': dbuser['name'],
-                            'entry': dbuser['entry'],
-                            'exits': dbuser['exits'],
-                            'used': dbuser['used']
-                            }
-            }
-            userlist.append(user)
-        # print(user)
-        userlist_info = []
-        for dbuser in get_userselectdetail_test(db, selected_name):
-            user_info = {
-                'info': {
-                    'id': dbuser['id'],
-                    'sex': dbuser['sex'],
-                    'phone': dbuser['phone'],
-                    'year': dbuser['year'],
-                    'memo': dbuser['memo']
+    if 'reliquum' in session:
+        if request.method == 'GET':
+            abort(403, '잘못된 접근입니다.')
+        # print("######" + str(request.form))
+        if request.method == 'POST':
+            selected_name = request.form['name']
+            user = {'name': '관리자'}
+            # db = init_connect_db()
+            db = get_conn()
+            userlist = []
+            for dbuser in get_userattendance_test(db, selected_name):
+                user = {
+                    'profile': {'userid': dbuser['userid'],
+                                'name': dbuser['name'],
+                                'entry': dbuser['entry'],
+                                'exits': dbuser['exits'],
+                                'used': dbuser['used']
+                                }
                 }
-            }
-            userlist_info.append(user_info)
-        # print(user_info)
-        # print('****' + selected_name)
-        # print(userlist)
-        # print(userlist_info)
-        if len(userlist_info) == 0:
-            return """<h2>해당사용자는 기록이 없습니다.</h2>
-                        <script>
-                        setTimeout(function(){
-                            history.back()
-                        }, 3000);
-                        </script>"""
-        return render_template('userinfo_test.html', title='검색', user=user, userlist=userlist, user_info=user_info,
-                               userlist_info=userlist_info)
-
+                userlist.append(user)
+            # print(user)
+            userlist_info = []
+            for dbuser in get_userselectdetail_test(db, selected_name):
+                user_info = {
+                    'info': {
+                        'id': dbuser['id'],
+                        'sex': dbuser['sex'],
+                        'phone': dbuser['phone'],
+                        'year': dbuser['year'],
+                        'memo': dbuser['memo']
+                    }
+                }
+                userlist_info.append(user_info)
+            # print(user_info)
+            # print('****' + selected_name)
+            # print(userlist)
+            # print(userlist_info)
+            if len(userlist_info) == 0:
+                return """<h2>해당사용자는 기록이 없습니다.</h2>
+                            <script>
+                            setTimeout(function(){
+                                history.back()
+                            }, 3000);
+                            </script>"""
+            return render_template('userinfo_test.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+                                   userlist_info=userlist_info)
+        else:
+            return f"<h1>not selected</h1>"
     else:
-        return f"<h1>not selected</h1>"
+        return redirect(url_for('login'))
 
 # [반포도서관] 사용자를 확인하는 페이지
 @application.route('/bp/userinfo', methods=['GET', 'POST'])
 def userinfo_bp():
-    if request.method == 'GET':
-        abort(403, '잘못된 접근입니다.')
-    # print("######" + str(request.form))
-    if request.method == 'POST':
-        selected_name = request.form['name']
-        user = {'name': '관리자'}
-        # db = init_connect_db()
-        db = get_conn()
-        userlist = []
-        for dbuser in get_userattendance_bp(db, selected_name):
-            user = {
-                'profile': {'userid': dbuser['userid'],
-                            'name': dbuser['name'],
-                            'entry': dbuser['entry'],
-                            'exits': dbuser['exits'],
-                            'used': dbuser['used']
-                            }
-            }
-            userlist.append(user)
-        # print(user)
-        userlist_info = []
-        for dbuser in get_userselectdetail_bp(db, selected_name):
-            user_info = {
-                'info': {
-                    'id': dbuser['id'],
-                    'sex': dbuser['sex'],
-                    'phone': dbuser['phone'],
-                    'year': dbuser['year'],
-                    'memo': dbuser['memo']
+    if 'reliquum' in session:
+        if request.method == 'GET':
+            abort(403, '잘못된 접근입니다.')
+        # print("######" + str(request.form))
+        if request.method == 'POST':
+            selected_name = request.form['name']
+            user = {'name': '관리자'}
+            # db = init_connect_db()
+            db = get_conn()
+            userlist = []
+            for dbuser in get_userattendance_bp(db, selected_name):
+                user = {
+                    'profile': {'userid': dbuser['userid'],
+                                'name': dbuser['name'],
+                                'entry': dbuser['entry'],
+                                'exits': dbuser['exits'],
+                                'used': dbuser['used']
+                                }
                 }
-            }
-            userlist_info.append(user_info)
-        # print(user_info)
-        # print('****' + selected_name)
-        # print(userlist)
-        # print(userlist_info)
-        if len(userlist_info) == 0:
-            return """<h2>해당사용자는 기록이 없습니다.</h2>
-                        <script>
-                        setTimeout(function(){
-                            history.back()
-                        }, 3000);
-                        </script>"""
-        return render_template('userinfo_bp.html', title='검색', user=user, userlist=userlist, user_info=user_info,
-                               userlist_info=userlist_info)
-
+                userlist.append(user)
+            # print(user)
+            userlist_info = []
+            for dbuser in get_userselectdetail_bp(db, selected_name):
+                user_info = {
+                    'info': {
+                        'id': dbuser['id'],
+                        'sex': dbuser['sex'],
+                        'phone': dbuser['phone'],
+                        'year': dbuser['year'],
+                        'memo': dbuser['memo']
+                    }
+                }
+                userlist_info.append(user_info)
+            # print(user_info)
+            # print('****' + selected_name)
+            # print(userlist)
+            # print(userlist_info)
+            if len(userlist_info) == 0:
+                return """<h2>해당사용자는 기록이 없습니다.</h2>
+                            <script>
+                            setTimeout(function(){
+                                history.back()
+                            }, 3000);
+                            </script>"""
+            return render_template('userinfo_bp.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+                                   userlist_info=userlist_info)
+        else:
+            return f"<h1>not selected</h1>"
     else:
-        return f"<h1>not selected</h1>"
+        return redirect(url_for('login'))
 
 # [세종시립도서관] 사용자를 확인하는 페이지
 @application.route('/sj/userinfo', methods=['GET', 'POST'])
 def userinfo_sj():
-    if request.method == 'GET':
-        abort(403, '잘못된 접근입니다.')
-    if request.method == 'POST':
-        selected_name = request.form['name']
-        user = {'name': '관리자'}
-        db = get_conn()
-        userlist = []
-        for dbuser in get_userattendance_sj(db, selected_name):
-            user = {
-                'profile': {'userid': dbuser['userid'],
-                            'name': dbuser['name'],
-                            'entry': dbuser['entry'],
-                            'exits': dbuser['exits'],
-                            'used': dbuser['used']
-                            }
-            }
-            userlist.append(user)
-        userlist_info = []
-        for dbuser in get_userselectdetail_sj(db, selected_name):
-            user_info = {
-                'info': {
-                    'id': dbuser['id'],
-                    'sex': dbuser['sex'],
-                    'phone': dbuser['phone'],
-                    'year': dbuser['year'],
-                    'memo': dbuser['memo']
+    if 'reliquum' in session:
+        if request.method == 'GET':
+            abort(403, '잘못된 접근입니다.')
+        if request.method == 'POST':
+            selected_name = request.form['name']
+            user = {'name': '관리자'}
+            db = get_conn()
+            userlist = []
+            for dbuser in get_userattendance_sj(db, selected_name):
+                user = {
+                    'profile': {'userid': dbuser['userid'],
+                                'name': dbuser['name'],
+                                'entry': dbuser['entry'],
+                                'exits': dbuser['exits'],
+                                'used': dbuser['used']
+                                }
                 }
-            }
-            userlist_info.append(user_info)
-        if len(userlist_info) == 0:
-            return """<h2>해당사용자는 기록이 없습니다.</h2>
-                        <script>
-                        setTimeout(function(){
-                            history.back()
-                        }, 3000);
-                        </script>"""
-        return render_template('userinfo_sj.html', title='검색', user=user, userlist=userlist, user_info=user_info,
-                               userlist_info=userlist_info)
+                userlist.append(user)
+            userlist_info = []
+            for dbuser in get_userselectdetail_sj(db, selected_name):
+                user_info = {
+                    'info': {
+                        'id': dbuser['id'],
+                        'sex': dbuser['sex'],
+                        'phone': dbuser['phone'],
+                        'year': dbuser['year'],
+                        'memo': dbuser['memo']
+                    }
+                }
+                userlist_info.append(user_info)
+            if len(userlist_info) == 0:
+                return """<h2>해당사용자는 기록이 없습니다.</h2>
+                            <script>
+                            setTimeout(function(){
+                                history.back()
+                            }, 3000);
+                            </script>"""
+            return render_template('userinfo_sj.html', title='검색', user=user, userlist=userlist, user_info=user_info,
+                                   userlist_info=userlist_info)
+        else:
+            return f"<h1>not selected</h1>"
     else:
-        return f"<h1>not selected</h1>"
+        return redirect(url_for('login'))
 
 # @application.route('/userinfo/userinfo/<username>', methods=['POST', 'GET'])
 # def fixed_url(username):
