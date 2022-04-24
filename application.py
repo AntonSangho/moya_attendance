@@ -1948,41 +1948,44 @@ def inputdateform_bp():
 # [세종시립도서관] 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/sj/inputdateform', methods=['GET', 'POST'])
 def inputdateform_sj():
-    form = DateForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            filterdate = form.dt.data.strftime('%Y-%m-%d')
+    if 'reliquum' in session:
+        form = DateForm()
+        if request.method == 'POST':
+            if form.validate_on_submit():
+                filterdate = form.dt.data.strftime('%Y-%m-%d')
+            else:
+                return redirect('/bp/inputdateform')
+            user = {'name': '관리자'}
+            db = get_conn()
+            userlist = []
+            for dbuser in get_dayattendance_sj(db, filterdate):
+                user = {
+                    'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                                'exits': dbuser['exits'], 'used': dbuser['used']}
+                }
+                userlist.append(user)
+            if len(userlist) == 0:
+                return """<h2>해당날짜에는 기록이 없습니다.</h2>
+                <script>
+                setTimeout(function(){
+                    history.back()
+                }, 3000);
+                </script>"""
+            return render_template('daylist_sj.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
         else:
-            return redirect('/bp/inputdateform')
-        user = {'name': '관리자'}
-        db = get_conn()
-        userlist = []
-        for dbuser in get_dayattendance_sj(db, filterdate):
-            user = {
-                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-                            'exits': dbuser['exits'], 'used': dbuser['used']}
-            }
-            userlist.append(user)
-        if len(userlist) == 0:
-            return """<h2>해당날짜에는 기록이 없습니다.</h2>
-            <script>
-            setTimeout(function(){
-                history.back()
-            }, 3000);
-            </script>"""
-        return render_template('daylist_sj.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
+            today = datetime.date.today()
+            user = {'name': '관리자'}
+            db = get_conn()
+            userlist = []
+            for dbuser in get_dayattendance_sj(db, today):
+                user = {
+                    'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                                'exits': dbuser['exits'], 'used': dbuser['used']}
+                }
+                userlist.append(user)
+            return render_template('todaytable_sj.html', user=user, userlist=userlist, title='도서관현황판', platform="",form=form)
     else:
-        today = datetime.date.today()
-        user = {'name': '관리자'}
-        db = get_conn()
-        userlist = []
-        for dbuser in get_dayattendance_sj(db, today):
-            user = {
-                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-                            'exits': dbuser['exits'], 'used': dbuser['used']}
-            }
-            userlist.append(user)
-        return render_template('todaytable_sj.html', user=user, userlist=userlist, title='도서관현황판', platform="",form=form)
+        return redirect(url_for('login'))
 
 # 관리자 로그아웃시 index로 이동하는 페이지
 @application.route('/logout')
