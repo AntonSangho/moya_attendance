@@ -1524,49 +1524,96 @@ def daterange_sj():
 # 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/inputdateform', methods=['GET', 'POST'])
 def inputdateform():
-    form = DateForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            filterdate = form.dt.data.strftime('%Y-%m-%d')
+    if 'reliquum' in session:
+        form = DateForm()
+        if request.method == 'POST':
+            if form.validate_on_submit():
+                filterdate = form.dt.data.strftime('%Y-%m-%d')
+            else:
+                return redirect('/inputdateform')
+            user = {'name': '관리자'}
+            db = get_conn()
+            userlist = []
+            print(filterdate)
+            for dbuser in get_dayattendance(db, filterdate):
+                user = {
+                    'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                                'exits': dbuser['exits'], 'used': dbuser['used']}
+                }
+                userlist.append(user)
+
+            print('###379' + str(userlist))
+            if len(userlist) == 0:
+                return """<h2>해당날짜에는 기록이 없습니다.</h2>
+                <script>
+                setTimeout(function(){
+                    history.back()
+                }, 3000);
+                </script>"""
+
+            return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
+            # return '''<h1>{}</h1>'''.format(filterdate)
         else:
-            return redirect('/inputdateform')
-        user = {'name': '관리자'}
-        db = get_conn()
-        userlist = []
-        print(filterdate)
-        for dbuser in get_dayattendance(db, filterdate):
-            user = {
-                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-                            'exits': dbuser['exits'], 'used': dbuser['used']}
-            }
-            userlist.append(user)
+            today = datetime.date.today()
+            print(today)
+            user = {'name': '관리자'}
+            db = get_conn()
+            userlist = []
+            for dbuser in get_dayattendance(db, today):
+                user = {
+                    'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+                                'exits': dbuser['exits'], 'used': dbuser['used']}
+                }
+                userlist.append(user)
+                print(user)
+            return render_template('todaytable.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
 
-        print('###379' + str(userlist))
-        if len(userlist) == 0:
-            return """<h2>해당날짜에는 기록이 없습니다.</h2>
-            <script>
-            setTimeout(function(){
-                history.back()
-            }, 3000);
-            </script>"""
-
-        return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
-        # return '''<h1>{}</h1>'''.format(filterdate)
     else:
-        today = datetime.date.today()
-        print(today)
-        user = {'name': '관리자'}
-        db = get_conn()
-        userlist = []
-        for dbuser in get_dayattendance(db, today):
-            user = {
-                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-                            'exits': dbuser['exits'], 'used': dbuser['used']}
-            }
-            userlist.append(user)
-            print(user)
-        return render_template('todaytable.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
+        return redirect(url_for('login'))
 
+#    form = DateForm()
+#    if request.method == 'POST':
+#        if form.validate_on_submit():
+#            filterdate = form.dt.data.strftime('%Y-%m-%d')
+#        else:
+#            return redirect('/inputdateform')
+#        user = {'name': '관리자'}
+#        db = get_conn()
+#        userlist = []
+#        print(filterdate)
+#        for dbuser in get_dayattendance(db, filterdate):
+#            user = {
+#                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+#                            'exits': dbuser['exits'], 'used': dbuser['used']}
+#            }
+#            userlist.append(user)
+#
+#        print('###379' + str(userlist))
+#        if len(userlist) == 0:
+#            return """<h2>해당날짜에는 기록이 없습니다.</h2>
+#            <script>
+#            setTimeout(function(){
+#                history.back()
+#            }, 3000);
+#            </script>"""
+#
+#        return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
+#        # return '''<h1>{}</h1>'''.format(filterdate)
+#    else:
+#        today = datetime.date.today()
+#        print(today)
+#        user = {'name': '관리자'}
+#        db = get_conn()
+#        userlist = []
+#        for dbuser in get_dayattendance(db, today):
+#            user = {
+#                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
+#                            'exits': dbuser['exits'], 'used': dbuser['used']}
+#            }
+#            userlist.append(user)
+#            print(user)
+#        return render_template('todaytable.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
+#
 
 # [마하도서관] 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/mh/inputdateform', methods=['GET', 'POST'])
