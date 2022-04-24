@@ -1370,162 +1370,178 @@ def modify_sj(username):
 # 자료받기 원하는 구간을 정하기
 @application.route('/daterange', methods=['GET', 'POST'])
 def daterange():
-    user = {'name': '관리자'}
-    form = DateForm()
-    if request.method == 'POST':
-        StartDate = form.dStart.data.strftime('%Y-%m-%d')
-        EndDate = form.dEnd.data.strftime('%Y-%m-%d')
-        print(StartDate)
-        print(EndDate)
-        # db = init_connect_db()
-        db = get_conn()
-        df = pd.DataFrame(get_RangeAttendance(db, StartDate, EndDate))
-        output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
-        response = Response(
-            output.getvalue(),
-            mimetype="text/csv",
-            content_type='application/octet-strem',
-        )
-        # csv_data = df.to_csv(index='false', encoding='utf-8-sig')
-        # response = Response(csv_data, mimetype='text/csv')
-        response.headers.set("Content-Disposition", "attachment", filename="data.csv")
-        return response
-    return render_template('/daterange.html', user=user, title='관리자', form=form)
-
+    if 'reliquum' in session:
+        user = {'name': '관리자'}
+        form = DateForm()
+        if request.method == 'POST':
+            StartDate = form.dStart.data.strftime('%Y-%m-%d')
+            EndDate = form.dEnd.data.strftime('%Y-%m-%d')
+            print(StartDate)
+            print(EndDate)
+            # db = init_connect_db()
+            db = get_conn()
+            df = pd.DataFrame(get_RangeAttendance(db, StartDate, EndDate))
+            output = StringIO()
+            output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+            df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
+            response = Response(
+                output.getvalue(),
+                mimetype="text/csv",
+                content_type='application/octet-strem',
+            )
+            # csv_data = df.to_csv(index='false', encoding='utf-8-sig')
+            # response = Response(csv_data, mimetype='text/csv')
+            response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+            return response
+        return render_template('/daterange.html', user=user, title='관리자', form=form)
+    else:
+        return redirect(url_for('login'))
 
 # [마하도서관] 자료받기 원하는 구간을 정하기
 @application.route('/mh/daterange', methods=['GET', 'POST'])
 def daterange_mh():
-    user = {'name': '관리자'}
-    form = DateForm()
-    if request.method == 'POST':
-        StartDate = form.dStart.data.strftime('%Y-%m-%d')
-        EndDate = form.dEnd.data.strftime('%Y-%m-%d')
-        print(StartDate)
-        print(EndDate)
-        # db = init_connect_db()
-        db = get_conn()
-        df = pd.DataFrame(get_RangeAttendance_mh(db, StartDate, EndDate))
-        output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
-        response = Response(
-            output.getvalue(),
-            mimetype="text/csv",
-            content_type='application/octet-strem',
-        )
-        # csv_data = df.to_csv(index='false', encoding='utf-8')
-        # response = Response(csv_data, mimetype='text/csv')
-        response.headers.set("Content-Disposition", "attachment", filename="data.csv")
-        return response
-    return render_template('daterange_mh.html', user=user, title='관리자', form=form)
-
+    if 'reliquum' in session:
+        user = {'name': '관리자'}
+        form = DateForm()
+        if request.method == 'POST':
+            StartDate = form.dStart.data.strftime('%Y-%m-%d')
+            EndDate = form.dEnd.data.strftime('%Y-%m-%d')
+            print(StartDate)
+            print(EndDate)
+            # db = init_connect_db()
+            db = get_conn()
+            df = pd.DataFrame(get_RangeAttendance_mh(db, StartDate, EndDate))
+            output = StringIO()
+            output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+            df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
+            response = Response(
+                output.getvalue(),
+                mimetype="text/csv",
+                content_type='application/octet-strem',
+            )
+            # csv_data = df.to_csv(index='false', encoding='utf-8')
+            # response = Response(csv_data, mimetype='text/csv')
+            response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+            return response
+        return render_template('daterange_mh.html', user=user, title='관리자', form=form)
+    else:
+        return redirect(url_for('login'))
 
 # [바른샘도서관] 자료받기 원하는 구간을 정하기
 @application.route('/sw/daterange', methods=['GET', 'POST'])
 def daterange_sw():
-    user = {'name': '관리자'}
-    form = DateForm()
-    if request.method == 'POST':
-        StartDate = form.dStart.data.strftime('%Y-%m-%d')
-        EndDate = form.dEnd.data.strftime('%Y-%m-%d')
-        print(StartDate)
-        print(EndDate)
-        # db = init_connect_db()
-        db = get_conn()
-        df = pd.DataFrame(get_RangeAttendance_sw(db, StartDate, EndDate))
-        output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
-        response = Response(
-            output.getvalue(),
-            mimetype="text/csv",
-            content_type='application/octet-strem',
-        )
-        #csv_data = df.to_csv(index='false', encoding='utf-8')
-        #response = Response(csv_data, mimetype='text/csv')
-        response.headers.set("Content-Disposition", "attachment", filename="data.csv")
-        return response
-    return render_template('daterange_sw.html', user=user, title='관리자', form=form)
+    if 'reliquum' in session:
+        user = {'name': '관리자'}
+        form = DateForm()
+        if request.method == 'POST':
+            StartDate = form.dStart.data.strftime('%Y-%m-%d')
+            EndDate = form.dEnd.data.strftime('%Y-%m-%d')
+            print(StartDate)
+            print(EndDate)
+            # db = init_connect_db()
+            db = get_conn()
+            df = pd.DataFrame(get_RangeAttendance_sw(db, StartDate, EndDate))
+            output = StringIO()
+            output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+            df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
+            response = Response(
+                output.getvalue(),
+                mimetype="text/csv",
+                content_type='application/octet-strem',
+            )
+            #csv_data = df.to_csv(index='false', encoding='utf-8')
+            #response = Response(csv_data, mimetype='text/csv')
+            response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+            return response
+        return render_template('daterange_sw.html', user=user, title='관리자', form=form)
+    else:
+        return redirect(url_for('login'))
 
 # [개발용] 자료받기 원하는 구간을 정하기
 @application.route('/test/daterange', methods=['GET', 'POST'])
 def daterange_test():
-    user = {'name': '관리자'}
-    form = DateForm()
-    if request.method == 'POST':
-        StartDate = form.dStart.data.strftime('%Y-%m-%d')
-        EndDate = form.dEnd.data.strftime('%Y-%m-%d')
-        print(StartDate)
-        print(EndDate)
-        # db = init_connect_db()
-        db = get_conn()
-        df = pd.DataFrame(get_RangeAttendance_test(db, StartDate, EndDate))
-        output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
-        response = Response(
-            output.getvalue(),
-            mimetype="text/csv",
-            content_type='application/octet-strem',
-        )
-        #csv_data = df.to_csv(index='false', encoding='utf-8')
-        #response = Response(csv_data, mimetype='text/csv')
-        response.headers.set("Content-Disposition", "attachment", filename="data.csv")
-        return response
-    return render_template('daterange_test.html', user=user, title='관리자', form=form)
+    if 'reliquum' in session:
+        user = {'name': '관리자'}
+        form = DateForm()
+        if request.method == 'POST':
+            StartDate = form.dStart.data.strftime('%Y-%m-%d')
+            EndDate = form.dEnd.data.strftime('%Y-%m-%d')
+            print(StartDate)
+            print(EndDate)
+            # db = init_connect_db()
+            db = get_conn()
+            df = pd.DataFrame(get_RangeAttendance_test(db, StartDate, EndDate))
+            output = StringIO()
+            output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+            df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
+            response = Response(
+                output.getvalue(),
+                mimetype="text/csv",
+                content_type='application/octet-strem',
+            )
+            #csv_data = df.to_csv(index='false', encoding='utf-8')
+            #response = Response(csv_data, mimetype='text/csv')
+            response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+            return response
+        return render_template('daterange_test.html', user=user, title='관리자', form=form)
+    else:
+        return redirect(url_for('login'))
 
 # [반포도서관] 자료받기 원하는 구간을 정하기
 @application.route('/bp/daterange', methods=['GET', 'POST'])
 def daterange_bp():
-    user = {'name': '관리자'}
-    form = DateForm()
-    if request.method == 'POST':
-        StartDate = form.dStart.data.strftime('%Y-%m-%d')
-        EndDate = form.dEnd.data.strftime('%Y-%m-%d')
-        # print(StartDate)
-        # print(EndDate)
-        # db = init_connect_db()
-        db = get_conn()
-        df = pd.DataFrame(get_RangeAttendance_bp(db, StartDate, EndDate))
-        output = StringIO()
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
-        response = Response(
-            output.getvalue(),
-            mimetype="text/csv",
-            content_type='application/octet-strem',
-        )
-        #csv_data = df.to_csv(index='false', encoding='utf-8')
-        #response = Response(csv_data, mimetype='text/csv')
-        response.headers.set("Content-Disposition", "attachment", filename="data.csv")
-        return response
-    return render_template('daterange_bp.html', user=user, title='관리자', form=form)
+    if 'reliquum' in session:
+        user = {'name': '관리자'}
+        form = DateForm()
+        if request.method == 'POST':
+            StartDate = form.dStart.data.strftime('%Y-%m-%d')
+            EndDate = form.dEnd.data.strftime('%Y-%m-%d')
+            # print(StartDate)
+            # print(EndDate)
+            # db = init_connect_db()
+            db = get_conn()
+            df = pd.DataFrame(get_RangeAttendance_bp(db, StartDate, EndDate))
+            output = StringIO()
+            output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+            df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
+            response = Response(
+                output.getvalue(),
+                mimetype="text/csv",
+                content_type='application/octet-strem',
+            )
+            #csv_data = df.to_csv(index='false', encoding='utf-8')
+            #response = Response(csv_data, mimetype='text/csv')
+            response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+            return response
+        return render_template('daterange_bp.html', user=user, title='관리자', form=form)
+    else:
+        return redirect(url_for('login'))
 
 # [세종시립도서관] 자료받기 원하는 구간을 정하기
 @application.route('/sj/daterange', methods=['GET', 'POST'])
 def daterange_sj():
-    user = {'name': '관리자'}
-    form = DateForm()
-    if request.method == 'POST':
-        StartDate = form.dStart.data.strftime('%Y-%m-%d')
-        EndDate = form.dEnd.data.strftime('%Y-%m-%d')
-        db = get_conn()
-        df = pd.DataFrame(get_RangeAttendance_sj(db, StartDate, EndDate))
-        output = StringIO()
+    if 'reliquum' in session:
+        user = {'name': '관리자'}
+        form = DateForm()
+        if request.method == 'POST':
+            StartDate = form.dStart.data.strftime('%Y-%m-%d')
+            EndDate = form.dEnd.data.strftime('%Y-%m-%d')
+            db = get_conn()
+            df = pd.DataFrame(get_RangeAttendance_sj(db, StartDate, EndDate))
+            output = StringIO()
 
-        output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
-        df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
-        response = Response(
-            output.getvalue(),
-            mimetype="text/csv",
-            content_type='application/octet-strem',
-        )
-        response.headers.set("Content-Disposition", "attachment", filename="data.csv")
-        return response
-    return render_template('daterange_sj.html', user=user, title='관리자', form=form)
+            output.write(u'\ufeff') # 한글인코딩을 위해 UTF-8 with BOM 설정해주기
+            df.to_csv(output) # CSV 파일 형태로 브라우저가 파일 다운로라고 인식하도록 만들어주기
+            response = Response(
+                output.getvalue(),
+                mimetype="text/csv",
+                content_type='application/octet-strem',
+            )
+            response.headers.set("Content-Disposition", "attachment", filename="data.csv")
+            return response
+        return render_template('daterange_sj.html', user=user, title='관리자', form=form)
+    else:
+        return redirect(url_for('login'))
 
 # [제천기적의도서관]날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/inputdateform', methods=['GET', 'POST'])
