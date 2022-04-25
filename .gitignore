@@ -164,4 +164,8 @@ stat.sql
 
 #vs code workspacefile
 moya_attendance.code-workspace
+.vscode
 
+#nodejs
+node_modules/
+package-lock.json

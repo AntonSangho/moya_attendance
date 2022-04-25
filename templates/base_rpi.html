@@ -3,10 +3,10 @@
     <meta charset="UTF-8">
     {% block title %}
     {% endblock %}
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/@kfonts/neodgm/index.css" />
     <style>
         body {
-            font-family: 'Noto Sans KR', sans-serif;
+            font-family: "Neo둥근모", "neodgm";
             {% block background %}
             {% endblock %}
             overflow: hidden;
@@ -31,22 +31,25 @@
         #container {
             text-align: center;
             line-height: 400px;
-            min-width: 300px;
+            /* width: 100%; */
+            width: 700px;
+            /* margin-right: -100px; */
+            /* min-width: 300px; */
         }
         #go_webapp {
             text-align: left;
             line-height: 400px;
-            min-width: 200px;
+            min-width: 80px;
         }
 	
 	    #go_exits {
             text-align: left;
             line-height: 400px;
-            min-width: 200px;
+            min-width: 400px;
         }
         body {
             min-width: 400px;
-            font-size:2rem;
+            font-size:2.5rem;
             margin:0;
             min-width: 600px;
             min-height: 100%;
@@ -94,9 +97,10 @@
                             //작은손의 이름이 출력
                             {% block textContent %}
                             {% endblock %}
+                            //입퇴장 버튼으로 돌아가는 스크립트
                             setTimeout(function name(params) {
-                                window.location.href = './webapp';
-                            }, 1000);
+                               window.location.href = './webapp';
+                            }, 2000);
                         }
                     else {
                         // 입퇴장시 카드가 등록 안되어있을 경우
@@ -117,8 +121,8 @@
                         }
                     } else {
                        //카드가 아직 인식이 안된 경우 
-                        //document.querySelector('#container').textContent = '카드를 원에 대주세요' //제천, 반포
-                        document.querySelector('#container').textContent = '카드를 그림에 대주세요' //수원
+                        document.querySelector('#container').textContent = '카드를 대주세요' 
+                        //document.querySelector('#container').textContent = '카드를 넣어주세요' //마하
                     }
                     console.log(JSON.stringify(usercardjson));
 

@@ -1,10 +1,10 @@
 [Unit]
-Description=Maha flask application
+Description=Jecheon flask application
 After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=/home/pi/moya_attendance/moyavenv/bin/python3 /home/pi/moya_attendance/webapp_mh.py
+ExecStart=/home/pi/moya_attendance/moyavenv/bin/python3 /home/pi/moya_attendance/webapp_jc.py
 WorkingDirectory=/home/pi/moya_attendance
 User=root
 Restart=always
