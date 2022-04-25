@@ -214,7 +214,7 @@ def adminmoya():
         return redirect(url_for('login'))
 
 
-# 현재 사용자를 확인하는 페이지
+# [제천기적의도서관]현재 사용자를 확인하는 페이지
 @application.route('/userlist', methods=['GET', 'POST'])
 def userlist():
     if 'reliquum' in session:
@@ -439,7 +439,7 @@ def userlist_bp():
 
 # [세종시립도서관] 현재 사용자를 확인하는 페이지
 @application.route('/sj/userlist', methods=['GET', 'POST'])
-def userlist_xx():
+def userlist_sj():
     if 'reliquum' in session:
         # print(application.env)
         user = {'name': '관리자'}
@@ -482,7 +482,7 @@ def userlist_xx():
     else:
         return redirect(url_for('login'))
 
-# 사용자를 확인하는 페이지
+# [제천]사용자를 확인하는 페이지
 @application.route('/userinfo', methods=['GET', 'POST'])
 def userinfo():
     if 'reliquum' in session:
@@ -1804,265 +1804,283 @@ def logout():
     return redirect(url_for('login'))
 
 
-# 회원 신규 등록 페이지
+# [제천기적의도서관]회원 신규 등록 페이지
 @application.route('/signup', methods=['POST', 'GET'])
 def signup():
-    if request.method == 'POST':
+    if 'reliquum' in session:
+        if request.method == 'POST':
 
-        idrfid = request.form['idrfid']
-        id = idrfid.split("^")[0]
-        rfid = idrfid.split("^")[1]
-        name = request.form['name']
-        year = request.form['year']
-        sex = request.form['sex']
-        phone = request.form['phone']
-        memo = request.form['memo']
+            idrfid = request.form['idrfid']
+            id = idrfid.split("^")[0]
+            rfid = idrfid.split("^")[1]
+            name = request.form['name']
+            year = request.form['year']
+            sex = request.form['sex']
+            phone = request.form['phone']
+            memo = request.form['memo']
 
-        ## 데이타베이스 저장하는 코드
+            ## 데이타베이스 저장하는 코드
 
+            # db = init_connect_db()
+            db = get_conn()
+            if set_signup(db, id, rfid, name, sex, year, phone, memo):
+                return """<h2>새로운 회원을 등록했습니다.</h2><script>
+                setTimeout(function(){
+                    history.back()
+                }, 3000);
+                </script>"""
+            else:
+                return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
+
+            ## 이상이 없으면 alert 창 뛰우기
+            return f"<h2>{age}post 입니다{rfid} </h2>"
+
+        user = {'name': '관리자'}
         # db = init_connect_db()
         db = get_conn()
-        if set_signup(db, id, rfid, name, sex, year, phone, memo):
-            return """<h2>새로운 회원을 등록했습니다.</h2><script>
-            setTimeout(function(){
-                history.back()
-            }, 3000);
-            </script>"""
-        else:
-            return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
-
-        ## 이상이 없으면 alert 창 뛰우기
-        return f"<h2>{age}post 입니다{rfid} </h2>"
-
-    user = {'name': '관리자'}
-    # db = init_connect_db()
-    db = get_conn()
-    userlist = []
-    for dbuser in get_adduserlist(db):
-        user = {
-            'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
-            'status': '입장중',
-            'is': True
-        }
-        userlist.append(user)
-    return render_template('signup.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
+        userlist = []
+        for dbuser in get_adduserlist(db):
+            user = {
+                'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+                'status': '입장중',
+                'is': True
+            }
+            userlist.append(user)
+        return render_template('signup.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
+    else:
+        return redirect(url_for('login'))
 
 
 # [마하도서관] 회원 신규 등록 페이지
 @application.route('/mh/signup', methods=['POST', 'GET'])
 def signup_mh():
-    if request.method == 'POST':
+    if 'reliquum' in session:
+        if request.method == 'POST':
 
-        idrfid = request.form['idrfid']
-        id = idrfid.split("^")[0]
-        rfid = idrfid.split("^")[1]
-        name = request.form['name']
-        year = request.form['year']
-        sex = request.form['sex']
-        phone = request.form['phone']
-        memo = request.form['memo']
+            idrfid = request.form['idrfid']
+            id = idrfid.split("^")[0]
+            rfid = idrfid.split("^")[1]
+            name = request.form['name']
+            year = request.form['year']
+            sex = request.form['sex']
+            phone = request.form['phone']
+            memo = request.form['memo']
 
-        ## 데이타베이스 저장하는 코드
+            ## 데이타베이스 저장하는 코드
 
+            # db = init_connect_db()
+            db = get_conn()
+            if set_signup_mh(db, id, rfid, name, sex, year, phone, memo):
+                return """<h2>새로운 회원을 등록했습니다.</h2><script>
+                setTimeout(function(){
+                    history.back()
+                }, 3000);
+                </script>"""
+            else:
+                return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
+
+            ## 이상이 없으면 alert 창 뛰우기
+            return f"<h2>{age}post 입니다{rfid} </h2>"
+
+        user = {'name': '관리자'}
         # db = init_connect_db()
         db = get_conn()
-        if set_signup_mh(db, id, rfid, name, sex, year, phone, memo):
-            return """<h2>새로운 회원을 등록했습니다.</h2><script>
-            setTimeout(function(){
-                history.back()
-            }, 3000);
-            </script>"""
-        else:
-            return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
-
-        ## 이상이 없으면 alert 창 뛰우기
-        return f"<h2>{age}post 입니다{rfid} </h2>"
-
-    user = {'name': '관리자'}
-    # db = init_connect_db()
-    db = get_conn()
-    userlist = []
-    for dbuser in get_adduserlist_mh(db):
-        user = {
-            'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
-            'status': '입장중',
-            'is': True
-        }
-        userlist.append(user)
-    return render_template('signup_mh.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
+        userlist = []
+        for dbuser in get_adduserlist_mh(db):
+            user = {
+                'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+                'status': '입장중',
+                'is': True
+            }
+            userlist.append(user)
+        return render_template('signup_mh.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
+    else:
+        return redirect(url_for('login'))
 
 
 # [바른샘도서관] 회원 신규 등록 페이지
 @application.route('/sw/signup', methods=['POST', 'GET'])
 def signup_sw():
-    if request.method == 'POST':
+    if 'reliquum' in session:
+        if request.method == 'POST':
 
-        idrfid = request.form['idrfid']
-        id = idrfid.split("^")[0]
-        rfid = idrfid.split("^")[1]
-        name = request.form['name']
-        year = request.form['year']
-        sex = request.form['sex']
-        phone = request.form['phone']
-        memo = request.form['memo']
+            idrfid = request.form['idrfid']
+            id = idrfid.split("^")[0]
+            rfid = idrfid.split("^")[1]
+            name = request.form['name']
+            year = request.form['year']
+            sex = request.form['sex']
+            phone = request.form['phone']
+            memo = request.form['memo']
 
-        ## 데이타베이스 저장하는 코드
+            ## 데이타베이스 저장하는 코드
 
+            # db = init_connect_db()
+            db = get_conn()
+            if set_signup_sw(db, id, rfid, name, sex, year, phone, memo):
+                return """<h2>새로운 회원을 등록했습니다.</h2><script>
+                setTimeout(function(){
+                    history.back()
+                }, 3000);
+                </script>"""
+            else:
+                return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
+
+            ## 이상이 없으면 alert 창 뛰우기
+            return f"<h2>{age}post 입니다{rfid} </h2>"
+
+        user = {'name': '관리자'}
         # db = init_connect_db()
         db = get_conn()
-        if set_signup_sw(db, id, rfid, name, sex, year, phone, memo):
-            return """<h2>새로운 회원을 등록했습니다.</h2><script>
-            setTimeout(function(){
-                history.back()
-            }, 3000);
-            </script>"""
-        else:
-            return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
-
-        ## 이상이 없으면 alert 창 뛰우기
-        return f"<h2>{age}post 입니다{rfid} </h2>"
-
-    user = {'name': '관리자'}
-    # db = init_connect_db()
-    db = get_conn()
-    userlist = []
-    for dbuser in get_adduserlist_sw(db):
-        user = {
-            'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
-            'status': '입장중',
-            'is': True
-        }
-        userlist.append(user)
-    return render_template('signup_sw.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
+        userlist = []
+        for dbuser in get_adduserlist_sw(db):
+            user = {
+                'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+                'status': '입장중',
+                'is': True
+            }
+            userlist.append(user)
+        return render_template('signup_sw.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
+    else:
+        return redirect(url_for('login'))
 
 # [개발용] 회원 신규 등록 페이지
 @application.route('/test/signup', methods=['POST', 'GET'])
 def signup_test():
-    if request.method == 'POST':
+    if 'reliquum' in session:
+        if request.method == 'POST':
 
-        idrfid = request.form['idrfid']
-        id = idrfid.split("^")[0]
-        rfid = idrfid.split("^")[1]
-        name = request.form['name']
-        year = request.form['year']
-        sex = request.form['sex']
-        phone = request.form['phone']
-        memo = request.form['memo']
+            idrfid = request.form['idrfid']
+            id = idrfid.split("^")[0]
+            rfid = idrfid.split("^")[1]
+            name = request.form['name']
+            year = request.form['year']
+            sex = request.form['sex']
+            phone = request.form['phone']
+            memo = request.form['memo']
 
-        ## 데이타베이스 저장하는 코드
+            ## 데이타베이스 저장하는 코드
 
+            # db = init_connect_db()
+            db = get_conn()
+            if set_signup_test(db, id, rfid, name, sex, year, phone, memo):
+                return """<h2>새로운 회원을 등록했습니다.</h2><script>
+                setTimeout(function(){
+                    history.back()
+                }, 3000);
+                </script>"""
+            else:
+                return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
+
+            ## 이상이 없으면 alert 창 뛰우기
+            return f"<h2>{age}post 입니다{rfid} </h2>"
+
+        user = {'name': '관리자'}
         # db = init_connect_db()
         db = get_conn()
-        if set_signup_test(db, id, rfid, name, sex, year, phone, memo):
-            return """<h2>새로운 회원을 등록했습니다.</h2><script>
-            setTimeout(function(){
-                history.back()
-            }, 3000);
-            </script>"""
-        else:
-            return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
-
-        ## 이상이 없으면 alert 창 뛰우기
-        return f"<h2>{age}post 입니다{rfid} </h2>"
-
-    user = {'name': '관리자'}
-    # db = init_connect_db()
-    db = get_conn()
-    userlist = []
-    for dbuser in get_adduserlist_test(db):
-        user = {
-            'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
-            'status': '입장중',
-            'is': True
-        }
-        userlist.append(user)
-    return render_template('signup_test.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
+        userlist = []
+        for dbuser in get_adduserlist_test(db):
+            user = {
+                'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+                'status': '입장중',
+                'is': True
+            }
+            userlist.append(user)
+        return render_template('signup_test.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
+    else:
+        return redirect(url_for('login'))
 
 # [반포도서관] 회원 신규 등록 페이지
 @application.route('/bp/signup', methods=['POST', 'GET'])
 def signup_bp():
-    if request.method == 'POST':
+    if 'reliquum' in session:
+        if request.method == 'POST':
 
-        idrfid = request.form['idrfid']
-        id = idrfid.split("^")[0]
-        rfid = idrfid.split("^")[1]
-        name = request.form['name']
-        year = request.form['year']
-        sex = request.form['sex']
-        phone = request.form['phone']
-        memo = request.form['memo']
+            idrfid = request.form['idrfid']
+            id = idrfid.split("^")[0]
+            rfid = idrfid.split("^")[1]
+            name = request.form['name']
+            year = request.form['year']
+            sex = request.form['sex']
+            phone = request.form['phone']
+            memo = request.form['memo']
 
-        ## 데이타베이스 저장하는 코드
+            ## 데이타베이스 저장하는 코드
 
+            # db = init_connect_db()
+            db = get_conn()
+            if set_signup_bp(db, id, rfid, name, sex, year, phone, memo):
+                return """<h2>새로운 회원을 등록했습니다.</h2><script>
+                setTimeout(function(){
+                    history.back()
+                }, 3000);
+                </script>"""
+            else:
+                return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
+
+            ## 이상이 없으면 alert 창 뛰우기
+            return f"<h2>{age}post 입니다{rfid} </h2>"
+
+        user = {'name': '관리자'}
         # db = init_connect_db()
         db = get_conn()
-        if set_signup_bp(db, id, rfid, name, sex, year, phone, memo):
-            return """<h2>새로운 회원을 등록했습니다.</h2><script>
-            setTimeout(function(){
-                history.back()
-            }, 3000);
-            </script>"""
-        else:
-            return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
-
-        ## 이상이 없으면 alert 창 뛰우기
-        return f"<h2>{age}post 입니다{rfid} </h2>"
-
-    user = {'name': '관리자'}
-    # db = init_connect_db()
-    db = get_conn()
-    userlist = []
-    for dbuser in get_adduserlist_bp(db):
-        user = {
-            'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
-            'status': '입장중',
-            'is': True
-        }
-        userlist.append(user)
-    return render_template('signup_bp.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
+        userlist = []
+        for dbuser in get_adduserlist_bp(db):
+            user = {
+                'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+                'status': '입장중',
+                'is': True
+            }
+            userlist.append(user)
+        return render_template('signup_bp.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
+    else:
+        return redirect(url_for('login'))
 
 # [세종시립도서관] 회원 신규 등록 페이지
 @application.route('/sj/signup', methods=['POST', 'GET'])
 def signup_sj():
-    if request.method == 'POST':
+    if 'reliquum' in session:
+        if request.method == 'POST':
 
-        idrfid = request.form['idrfid']
-        id = idrfid.split("^")[0]
-        rfid = idrfid.split("^")[1]
-        name = request.form['name']
-        year = request.form['year']
-        sex = request.form['sex']
-        phone = request.form['phone']
-        memo = request.form['memo']
+            idrfid = request.form['idrfid']
+            id = idrfid.split("^")[0]
+            rfid = idrfid.split("^")[1]
+            name = request.form['name']
+            year = request.form['year']
+            sex = request.form['sex']
+            phone = request.form['phone']
+            memo = request.form['memo']
 
-        ## 데이타베이스 저장하는 코드
+            ## 데이타베이스 저장하는 코드
 
+            # db = init_connect_db()
+            db = get_conn()
+            if set_signup_sj(db, id, rfid, name, sex, year, phone, memo):
+                return """<h2>새로운 회원을 등록했습니다.</h2><script>
+                setTimeout(function(){
+                    history.back()
+                }, 3000);
+                </script>"""
+            else:
+                return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
+
+            ## 이상이 없으면 alert 창 뛰우기
+            return f"<h2>{age}post 입니다{rfid} </h2>"
+
+        user = {'name': '관리자'}
         # db = init_connect_db()
         db = get_conn()
-        if set_signup_sj(db, id, rfid, name, sex, year, phone, memo):
-            return """<h2>새로운 회원을 등록했습니다.</h2><script>
-            setTimeout(function(){
-                history.back()
-            }, 3000);
-            </script>"""
-        else:
-            return f"<h2>관리자한테 연락주세요</h2>"  # 이미등록된 카드일 경우 알려줄 필요가 있음.
-
-        ## 이상이 없으면 alert 창 뛰우기
-        return f"<h2>{age}post 입니다{rfid} </h2>"
-
-    user = {'name': '관리자'}
-    # db = init_connect_db()
-    db = get_conn()
-    userlist = []
-    for dbuser in get_adduserlist_sj(db):
-        user = {
-            'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
-            'status': '입장중',
-            'is': True
-        }
-        userlist.append(user)
-    return render_template('signup_sj.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
+        userlist = []
+        for dbuser in get_adduserlist_sj(db):
+            user = {
+                'profile': {'id': dbuser['id'], 'name': dbuser['name'], 'rfid': dbuser['rfid_uid']},
+                'status': '입장중',
+                'is': True
+            }
+            userlist.append(user)
+        return render_template('signup_sj.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
+    else:
+        return redirect(url_for('login'))
 
 #[개발용] 통계페이지
 @application.route("/test/statistics")
