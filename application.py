@@ -164,11 +164,6 @@ def login():
         except:
             return render_template('login.html')
 
-#@application.route('/webapp')
-#def index():
-#    # print(application.env)
-#    return render_template('webapp.html', platform="제천기적의도서관")
-#
 
 # YouTube embedded page
 @application.route('/intro')
@@ -183,28 +178,6 @@ def intro2():
     # print(application.env)
     return render_template('intro-s.html', platform="")
 
-
-## 입장시 RFID카드를 인식하는 페이지
-#@application.route('/entry')
-#def entry():
-#    try:
-#        # print(application.env)
-#        # global blocking
-#        # blocking = False
-#        return render_template('entry.html', msg="카드를 원에 대주세요", platform="입장")
-#    except Exception as e:
-#        return str(e)
-#
-#@application.route('/newcard')
-#def newcard():
-#    try:
-#        # print(application.env)
-#        # global blocking
-#        # blocking = False
-#        return render_template('newcard.html', msg="카드를 원에 대주세요", platform="카드등록")
-#    except Exception as e:
-#        return str(e)
-#
 def get_conn():
     conn = request.cookies.get('conn')
     if conn == "1":
@@ -226,19 +199,6 @@ def get_conn():
     else:
         return init_connect_db(#) #도서관이름
     """
-
-
-# 총괄 관리자 페이지
-#@application.route('/admin')
-#def admin():
-#    print(application.env)
-#    user = {'name': '관리자'}
-#    print('admin')
-#    if 'reliquum' in session:
-#        on_active = session['reliquum']
-#        return render_template('admin.html', title='관리자', user=user)
-#    return "권한이 없습니다. <br><a href = '/auth'>" + "로그인 페이지로 가기</a>"
-#
 
 # adminmoya관리 페이지
 @application.route('/adminmoya')
@@ -1593,49 +1553,6 @@ def inputdateform():
     else:
         return redirect(url_for('login'))
 
-#    form = DateForm()
-#    if request.method == 'POST':
-#        if form.validate_on_submit():
-#            filterdate = form.dt.data.strftime('%Y-%m-%d')
-#        else:
-#            return redirect('/inputdateform')
-#        user = {'name': '관리자'}
-#        db = get_conn()
-#        userlist = []
-#        print(filterdate)
-#        for dbuser in get_dayattendance(db, filterdate):
-#            user = {
-#                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-#                            'exits': dbuser['exits'], 'used': dbuser['used']}
-#            }
-#            userlist.append(user)
-#
-#        print('###379' + str(userlist))
-#        if len(userlist) == 0:
-#            return """<h2>해당날짜에는 기록이 없습니다.</h2>
-#            <script>
-#            setTimeout(function(){
-#                history.back()
-#            }, 3000);
-#            </script>"""
-#
-#        return render_template('daylist.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
-#        # return '''<h1>{}</h1>'''.format(filterdate)
-#    else:
-#        today = datetime.date.today()
-#        print(today)
-#        user = {'name': '관리자'}
-#        db = get_conn()
-#        userlist = []
-#        for dbuser in get_dayattendance(db, today):
-#            user = {
-#                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-#                            'exits': dbuser['exits'], 'used': dbuser['used']}
-#            }
-#            userlist.append(user)
-#            print(user)
-#        return render_template('todaytable.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
-#
 
 # [마하도서관] 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/mh/inputdateform', methods=['GET', 'POST'])
@@ -1686,50 +1603,7 @@ def inputdateform_mh():
                                    form=form)
     else:
         return redirect(url_for('login'))
-#    form = DateForm()
-#    if request.method == 'POST':
-#        if form.validate_on_submit():
-#            filterdate = form.dt.data.strftime('%Y-%m-%d')
-#        else:
-#            return redirect('/mh/inputdateform')
-#        user = {'name': '관리자'}
-#        db = get_conn()
-#        userlist = []
-#        print(filterdate)
-#        for dbuser in get_dayattendance_mh(db, filterdate):
-#            user = {
-#                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-#                            'exits': dbuser['exits'], 'used': dbuser['used']}
-#            }
-#            userlist.append(user)
-#
-#        print('mh_attendace' + str(userlist))
-#        if len(userlist) == 0:
-#            return """<h2>해당날짜에는 기록이 없습니다.</h2>
-#            <script>
-#            setTimeout(function(){
-#                history.back()
-#            }, 3000);
-#            </script>"""
-#
-#        return render_template('daylist_mh.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
-#        # return '''<h1>{}</h1>'''.format(filterdate)
-#    else:
-#        today = datetime.date.today()
-#        print(today)
-#        user = {'name': '관리자'}
-#        db = get_conn()
-#        userlist = []
-#        for dbuser in get_dayattendance_mh(db, today):
-#            user = {
-#                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-#                            'exits': dbuser['exits'], 'used': dbuser['used']}
-#            }
-#            userlist.append(user)
-#            print(user)
-#        return render_template('todaytable_mh.html', user=user, userlist=userlist, title='도서관현황판', platform="",
-#                               form=form)
-#
+
 
 # [바른샘도서관] 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/sw/inputdateform', methods=['GET', 'POST'])
@@ -1780,49 +1654,6 @@ def inputdateform_sw():
                                    form=form)
     else:
         return redirect(url_for('login'))
-#    form = DateForm()
-#    if request.method == 'POST':
-#        if form.validate_on_submit():
-#            filterdate = form.dt.data.strftime('%Y-%m-%d')
-#        else:
-#            return redirect('/sw/inputdateform')
-#        user = {'name': '관리자'}
-#        db = get_conn()
-#        userlist = []
-#        print(filterdate)
-#        for dbuser in get_dayattendance_sw(db, filterdate):
-#            user = {
-#                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-#                            'exits': dbuser['exits'], 'used': dbuser['used']}
-#            }
-#            userlist.append(user)
-#
-#        print('sw_attendace' + str(userlist))
-#        if len(userlist) == 0:
-#            return """<h2>해당날짜에는 기록이 없습니다.</h2>
-#            <script>
-#            setTimeout(function(){
-#                history.back()
-#            }, 3000);
-#            </script>"""
-#
-#        return render_template('daylist_sw.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
-#        # return '''<h1>{}</h1>'''.format(filterdate)
-#    else:
-#        today = datetime.date.today()
-#        print(today)
-#        user = {'name': '관리자'}
-#        db = get_conn()
-#        userlist = []
-#        for dbuser in get_dayattendance_sw(db, today):
-#            user = {
-#                'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-#                            'exits': dbuser['exits'], 'used': dbuser['used']}
-#            }
-#            userlist.append(user)
-#            print(user)
-#        return render_template('todaytable_sw.html', user=user, userlist=userlist, title='도서관현황판', platform="",
-#                               form=form)
 
 # [개발용] 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/test/inputdateform', methods=['GET', 'POST'])
@@ -1877,50 +1708,6 @@ def inputdateform_test():
 # [반포도서관] 날짜를 입력해서 날짜에 해당하는 테이블을 불러오는 페이지
 @application.route('/bp/inputdateform', methods=['GET', 'POST'])
 def inputdateform_bp():
-#    if 'reliquum' in session:
-#        form = DateForm()
-#        if request.method == 'POST':
-#            if form.validate_on_submit():
-#                filterdate = form.dt.data.strftime('%Y-%m-%d')
-#            else:
-#                return redirect('/bp/inputdateform')
-#            user = {'name': '관리자'}
-#            db = get_conn()
-#            userlist = []
-#            # print(filterdate)
-#            for dbuser in get_dayattendance_bp(db, filterdate):
-#                user = {
-#                    'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-#                                'exits': dbuser['exits'], 'used': dbuser['used']}
-#                }
-#                userlist.append(user)
-#
-#            # print('test_attendace' + str(userlist))
-#            if len(userlist) == 0:
-#                return """<h2>해당날짜에는 기록이 없습니다.</h2>
-#                <script>
-#                setTimeout(function(){
-#                    history.back()
-#                }, 3000);
-#                </script>"""
-#                return render_template('daylist_bp.html', user=user, userlist=userlist, title='도서관현황판', platform="", form=form)
-#            # return '''<h1>{}</h1>'''.format(filterdate)
-#            else:
-#                today = datetime.date.today()
-#                # print(today)
-#                user = {'name': '관리자'}
-#                db = get_conn()
-#                userlist = []
-#                for dbuser in get_dayattendance_bp(db, today):
-#                    user = {
-#                        'profile': {'userid': dbuser['userid'], 'name': dbuser['name'], 'entry': dbuser['entry'],
-#                                    'exits': dbuser['exits'], 'used': dbuser['used']}
-#                    }
-#                    userlist.append(user)
-#                    # print(user)
-#                return render_template('todaytable_bp.html', user=user, userlist=userlist, title='도서관현황판', platform="",form=form)
-#    else:
-#        return redirect(url_for('login'))
     if 'reliquum' in session:
         form = DateForm()
         if request.method == 'POST':
@@ -2276,110 +2063,6 @@ def signup_sj():
         }
         userlist.append(user)
     return render_template('signup_sj.html', title='신규 회원 등록', len=len(userlist), user=user, userlist=userlist)
-
-# 퇴장시 RFID카드를 인식하는 페이지
-@application.route('/exits')
-def exis():
-    print(application.env)
-    return render_template('exits.html', msg="카드를 원에 대주세요", platform="퇴장")
-
-
-# 퇴장시 RFID카드와 DB 대조작업
-@application.route('/api/v1.0/exits', methods=['GET'])
-def endpoint_rfid_read_exit():
-    try:
-        print("rpi buzz test- exit")
-        rst = rfid_read()
-        print("rfid buzz test-----")
-        if rst[0] != "not support this platform.":
-            # db = init_connect_db()
-            db = get_conn()
-            if rst[2] != None:
-                # 공백을 확인해서 0으로 변경
-                userid = str(rst[2]).replace(' ', '') + "0"
-                if len(userid) == 49:
-                    userid = 0
-                else:
-                    userid = rst[2]
-                rfid_uid = rst[1]
-                name = get_userinfo(db, userid, rfid_uid)
-                rst.append("DB TRUE" if set_exit(db, userid) else "DB FALSE")
-                if len(name) > 0:
-                    rst.append(name[0])
-                else:
-                    rst.append('누구예요?')
-                buzzer_call()
-    except Exception as e:
-        print("error", e)
-        return abort(500)
-
-    return jsonify({'ps': rst})
-
-
-# 입장시 RFID카드와 DB 대조작업
-@application.route('/api/v1.0/entry', methods=['GET'])
-# def endpoint_rfid_read():
-def endpoint_rfid_read_entry():
-    try:
-        # print("rpi buzz test")
-
-        rst = rfid_read()
-        if rst[0] != "not support this platform.":
-            # db = init_connect_db()
-            db = get_conn()
-            if rst[2] != None:
-                # 공백을 확인해서 0으로 변경
-                userid = str(rst[2]).replace(' ', '') + "0"
-                if len(userid) == 49:
-                    userid = 0
-                else:
-                    userid = rst[2]
-                rfid_uid = rst[1]
-                name = get_userinfo(db, userid, rfid_uid)
-                rst.append("DB TRUE" if set_attendance(db, userid) else "DB FALSE")
-
-                # print("*****************3")
-                if len(name) > 0:
-                    rst.append(name[0])
-                else:
-                    rst.append('누구예요?')
-                buzzer_call()
-    except Exception as e:
-        print("error", e)
-        return abort(500)
-
-    return jsonify({'ps': rst})
-
-
-# 새로운 카드등록시 RFID카드와 DB 대조작업
-@application.route('/api/v1.0/newcard', methods=['GET'])
-def endpoint_rfid_read():
-    try:
-        print("rpi buzz")
-        rfid_uid = ""
-        uid = 0
-        rst = rfid_read()
-        if rst[0] != "not support the platform.":
-            db = get_conn()
-            if rst[1] != None:
-                rfid_uid = rst[1]
-
-                if is_rfid(db, rfid_uid)['cnt'] == 0:
-                    add_newcard(db, rfid_uid, '이름없음', 1)
-                    time.sleep(1)
-                    buzzer_call()
-                    # DB에 접속해서 배정된 카드번호 표시
-                else:
-                    uid = get_rfid(db, rfid_uid)['id']
-                    # 이미카드가 있는 경우
-                    rfid_write(str(uid))
-                    print("uid write %d", uid)
-                    rfid_uid = 00000
-                    buzzer_call()
-    except Exception as e:
-        print("error", e)
-        return abort(500)
-    return jsonify({'ps': rfid_uid, 'uid': uid})
 
 #[개발용] 통계페이지
 @application.route("/test/statistics")
