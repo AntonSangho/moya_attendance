@@ -168,8 +168,12 @@ moya_attendance.code-workspace
 
 #nodejs
 node_modules/
+<<<<<<< HEAD
 package-lock.json
 
 # 보안을 위해 숨기는 파일
 application.py
 moya/driver_db.py
+=======
+package-lock.json
+>>>>>>> 8adf89be2f5a3583ab78b3bf71f6309b2dc30247
